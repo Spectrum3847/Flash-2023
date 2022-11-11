@@ -1,0 +1,9 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Main/Auton Selection": "String Chooser",
+      "/SmartDashboard/Scheduler": "Scheduler"
+    }
+  }
+}
