@@ -1,8 +1,23 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "Talon FX[2]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      }
+    },
+    "RoboRIO": {
+      "RoboRIO Input": {
+        "open": true
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Main/Auton Selection": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Scheduler": "Scheduler"
     }
   }

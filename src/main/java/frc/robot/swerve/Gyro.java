@@ -1,7 +1,6 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.sensors.Pigeon2;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConfig;
 
@@ -24,10 +23,10 @@ public class Gyro {
         yawOffset = getRawYaw().minus(new Rotation2d(value));
     }
 
-    public Rotation2d getYaw(){
+    public Rotation2d getYaw() {
         return getRawYaw().minus(yawOffset);
     }
-    
+
     public Rotation2d getRawYaw() {
         double yaw = pigeon.getYaw();
         return Rotation2d.fromDegrees(yaw);

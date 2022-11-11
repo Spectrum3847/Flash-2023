@@ -15,7 +15,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.SpectrumLib.swerve.CTREModuleState;
 import frc.SpectrumLib.swerve.SwerveModuleConfig;
 import frc.SpectrumLib.util.Conversions;
-import frc.robot.Robot;
 
 public class SwerveModule {
     public int moduleNumber;
@@ -24,13 +23,16 @@ public class SwerveModule {
     public WPI_TalonFX mDriveMotor;
     private WPI_CANCoder angleEncoder;
     private double lastAngle;
+    private SwerveConfig swerveConfig;
 
     SimpleMotorFeedforward feedforward =
             new SimpleMotorFeedforward(
                     SwerveConfig.driveKS, SwerveConfig.driveKV, SwerveConfig.driveKA);
 
-    public SwerveModule(int moduleNumber, SwerveModuleConfig moduleConfig) {
+    public SwerveModule(
+            int moduleNumber, SwerveConfig swerveConfig, SwerveModuleConfig moduleConfig) {
         this.moduleNumber = moduleNumber;
+        this.swerveConfig = swerveConfig;
         angleOffset = moduleConfig.angleOffset;
 
         /* Angle Encoder Config */
@@ -93,13 +95,13 @@ public class SwerveModule {
 
     private void configAngleEncoder() {
         angleEncoder.configFactoryDefault();
-        angleEncoder.configAllSettings(Robot.swerve.config.swerveCanCoderConfig);
+        angleEncoder.configAllSettings(swerveConfig.swerveCanCoderConfig);
         angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 200);
     }
 
     private void configAngleMotor() {
         mAngleMotor.configFactoryDefault();
-        mAngleMotor.configAllSettings(Robot.swerve.config.swerveAngleFXConfig);
+        mAngleMotor.configAllSettings(swerveConfig.swerveAngleFXConfig);
         mAngleMotor.setInverted(SwerveConfig.angleMotorInvert);
         mAngleMotor.setNeutralMode(SwerveConfig.angleNeutralMode);
         resetToAbsolute();
@@ -107,7 +109,7 @@ public class SwerveModule {
 
     private void configDriveMotor() {
         mDriveMotor.configFactoryDefault();
-        mDriveMotor.configAllSettings(Robot.swerve.config.swerveDriveFXConfig);
+        mDriveMotor.configAllSettings(swerveConfig.swerveDriveFXConfig);
         mDriveMotor.setInverted(SwerveConfig.driveMotorInvert);
         mDriveMotor.setNeutralMode(SwerveConfig.driveNeutralMode);
         mDriveMotor.setSelectedSensorPosition(0);

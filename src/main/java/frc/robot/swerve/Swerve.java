@@ -28,18 +28,17 @@ public class Swerve extends SubsystemBase {
     public Swerve() {
         setName("Swerve");
         config = new SwerveConfig();
-        odometry = new Odometry(this);
         gyro = new Gyro();
 
         mSwerveMods =
                 new SwerveModule[] {
-                    new SwerveModule(0, SwerveConfig.Mod0.config),
-                    new SwerveModule(1, SwerveConfig.Mod1.config),
-                    new SwerveModule(2, SwerveConfig.Mod2.config),
-                    new SwerveModule(3, SwerveConfig.Mod3.config)
+                    new SwerveModule(0, config, SwerveConfig.Mod0.config),
+                    new SwerveModule(1, config, SwerveConfig.Mod1.config),
+                    new SwerveModule(2, config, SwerveConfig.Mod2.config),
+                    new SwerveModule(3, config, SwerveConfig.Mod3.config)
                 };
-
         resetSteeringToAbsolute();
+        odometry = new Odometry(this);
     }
 
     @Override
