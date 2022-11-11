@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
      */
     public static void resetCommandsAndButtons() {
         CommandScheduler.getInstance().cancelAll(); // Disable any currently running commands
-        CommandScheduler.getInstance().clearButtons();
+        CommandScheduler.getInstance().getActiveButtonLoop().clear();
         LiveWindow.setEnabled(false); // Disable Live Window we don't need that data being sent
         LiveWindow.disableAllTelemetry();
 
