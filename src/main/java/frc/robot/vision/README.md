@@ -2,7 +2,9 @@
 
 Contains all the subsystems and commands for the vision processing.
 
-1. Photonvision cameras
-2. Limelight camera
-3. AprilTag field layout and tags
-4. Works with Swerve to do poseesitmation.
+## Tasks
+* Create classes: Vision.java, VisionConfig.java, VisionCommands.java 
+* Create a PVcamera.java, should be setup to let us have multiple Photonvision cameras
+* Create a LLcamera.java, should be setup to let us have multiple Limelight cameras
+* AprilTag field layout and tags class and JSON file
+

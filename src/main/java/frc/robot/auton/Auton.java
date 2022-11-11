@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 
-public class AutonSetup {
+public class Auton {
     public static final SendableChooser<Command> autonChooser = new SendableChooser<>();
 
     // A chooser for autonomous commands

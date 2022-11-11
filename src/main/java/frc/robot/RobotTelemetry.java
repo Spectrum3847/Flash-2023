@@ -9,7 +9,7 @@ import frc.SpectrumLib.telemetry.Alert.AlertType;
 import frc.SpectrumLib.telemetry.TelemetrySubsystem;
 import frc.SpectrumLib.util.Network;
 import frc.SpectrumLib.util.Util;
-import frc.robot.auton.AutonSetup;
+import frc.robot.auton.Auton;
 import java.util.Map;
 
 /** Add your docs here. */
@@ -31,8 +31,8 @@ public class RobotTelemetry extends TelemetrySubsystem {
 
         // Column 0
         // Setup the auton selector to display on shuffleboard
-        AutonSetup.setupSelectors();
-        tab.add("Auton Selection", AutonSetup.autonChooser).withPosition(0, 0).withSize(2, 1);
+        Auton.setupSelectors();
+        tab.add("Auton Selection", Auton.autonChooser).withPosition(0, 0).withSize(2, 1);
 
         // Column 2
         tab.addBoolean("Connected?", () -> flash())

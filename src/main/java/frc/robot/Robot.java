@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.SpectrumLib.sim.PhysicsSim;
 import frc.SpectrumLib.util.Network;
-import frc.robot.auton.AutonSetup;
+import frc.robot.auton.Auton;
 import frc.robot.pilot.PilotCommands;
 import frc.robot.pilot.PilotGamepad;
 import frc.robot.swerve.Swerve;
@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         resetCommandsAndButtons();
 
-        Command autonCommand = AutonSetup.getAutonomousCommand();
+        Command autonCommand = Auton.getAutonomousCommand();
         if (autonCommand != null) {
             autonCommand.schedule();
         }

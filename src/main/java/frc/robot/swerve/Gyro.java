@@ -1,15 +1,16 @@
 package frc.robot.swerve;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConfig;
 
 public class Gyro {
-    public Pigeon2 pigeon;
+    public WPI_Pigeon2 pigeon;
     public Rotation2d yawOffset = new Rotation2d(0);
 
     public Gyro() {
-        pigeon = new Pigeon2(RobotConfig.pigeonID);
+        pigeon = new WPI_Pigeon2(RobotConfig.pigeonID);
         pigeon.configFactoryDefault();
         zeroGyro();
     }
