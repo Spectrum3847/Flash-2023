@@ -46,7 +46,7 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update();
-        mSwerveModStates = getStatesCAN(); //Get the states once a loop
+        mSwerveModStates = getStatesCAN(); // Get the states once a loop
         telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModStates);
     }
 
@@ -133,7 +133,7 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
-    public SwerveModuleState[] getStates(){
+    public SwerveModuleState[] getStates() {
         return mSwerveModStates;
     }
 
