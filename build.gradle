@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2023.1.1-beta-3"
     id 'com.diffplug.spotless' version '6.10.0'
+    id "com.peterabeles.gversion" version "1.10"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -59,6 +60,20 @@ repositories {
     }
 }
 
+//AdvatageKit code
+configurations.all {
+    exclude group: "edu.wpi.first.wpilibj"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs "src/main/java"
+            srcDirs "build/generated/sources/annotationProcessor/java/main"
+        }
+    }
+}
+
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
@@ -83,6 +98,9 @@ dependencies {
 
     //Include SpectrumLib in the project
     implementation ('com.github.Spectrum3847:SpectrumLib:main-SNAPSHOT') { changing = true }
+
+    //Include AdvantageKit in the project
+    annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:2.0.0-beta-1"
 }
 
 // Simulation configuration (e.g. environment variables).
@@ -154,3 +172,14 @@ spotless {
 
 //Configure Spotless to apply on every build
 compileJava.dependsOn spotlessApply
+
+//Create BuildConstants.java file
+project.compileJava.dependsOn(createVersionFile)
+gversion {
+    srcDir       = "src/main/java/"
+    classPackage = "frc.robot"
+    className    = "BuildConstants"
+    dateFormat   = "yyyy-MM-dd HH:mm:ss z"
+    timeZone     = "America/Chicago" // Use preferred time zone
+    indent       = "    "
+}

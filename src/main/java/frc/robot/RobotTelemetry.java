@@ -80,6 +80,7 @@ public class RobotTelemetry extends TelemetrySubsystem {
                 SimRobotAlert.set(false);
                 break;
             case SIM:
+            case REPLAY:
                 CompetitionRobotAlert.set(false);
                 PracticeRobotAlert.set(false);
                 SimRobotAlert.set(true);

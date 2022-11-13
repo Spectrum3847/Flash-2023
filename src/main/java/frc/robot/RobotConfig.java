@@ -53,6 +53,7 @@ public final class RobotConfig {
                 SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
                 break;
             case SIM:
+            case REPLAY:
                 // Set all the constants specifically for the simulation
                 break;
         }
@@ -79,6 +80,7 @@ public final class RobotConfig {
     public enum RobotType {
         COMP,
         PRACTICE,
-        SIM
+        SIM,
+        REPLAY
     }
 }
