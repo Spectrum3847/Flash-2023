@@ -17,7 +17,9 @@ public class Swerve extends SubsystemBase {
     public SwerveConfig config;
     public Gyro gyro;
     public Odometry odometry;
+    public SwerveTelemetry telemetry;
     public SwerveModule[] mSwerveMods;
+    private SwerveModuleState[] mSwerveModStates;
     public double pidTurn = 0;
     public double drive_x = 0;
     public double drive_y = 0;
@@ -38,11 +40,14 @@ public class Swerve extends SubsystemBase {
                 };
         resetSteeringToAbsolute();
         odometry = new Odometry(this);
+        telemetry = new SwerveTelemetry();
     }
 
     @Override
     public void periodic() {
         odometry.update();
+        mSwerveModStates = getStatesCAN(); //Get the states once a loop
+        telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModStates);
     }
 
     public void drive(
@@ -120,7 +125,7 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public SwerveModuleState[] getStates() {
+    private SwerveModuleState[] getStatesCAN() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
             states[mod.moduleNumber] = mod.getState();
@@ -128,12 +133,16 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
+    public SwerveModuleState[] getStates(){
+        return mSwerveModStates;
+    }
+
     public SwerveModulePosition[] getPositions() {
-        SwerveModulePosition[] states = new SwerveModulePosition[4];
+        SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : mSwerveMods) {
-            states[mod.moduleNumber] = mod.getPosition();
+            positions[mod.moduleNumber] = mod.getPosition();
         }
-        return states;
+        return positions;
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
