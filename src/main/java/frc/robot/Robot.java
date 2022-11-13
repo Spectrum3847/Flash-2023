@@ -9,6 +9,7 @@ import frc.SpectrumLib.util.Network;
 import frc.robot.auton.Auton;
 import frc.robot.pilot.PilotCommands;
 import frc.robot.pilot.PilotGamepad;
+import frc.robot.pose.Pose;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.commands.SwerveCommands;
 
@@ -21,6 +22,7 @@ import frc.robot.swerve.commands.SwerveCommands;
 public class Robot extends TimedRobot {
     public static RobotConfig config;
     public static Swerve swerve;
+    public static Pose pose;
     public static RobotTelemetry telemetry;
     public static PilotGamepad pilotGamepad;
 
@@ -29,6 +31,7 @@ public class Robot extends TimedRobot {
         config = new RobotConfig();
         swerve = new Swerve();
         pilotGamepad = new PilotGamepad();
+        pose = new Pose();
         telemetry = new RobotTelemetry();
 
         // Set Default Commands, this method should exist for each subsystem that has commands
