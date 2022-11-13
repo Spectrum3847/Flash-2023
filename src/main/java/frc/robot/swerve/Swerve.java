@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.SpectrumLib.util.Conversions;
 
 public class Swerve extends SubsystemBase {
     public SwerveConfig config;
@@ -114,6 +113,13 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    public void stop() {
+        for (SwerveModule mod : mSwerveMods) {
+            mod.mDriveMotor.stopMotor();
+            mod.mAngleMotor.stopMotor();
+        }
+    }
+
     public SwerveModuleState[] getStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
@@ -130,52 +136,10 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
-    // Characterization methods
-    public void resetFalconPositions() {
-        for (SwerveModule mod : mSwerveMods) {
-            mod.mDriveMotor.setSelectedSensorPosition(0);
-        }
-    }
-
-    public double getLeftPositionMeters() {
-        return Conversions.FalconToMeters(
-                mSwerveMods[0].mDriveMotor.getSelectedSensorPosition(),
-                SwerveConfig.wheelCircumference,
-                SwerveConfig.driveGearRatio);
-    }
-
-    public double getRightPositionMeters() {
-        return Conversions.FalconToMeters(
-                mSwerveMods[1].mDriveMotor.getSelectedSensorPosition(),
-                SwerveConfig.wheelCircumference,
-                SwerveConfig.driveGearRatio);
-    }
-
-    public double getLeftMetersPerSec() {
-        return Conversions.falconToMPS(
-                mSwerveMods[0].mDriveMotor.getSelectedSensorVelocity(),
-                SwerveConfig.wheelCircumference,
-                SwerveConfig.driveGearRatio);
-    }
-
-    public double getRightMetersPerSec() {
-        return Conversions.falconToMPS(
-                mSwerveMods[1].mDriveMotor.getSelectedSensorVelocity(),
-                SwerveConfig.wheelCircumference,
-                SwerveConfig.driveGearRatio);
-    }
-
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         mSwerveMods[0].mDriveMotor.setVoltage(leftVolts);
         mSwerveMods[2].mDriveMotor.setVoltage(leftVolts);
         mSwerveMods[1].mDriveMotor.setVoltage(rightVolts);
         mSwerveMods[3].mDriveMotor.setVoltage(rightVolts);
-    }
-
-    public void stop() {
-        for (SwerveModule mod : mSwerveMods) {
-            mod.mDriveMotor.stopMotor();
-            mod.mAngleMotor.stopMotor();
-        }
     }
 }
