@@ -23,6 +23,12 @@
   },
   "NetworkTables": {
     "transitory": {
+      "Shuffleboard": {
+        "Main": {
+          "open": true
+        },
+        "open": true
+      },
       "SmartDashboard": {
         "Alerts": {
           "open": true

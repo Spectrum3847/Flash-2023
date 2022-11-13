@@ -12,21 +12,25 @@ import frc.robot.pilot.PilotGamepad;
 import frc.robot.pose.Pose;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.commands.SwerveCommands;
-
+import frc.robot.trajectories.Trajectories;
 
 public class Robot extends TimedRobot {
     public static RobotConfig config;
     public static Swerve swerve;
     public static Pose pose;
+    public static Trajectories trajectories;
     public static RobotTelemetry telemetry;
     public static PilotGamepad pilotGamepad;
 
     // Intialize subsystems and run their setupDefaultCommand methods here
     private void intializeSystems() {
         config = new RobotConfig();
+        
         swerve = new Swerve();
-        pilotGamepad = new PilotGamepad();
         pose = new Pose();
+        trajectories = new Trajectories();
+
+        pilotGamepad = new PilotGamepad();
         telemetry = new RobotTelemetry();
 
         // Set Default Commands, this method should exist for each subsystem that has commands

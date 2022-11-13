@@ -1,9 +1,9 @@
-package frc.robot.trajectory;
+package frc.robot.trajectories;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.swerve.SwerveConfig;
 
-public class TrajectoryConfig {
+public class TrajectoriesConfig {
     /* Swerve Conroller Constants */
     public static final double kMaxSpeed = 2.7;
     public static final double kMaxAccel = 2.4; // 2 worked but took too long

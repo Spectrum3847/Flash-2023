@@ -9,8 +9,8 @@ public class Gyro {
     public Rotation2d yawOffset = new Rotation2d(0);
 
     /**
-     * Creates a new Gyro, which is a wrapper for the Pigeon IMU and stores an
-     * offset so we don't have to directly zero the gyro
+     * Creates a new Gyro, which is a wrapper for the Pigeon IMU and stores an offset so we don't
+     * have to directly zero the gyro
      */
     public Gyro() {
         pigeon = new WPI_Pigeon2(RobotConfig.pigeonID);
@@ -18,16 +18,14 @@ public class Gyro {
         zeroGyro();
     }
 
-    /**
-     * Zero the gyro
-     */
+    /** Zero the gyro */
     public void zeroGyro() {
         setGyroDegrees(0);
     }
 
     /**
      * Set the gyro yawOffset to a specific angle
-     * 
+     *
      * @param degrees The angle to set the gyro to
      */
     public void setGyroDegrees(double value) {
@@ -36,7 +34,7 @@ public class Gyro {
 
     /**
      * Get the yaw of the robot in Rotation2d
-     * 
+     *
      * @return the yaw of the robot in Rotation2d
      */
     public Rotation2d getYaw() {
@@ -45,7 +43,7 @@ public class Gyro {
 
     /**
      * Get the raw yaw of the robot in Rotation2d without using the yawOffset
-     * 
+     *
      * @return the raw yaw of the robot in Rotation2d
      */
     public Rotation2d getRawYaw() {
@@ -54,7 +52,7 @@ public class Gyro {
 
     /**
      * Get the yaw of the robot in degrees
-     * 
+     *
      * @return the yaw of the robot in degrees including the yawOffset
      */
     public double getDegrees() {
@@ -63,7 +61,7 @@ public class Gyro {
 
     /**
      * Get the raw yaw of the robot in Radians
-     * 
+     *
      * @return the yaw of the robot in radians including the yawOffset
      */
     public double getRadians() {
