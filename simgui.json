@@ -19,6 +19,21 @@
       "/Shuffleboard/Main/Auton Selection": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Scheduler": "Scheduler"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "image": "C:\\Users\\Spectrum\\Documents\\GitHub\\Flash-2023\\pathplanner\\data\\flutter_assets\\images\\field22.png",
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "open": true
+      }
     }
   }
 }

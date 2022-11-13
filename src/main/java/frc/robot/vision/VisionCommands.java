@@ -1,5 +1,3 @@
 package frc.robot.vision;
 
-public class VisionCommands {
-    
-}
+public class VisionCommands {}
