@@ -4,3 +4,4 @@ This is our development robot, code in this repo is run on our swerve + vision +
 
 ## Tasks
 * Create a python script to sync a directory to the USB flashdrive on the roboRIO
+* Make sure merge and pull requests work correctly
