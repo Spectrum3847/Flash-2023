@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.swerve.SwerveConfig;
 
 /**
@@ -17,6 +18,7 @@ public final class RobotConfig {
     public final Motors motors = new Motors();
     public final Pneumatic pneumatic = new Pneumatic();
     public final String praticeBotMAC = "00-80-2F-1C-1C-1C";
+    public final ModuleType PowerDistributionType = ModuleType.kCTRE;
 
     public static final int pigeonID = 0;
 

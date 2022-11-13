@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,6 +12,7 @@ import frc.SpectrumLib.util.Network;
 import frc.SpectrumLib.util.Util;
 import frc.robot.auton.Auton;
 import java.util.Map;
+import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class RobotTelemetry extends TelemetrySubsystem {
@@ -21,12 +23,14 @@ public class RobotTelemetry extends TelemetrySubsystem {
     private static Alert SimRobotAlert = new Alert("SIM ROBOT", AlertType.INFO);
     private static Alert batteryAlert = new Alert("Low Battery < 12v", AlertType.WARNING);
     private static Alert FMSConnectedAlert = new Alert("FMS Connected", AlertType.INFO);
+    private static Alert logReceiverQueueAlert =
+            new Alert("NOT LOGGING: Queue Exceede", AlertType.ERROR);
 
     private String IPaddress = "UNKOWN";
 
     public RobotTelemetry() {
         super("Main");
-        // Allows us to see all running commands on the robot
+        // Allows us to see all running commands on the robot, needed to log commands
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         // Column 0
@@ -58,6 +62,8 @@ public class RobotTelemetry extends TelemetrySubsystem {
         checkRobotType();
         checkFMSalert();
         checkBatteryWhenDisabledalert();
+        checkLogQueueAlert();
+        logCommands();
     }
 
     public String getIP() {
@@ -88,15 +94,29 @@ public class RobotTelemetry extends TelemetrySubsystem {
         }
     }
 
-    public void checkFMSalert() {
+    private static void checkFMSalert() {
         FMSConnectedAlert.set(DriverStation.isFMSAttached());
     }
 
-    public void checkBatteryWhenDisabledalert() {
+    private static void checkBatteryWhenDisabledalert() {
         batteryAlert.set(DriverStation.isDisabled() && Util.checkBattery(12.0));
     }
 
-    public boolean flash() {
+    private static boolean flash() {
         return (int) Timer.getFPGATimestamp() % 2 == 0;
+    }
+
+    private static void checkLogQueueAlert() {
+        logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
+    }
+
+    private static void logCommands() {
+        // Log scheduled commands
+        Logger.getInstance()
+                .recordOutput(
+                        "ActiveCommands/Scheduler",
+                        NetworkTableInstance.getDefault()
+                                .getEntry("/SmartDashboard/Scheduler/Names")
+                                .getStringArray(new String[] {}));
     }
 }

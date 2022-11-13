@@ -6,8 +6,8 @@
       "style": "0",
       "userScale": "2",
       "width": "1280",
-      "xpos": "-1",
-      "ypos": "-1"
+      "xpos": "816",
+      "ypos": "925"
     }
   },
   "Table": {
@@ -19,6 +19,11 @@
     }
   },
   "Window": {
+    "###/SmartDashboard/Scheduler": {
+      "Collapsed": "0",
+      "Pos": "147,60",
+      "Size": "400,200"
+    },
     "###FMS": {
       "Collapsed": "0",
       "Pos": "5,540",
@@ -36,8 +41,8 @@
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "246,34",
-      "Size": "750,407"
+      "Pos": "308,43",
+      "Size": "904,407"
     },
     "###NetworkTables Info": {
       "Collapsed": "0",

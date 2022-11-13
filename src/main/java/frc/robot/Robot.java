@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -15,6 +16,7 @@ import frc.robot.trajectories.Trajectories;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
@@ -26,6 +28,8 @@ public class Robot extends LoggedRobot {
     public static Trajectories trajectories;
     public static RobotTelemetry telemetry;
     public static PilotGamepad pilotGamepad;
+
+    public static String MAC = "";
 
     // Intialize subsystems and run their setupDefaultCommand methods here
     private void intializeSystems() {
@@ -41,8 +45,6 @@ public class Robot extends LoggedRobot {
         PilotCommands.setupDefaultCommand();
         SwerveCommands.setupDefaultCommand();
     }
-
-    public static String MAC = "";
 
     /**
      * Used in all robot mode intialize methods to cancel previous commands and reset button
@@ -64,12 +66,12 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void robotInit() {
-        // Set up the config
-        config = new RobotConfig();
-
         // Set the MAC Address for this robot, useful for adjusting comp/practice bot
         // settings
         MAC = Network.getMACaddress();
+
+        // Set up the config
+        config = new RobotConfig();
 
         // Setup the logger
         setupAdvantageKit();
@@ -87,6 +89,8 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void robotPeriodic() {
+        // Ensures that the main thread is the highest priority thread
+        Threads.setCurrentThreadPriority(true, 99);
         /**
          * Runs the Scheduler. This is responsible for polling buttons, adding newly-scheduled
          * commands, running already-scheduled commands, removing finished or interrupted commands,
@@ -94,6 +98,10 @@ public class Robot extends LoggedRobot {
          * block in order for anything in the Command-based framework to work.
          */
         CommandScheduler.getInstance().run();
+
+        Auton.printAutoDuration(); // Prints auton command duration if it finishes or cancelled
+
+        Threads.setCurrentThreadPriority(true, 10); // Set the main thread back to normal priority
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
@@ -112,6 +120,7 @@ public class Robot extends LoggedRobot {
         Command autonCommand = Auton.getAutonomousCommand();
         if (autonCommand != null) {
             autonCommand.schedule();
+            Auton.startAutonTimer();
         }
     }
 
@@ -156,6 +165,8 @@ public class Robot extends LoggedRobot {
         Logger logger = Logger.getInstance();
 
         // Record metadata
+        logger.recordMetadata("MAC Address", MAC);
+        logger.recordMetadata("RuntimeType", getRuntimeType().toString());
         logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
         logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
         logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
@@ -179,6 +190,7 @@ public class Robot extends LoggedRobot {
             case PRACTICE:
                 logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
                 logger.addDataReceiver(new NT4Publisher());
+                LoggedPowerDistribution.getInstance(0, config.PowerDistributionType);
                 break;
 
                 // Running a physics simulator, log to local folder
