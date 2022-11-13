@@ -1,7 +1,7 @@
 # Trajectory
 
 PID configuration and commands for x, y, & theta controllers and trajectory following commands.
-This is seperated from Auton because we can use parts of this code in Telop as well for automated tasks, espcially the spin in place commands, and eventually the automated trajectory generation and being able to automatically drive to loading or scoring locations. 
+This is seperated from Auton because we can use parts of this code in Telop as well for automated tasks, espcially the spin in place commands, and eventually the automated trajectory generation and being able to automatically drive to loading or scoring locations.
 
 ## Tasks
 * PID controllers for x, y, & theta

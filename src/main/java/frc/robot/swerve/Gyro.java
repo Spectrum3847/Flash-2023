@@ -1,7 +1,6 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConfig;
 

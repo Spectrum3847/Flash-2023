@@ -18,17 +18,17 @@ public final class SwerveConfig {
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
-    public static final double trackWidth = Units.inchesToMeters(18.75);
-    public static final double wheelBase = Units.inchesToMeters(21.75);
+    public static final double trackWidth = Units.inchesToMeters(17.5); // (18.75); 2022
+    public static final double wheelBase = Units.inchesToMeters(20.5); // (21.75); 2022
     public static final double wheelDiameter = Units.inchesToMeters(3.8195);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
 
-    public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
+    public static final double driveGearRatio = (8.16 / 1.0); // 6.75:1
     public static final double angleGearRatio =
-            (50.0 / 14.0) * (60.0 / 10.0); // (12.8 / 1.0); //12.8:1
+            (12.8 / 1.0); // (50.0 / 14.0) * (60.0 / 10.0); //12.8:1
 
     public static final SwerveDriveKinematics swerveKinematics =
             new SwerveDriveKinematics(
@@ -62,15 +62,14 @@ public final class SwerveConfig {
 
     /* Drive Motor Characterization Values */
     public static final double driveKS =
-            (0.605 / 12); // divide by 12 to convert from volts to percent output for
-    // CTRE
+            (0.605 / 12); // divide by 12 to convert from volts to % output for CTRE
     public static final double driveKV = (1.72 / 12);
     public static final double driveKA = (0.193 / 12);
 
     /* Swerve Profiling Values */
-    public static final double maxSpeed = 4.8; // meters per second
+    public static final double maxSpeed = 4.5; // meters per second
     public static final double maxAccel = maxSpeed * 1.5; // take 1/2 sec to get to max speed.
-    public static final double maxAngularVelocity = 3 * Math.PI; // 11.5; //4 revolutions a second
+    public static final double maxAngularVelocity = 3 * Math.PI;
     public static final double maxAngularAcceleration =
             maxAngularVelocity * 2; // take 1/2 sec to get to max
     // angular velocity
@@ -80,8 +79,8 @@ public final class SwerveConfig {
     public static final NeutralMode driveNeutralMode = NeutralMode.Coast;
 
     /* Motor Inverts */
-    public static final boolean driveMotorInvert = true;
-    public static final boolean angleMotorInvert = true;
+    public static final boolean driveMotorInvert = false; // True = MK4i
+    public static final boolean angleMotorInvert = false; // True = MK4i
 
     /* Angle Encoder Invert */
     public static final boolean canCoderInvert = false;

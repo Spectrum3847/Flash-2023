@@ -10,4 +10,4 @@ PID configuration and commands for x, y, theta controllers and trajectory follow
 * Create Test methods, to auto check each module, and compare to known current ranges, for steering and drive on blocks. Check all modules turn to 90 set points, etc.
 * Create a way to zero the cancoder off-sets so if needed we can start with the wheels forward and known that works. This is incase our cancoders aren't working and we need to run a match.
 * Create an easy way to store the cancoder off-sets to a file on the roboRIO.
-* Create a Pose class: has a pose estimater and all the things needed for esimating the robots position. 
+* Create a Pose class: has a pose estimater and all the things needed for esimating the robots position.

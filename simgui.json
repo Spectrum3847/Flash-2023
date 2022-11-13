@@ -20,5 +20,15 @@
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Scheduler": "Scheduler"
     }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Alerts": {
+          "open": true
+        },
+        "open": true
+      }
+    }
   }
 }
