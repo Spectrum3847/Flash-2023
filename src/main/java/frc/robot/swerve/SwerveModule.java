@@ -89,14 +89,15 @@ public class SwerveModule {
         double offset = angleOffset;
         double absolutePosition =
                 Conversions.degreesToFalcon(
-                        getCanCoder().getDegrees() - offset, SwerveConfig.angleGearRatio);
+                        getCanCoderAngle().getDegrees() - offset, SwerveConfig.angleGearRatio);
         mAngleMotor.setSelectedSensorPosition(absolutePosition);
     }
 
     private void configAngleEncoder() {
         angleEncoder.configFactoryDefault();
         angleEncoder.configAllSettings(swerveConfig.swerveCanCoderConfig);
-        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 200);
+        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 249);
+        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 253);
     }
 
     private void configAngleMotor() {
@@ -115,17 +116,13 @@ public class SwerveModule {
         mDriveMotor.setSelectedSensorPosition(0);
     }
 
-    public Rotation2d getCanCoder() {
+    public Rotation2d getCanCoderAngle() {
         Rotation2d position = Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
         return position;
     }
 
-    public void slowCANcoderStatusFrames() {
-        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 200);
-    }
-
-    public void fastCANcoderSatusFrames() {
-        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10);
+    public Rotation2d getTargetAngle(){
+        return lastAngle;
     }
 
     public SwerveModuleState getState() {

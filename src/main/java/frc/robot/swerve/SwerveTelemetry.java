@@ -25,7 +25,7 @@ public class SwerveTelemetry {
             Logger.getInstance()
                     .recordOutput(
                             "Mod " + mod.moduleNumber + " Absolute",
-                            mod.getCanCoder().getDegrees());
+                            mod.getCanCoderAngle().getDegrees());
         }
     }
 }
