@@ -5,9 +5,8 @@
 package frc.robot.leds;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.leds.commands.BlinkLEDCommand;
 import frc.robot.leds.commands.LEDCommandBase;
+import frc.robot.leds.commands.RainbowLEDCommand;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,7 +31,7 @@ public class LEDScheduler {
     }
 
     private void intialAnimation() {
-        setDefaultAnimation("Default LED Animation", new BlinkLEDCommand(Color.kPurple));
+        setDefaultAnimation("Default LED Animation", new RainbowLEDCommand(0));
     }
 
     private void runScheduler() {
