@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.SpectrumLib.sim.PhysicsSim;
 import frc.SpectrumLib.util.Network;
 import frc.robot.auton.Auton;
+import frc.robot.leds.LEDs;
 import frc.robot.pilot.PilotCommands;
 import frc.robot.pilot.PilotGamepad;
 import frc.robot.pose.Pose;
@@ -26,8 +27,9 @@ public class Robot extends LoggedRobot {
     public static Swerve swerve;
     public static Pose pose;
     public static Trajectories trajectories;
-    public static RobotTelemetry telemetry;
+    public static LEDs leds;
     public static PilotGamepad pilotGamepad;
+    public static RobotTelemetry telemetry;
 
     public static String MAC = "";
 
@@ -37,6 +39,7 @@ public class Robot extends LoggedRobot {
         pose = new Pose();
         trajectories = new Trajectories();
 
+        leds = new LEDs();
         pilotGamepad = new PilotGamepad();
         telemetry = new RobotTelemetry();
 

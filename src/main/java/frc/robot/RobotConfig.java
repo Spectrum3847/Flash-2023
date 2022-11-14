@@ -21,6 +21,7 @@ public final class RobotConfig {
     public final ModuleType PowerDistributionType = ModuleType.kCTRE;
 
     public static final int pigeonID = 0;
+    public static final int ledPWMport = 0;
 
     public final class Motors {
         public static final int driveMotor0 = 1;
