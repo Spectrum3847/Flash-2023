@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.swerve.SwerveConfig;
 
 /**
@@ -17,8 +18,10 @@ public final class RobotConfig {
     public final Motors motors = new Motors();
     public final Pneumatic pneumatic = new Pneumatic();
     public final String praticeBotMAC = "00-80-2F-1C-1C-1C";
+    public final ModuleType PowerDistributionType = ModuleType.kCTRE;
 
     public static final int pigeonID = 0;
+    public static final int ledPWMport = 0;
 
     public final class Motors {
         public static final int driveMotor0 = 1;
@@ -53,6 +56,7 @@ public final class RobotConfig {
                 SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
                 break;
             case SIM:
+            case REPLAY:
                 // Set all the constants specifically for the simulation
                 break;
         }
@@ -79,6 +83,7 @@ public final class RobotConfig {
     public enum RobotType {
         COMP,
         PRACTICE,
-        SIM
+        SIM,
+        REPLAY
     }
 }

@@ -23,18 +23,30 @@
   },
   "NetworkTables": {
     "transitory": {
+      "AdvantageKit": {
+        "DriverStation": {
+          "Joystick0": {
+            "open": true
+          }
+        }
+      },
       "Shuffleboard": {
         "Main": {
           "open": true
-        },
-        "open": true
+        }
       },
       "SmartDashboard": {
         "Alerts": {
           "open": true
         },
+        "Scheduler": {
+          "open": true
+        },
         "open": true
       }
     }
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }

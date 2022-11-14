@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.swerve.SwerveConfig;
+import org.littletonrobotics.junction.Logger;
 
 /** Reports our expected, desired, and actual poses to dashboards */
 public class Pose extends SubsystemBase {
@@ -27,7 +28,7 @@ public class Pose extends SubsystemBase {
 
     public Pose() {
         config = new PoseConfig();
-        SmartDashboard.putData("Field", field);
+        createField();
 
         poseEstimator =
                 new SwerveDrivePoseEstimator<N7, N7, N5>(
@@ -53,13 +54,22 @@ public class Pose extends SubsystemBase {
 
     @Override
     public void periodic() {
-        updateOdometry();
+        updateOdometryEstimate();
         setEstimatedPose(getEstimatedPosition());
         setOdometryPose(Robot.swerve.odometry.getPoseMeters());
 
-        field.getObject("DesiredPose").setPose(desiredPose);
-        field.getObject("OdometryPose").setPose(odometryPose);
-        field.getObject("EstimatePose").setPose(estimatePose);
+        updatePose("DesiredPose", desiredPose);
+        updatePose("OdometryPose", odometryPose);
+        updatePose("EstimatedPose", estimatePose);
+    }
+
+    private void createField() {
+        SmartDashboard.putData("Field", field);
+    }
+
+    private void updatePose(String name, Pose2d pose) {
+        field.getObject(name).setPose(pose);
+        Logger.getInstance().recordOutput(name, pose);
     }
 
     /** Sets the Odometry Pose to the given post */
@@ -78,7 +88,7 @@ public class Pose extends SubsystemBase {
     }
 
     /** Updates the field relative position of the robot. */
-    public void updateOdometry() {
+    public void updateOdometryEstimate() {
         poseEstimator.update(
                 Robot.swerve.gyro.getYaw(), Robot.swerve.getStates(), Robot.swerve.getPositions());
     }
