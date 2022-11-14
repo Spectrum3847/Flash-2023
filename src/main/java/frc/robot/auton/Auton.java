@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
+import frc.robot.RobotTelemetry;
 
 public class Auton {
     public static final SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -46,12 +47,12 @@ public class Auton {
         if (autoCommand != null) {
             if (!autoCommand.isScheduled() && !autoMessagePrinted) {
                 if (DriverStation.isAutonomousEnabled()) {
-                    System.out.println(
+                    RobotTelemetry.print(
                             String.format(
                                     "*** Auton finished in %.2f secs ***",
                                     Timer.getFPGATimestamp() - autonStart));
                 } else {
-                    System.out.println(
+                    RobotTelemetry.print(
                             String.format(
                                     "*** Auton CANCELLED in %.2f secs ***",
                                     Timer.getFPGATimestamp() - autonStart));

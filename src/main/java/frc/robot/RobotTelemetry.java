@@ -14,8 +14,9 @@ import frc.robot.auton.Auton;
 import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
-/** Add your docs here. */
 public class RobotTelemetry extends TelemetrySubsystem {
+
+    private static boolean disablePrints = false;
 
     // Alerts
     private static Alert PracticeRobotAlert = new Alert("PRACTICE ROBOT", AlertType.INFO);
@@ -118,5 +119,11 @@ public class RobotTelemetry extends TelemetrySubsystem {
                         NetworkTableInstance.getDefault()
                                 .getEntry("/SmartDashboard/Scheduler/Names")
                                 .getStringArray(new String[] {}));
+    }
+
+    public static void print(String output) {
+        if (!disablePrints) {
+            System.out.println(output);
+        }
     }
 }

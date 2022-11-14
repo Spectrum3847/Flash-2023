@@ -6,6 +6,7 @@ package frc.robot.leds;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.RobotTelemetry;
 import frc.robot.leds.commands.BlinkLEDCommand;
 import frc.robot.leds.commands.LEDCommandBase;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class LEDScheduler {
     Animation defaultAnimation;
 
     public LEDScheduler(LEDs subsystem) {
-        System.out.println("Starting LED Scheduler Thread");
+        RobotTelemetry.print("Starting LED Scheduler Thread");
         LEDSchedulerThread.start();
     }
 
@@ -64,7 +65,7 @@ public class LEDScheduler {
             top = animationArrary.get(0);
             top.getCommand().schedule();
             top.getCommand().ledInitialize();
-            System.out.println("LEDs Set To: " + top.getName());
+            RobotTelemetry.print("LEDs Set To: " + top.getName());
         }
 
         if (top.getPriority() > 1) {

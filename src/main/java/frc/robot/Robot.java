@@ -69,6 +69,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void robotInit() {
+        RobotTelemetry.print("Robot Init Starting");
         // Set the MAC Address for this robot, useful for adjusting comp/practice bot
         // settings
         MAC = Network.getMACaddress();
@@ -81,6 +82,8 @@ public class Robot extends LoggedRobot {
 
         // Initialize all systems, do this after getting the MAC address
         intializeSystems();
+
+        RobotTelemetry.print("Robot Init Complete");
     }
 
     /**
@@ -110,7 +113,10 @@ public class Robot extends LoggedRobot {
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
+        RobotTelemetry.print("Disabled Init Starting");
         resetCommandsAndButtons();
+
+        RobotTelemetry.print("Disabled Init Complete");
     }
 
     @Override
@@ -118,6 +124,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void autonomousInit() {
+        RobotTelemetry.print("Auton Init Starting");
         resetCommandsAndButtons();
 
         Command autonCommand = Auton.getAutonomousCommand();
@@ -125,6 +132,7 @@ public class Robot extends LoggedRobot {
             autonCommand.schedule();
             Auton.startAutonTimer();
         }
+        RobotTelemetry.print("Auton Init Complete");
     }
 
     /** This function is called periodically during autonomous. */
@@ -136,7 +144,10 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopInit() {
+        RobotTelemetry.print("Teleop Init Starting");
         resetCommandsAndButtons();
+
+        RobotTelemetry.print("Teleop Init Complete");
     }
 
     /** This function is called periodically during operator control. */
@@ -148,7 +159,10 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void testInit() {
+        RobotTelemetry.print("Test Init Starting");
         resetCommandsAndButtons();
+
+        RobotTelemetry.print("Test Init Complete");
     }
 
     /** This function is called periodically during test mode. */
@@ -156,7 +170,11 @@ public class Robot extends LoggedRobot {
     public void testPeriodic() {}
 
     /** This function is called once when a simulation starts */
-    public void simulationInit() {}
+    public void simulationInit() {
+        RobotTelemetry.print("Simulation Init Starting");
+
+        RobotTelemetry.print("Simulation Init Complete");
+    }
 
     /** This function is called periodically during a simulation */
     public void simulationPeriodic() {

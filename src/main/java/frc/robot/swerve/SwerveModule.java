@@ -22,7 +22,7 @@ public class SwerveModule {
     public WPI_TalonFX mAngleMotor;
     public WPI_TalonFX mDriveMotor;
     private WPI_CANCoder angleEncoder;
-    private double lastAngle;
+    private Rotation2d lastAngle;
     private SwerveConfig swerveConfig;
 
     SimpleMotorFeedforward feedforward =
@@ -47,15 +47,13 @@ public class SwerveModule {
         mDriveMotor = new WPI_TalonFX(moduleConfig.driveMotorID);
         configDriveMotor();
 
-        lastAngle = getState().angle.getDegrees();
+        lastAngle = getState().angle;
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-        desiredState =
-                CTREModuleState.optimize(
-                        desiredState,
-                        getState().angle); // Custom optimize command, since default WPILib optimize
-        // assumes continuous controller which CTRE is not
+        // Custom optimize command, since default WPILib optimize assumes continuous controller
+        // which CTRE is not
+        desiredState = CTREModuleState.optimize(desiredState, getState().angle);
 
         if (isOpenLoop) {
             double percentOutput = desiredState.speedMetersPerSecond / SwerveConfig.maxSpeed;
@@ -73,15 +71,17 @@ public class SwerveModule {
                     feedforward.calculate(desiredState.speedMetersPerSecond));
         }
 
-        double angle =
-                (Math.abs(desiredState.speedMetersPerSecond) <= (SwerveConfig.maxSpeed * 0.01))
-                        ? lastAngle
-                        : desiredState.angle
-                                .getDegrees(); // Prevent rotating module if speed is less then 1%.
+        // Prevent rotating module if speed is less then 1% and the angle change is less than 5deg.
         // Prevents Jittering.
+        Rotation2d angle = desiredState.angle;
+        if ((Math.abs(desiredState.speedMetersPerSecond) < (SwerveConfig.maxSpeed * 0.01))
+                && Math.abs(lastAngle.minus(angle).getDegrees()) < 5) {
+            angle = lastAngle;
+        }
+
         mAngleMotor.set(
                 ControlMode.Position,
-                Conversions.degreesToFalcon(angle, SwerveConfig.angleGearRatio));
+                Conversions.degreesToFalcon(angle.getDegrees(), SwerveConfig.angleGearRatio));
         lastAngle = angle;
     }
 

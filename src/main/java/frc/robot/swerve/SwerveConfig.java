@@ -53,6 +53,8 @@ public final class SwerveConfig {
     public static final double angleKI = 0.0;
     public static final double angleKD = 12; // 364 = 12.0; SDS = 0.1;
     public static final double angleKF = 0.0;
+    public static final int angleAllowableError =
+            0; // increase to reduce jitter, (2048 * angleGearRatio) / 360.0) = 1 degree
 
     /* Drive Motor PID Values */
     public static final double driveKP = 0.1; // 0.10 was previous, switched to 1678 value 0.05
@@ -159,6 +161,7 @@ public final class SwerveConfig {
         swerveAngleFXConfig.slot0.kI = SwerveConfig.angleKI;
         swerveAngleFXConfig.slot0.kD = SwerveConfig.angleKD;
         swerveAngleFXConfig.slot0.kF = SwerveConfig.angleKF;
+        swerveAngleFXConfig.slot0.allowableClosedloopError = SwerveConfig.angleAllowableError;
         swerveAngleFXConfig.supplyCurrLimit = angleSupplyLimit;
         swerveAngleFXConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
 

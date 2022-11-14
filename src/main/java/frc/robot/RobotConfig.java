@@ -66,13 +66,13 @@ public final class RobotConfig {
     public void checkRobotType() {
         if (Robot.isSimulation()) {
             robotType = RobotType.SIM;
-            System.out.println("Robot Type: Simulation");
+            RobotTelemetry.print("Robot Type: Simulation");
         } else if (Robot.MAC.equals(praticeBotMAC)) {
             robotType = RobotType.PRACTICE;
-            System.out.println("Robot Type: Practice");
+            RobotTelemetry.print("Robot Type: Practice");
         } else {
             robotType = RobotType.COMP;
-            System.out.println("Robot Type: Competition");
+            RobotTelemetry.print("Robot Type: Competition");
         }
     }
 

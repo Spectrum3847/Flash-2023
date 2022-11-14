@@ -40,7 +40,7 @@ public class Swerve extends SubsystemBase {
                 };
         resetSteeringToAbsolute();
         odometry = new Odometry(this);
-        telemetry = new SwerveTelemetry();
+        telemetry = new SwerveTelemetry(this);
     }
 
     @Override
@@ -48,6 +48,7 @@ public class Swerve extends SubsystemBase {
         odometry.update();
         mSwerveModStates = getStatesCAN(); // Get the states once a loop
         telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModStates);
+        telemetry.logModuleAbsolutePositions();
     }
 
     public void drive(
