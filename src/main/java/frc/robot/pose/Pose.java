@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.swerve.SwerveConfig;
-import org.littletonrobotics.junction.Logger;
 
 /** Reports our expected, desired, and actual poses to dashboards */
 public class Pose extends SubsystemBase {
@@ -69,7 +68,7 @@ public class Pose extends SubsystemBase {
 
     private void updatePose(String name, Pose2d pose) {
         field.getObject(name).setPose(pose);
-        Logger.getInstance().recordOutput(name, pose);
+        Robot.log.logger.recordOutput(name, pose);
     }
 
     /** Sets the Odometry Pose to the given post */

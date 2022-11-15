@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 public final class RobotConfig {
 
-    private RobotType robotType;
+    public static final Double robotInitDelay = 2.0; // Seconds to wait before starting robot code
+    public static final boolean enableLogging = true; // Enable logging to file
+
     public final String Canivore = "3847";
     public final Motors motors = new Motors();
     public final Pneumatic pneumatic = new Pneumatic();
@@ -32,6 +34,8 @@ public final class RobotConfig {
     public final class Pneumatic {
         public final int ExamplePneumatic = 0;
     }
+
+    private RobotType robotType;
 
     public RobotConfig() {
         checkRobotType();
