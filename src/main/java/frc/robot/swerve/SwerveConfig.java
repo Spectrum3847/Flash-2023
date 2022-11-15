@@ -15,6 +15,7 @@ import frc.SpectrumLib.swerve.SwerveModuleConfig;
 import frc.robot.RobotConfig.Motors;
 
 public final class SwerveConfig {
+
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
@@ -73,8 +74,7 @@ public final class SwerveConfig {
     public static final double maxAccel = maxSpeed * 1.5; // take 1/2 sec to get to max speed.
     public static final double maxAngularVelocity = 3 * Math.PI;
     public static final double maxAngularAcceleration =
-            maxAngularVelocity * 2; // take 1/2 sec to get to max
-    // angular velocity
+            maxAngularVelocity * 2; // take 1/2 sec to get to max angular velocity
 
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -137,7 +137,7 @@ public final class SwerveConfig {
         public static double angleOffset = angleOffsetC;
         public static final SwerveModuleConfig config =
                 new SwerveModuleConfig(
-                        driveMotorID, angleMotorID, canCoderID, angleOffset, angleOffsetP);
+                        driveMotorID, angleMotorID, canCoderID, angleOffset, angleOffsetP);;
     }
 
     public TalonFXConfiguration swerveAngleFXConfig;

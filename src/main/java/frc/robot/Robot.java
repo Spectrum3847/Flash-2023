@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -14,16 +15,11 @@ import frc.robot.pose.Pose;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.commands.SwerveCommands;
 import frc.robot.trajectories.Trajectories;
-import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot {
     public static RobotConfig config;
+    public static RobotLog log;
     public static Swerve swerve;
     public static Pose pose;
     public static Trajectories trajectories;
@@ -69,21 +65,23 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void robotInit() {
-        RobotTelemetry.print("Robot Init Starting");
+        RobotTelemetry.print("--- Robot Init Starting ---");
+        Timer.delay(RobotConfig.robotInitDelay); // Wait for the robot to fully boot up
         // Set the MAC Address for this robot, useful for adjusting comp/practice bot
         // settings
         MAC = Network.getMACaddress();
+        RobotTelemetry.print("Robot MAC: " + MAC);
 
         // Set up the config
         config = new RobotConfig();
 
         // Setup the logger
-        setupAdvantageKit();
+        log = new RobotLog(this);
 
         // Initialize all systems, do this after getting the MAC address
         intializeSystems();
 
-        RobotTelemetry.print("Robot Init Complete");
+        RobotTelemetry.print("--- Robot Init Complete ---");
     }
 
     /**
@@ -113,18 +111,23 @@ public class Robot extends LoggedRobot {
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
-        RobotTelemetry.print("Disabled Init Starting");
+        RobotTelemetry.print("## Disabled Init Starting");
         resetCommandsAndButtons();
 
-        RobotTelemetry.print("Disabled Init Complete");
+        RobotTelemetry.print("## Disabled Init Complete");
     }
 
     @Override
     public void disabledPeriodic() {}
 
     @Override
+    public void disabledExit() {
+        RobotTelemetry.print("## Disabled Exit");
+    }
+
+    @Override
     public void autonomousInit() {
-        RobotTelemetry.print("Auton Init Starting");
+        RobotTelemetry.print("@@ Auton Init Starting");
         resetCommandsAndButtons();
 
         Command autonCommand = Auton.getAutonomousCommand();
@@ -132,7 +135,7 @@ public class Robot extends LoggedRobot {
             autonCommand.schedule();
             Auton.startAutonTimer();
         }
-        RobotTelemetry.print("Auton Init Complete");
+        RobotTelemetry.print("@@ Auton Init Complete");
     }
 
     /** This function is called periodically during autonomous. */
@@ -140,14 +143,16 @@ public class Robot extends LoggedRobot {
     public void autonomousPeriodic() {}
 
     @Override
-    public void autonomousExit() {}
+    public void autonomousExit() {
+        RobotTelemetry.print("@@ Auton Exit");
+    }
 
     @Override
     public void teleopInit() {
-        RobotTelemetry.print("Teleop Init Starting");
+        RobotTelemetry.print("$$ Teleop Init Starting");
         resetCommandsAndButtons();
 
-        RobotTelemetry.print("Teleop Init Complete");
+        RobotTelemetry.print("$$ Teleop Init Complete");
     }
 
     /** This function is called periodically during operator control. */
@@ -155,82 +160,36 @@ public class Robot extends LoggedRobot {
     public void teleopPeriodic() {}
 
     @Override
-    public void teleopExit() {}
+    public void teleopExit() {
+        RobotTelemetry.print("$$ Teleop Exit");
+    }
 
     @Override
     public void testInit() {
-        RobotTelemetry.print("Test Init Starting");
+        RobotTelemetry.print("~~ Test Init Starting");
         resetCommandsAndButtons();
 
-        RobotTelemetry.print("Test Init Complete");
+        RobotTelemetry.print("~~ Test Init Complete");
     }
 
     /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {}
 
+    @Override
+    public void testExit() {
+        RobotTelemetry.print("~~ Test Exit");
+    }
+
     /** This function is called once when a simulation starts */
     public void simulationInit() {
-        RobotTelemetry.print("Simulation Init Starting");
+        RobotTelemetry.print("--- Simulation Init Starting ---");
 
-        RobotTelemetry.print("Simulation Init Complete");
+        RobotTelemetry.print("--- Simulation Init Complete ---");
     }
 
     /** This function is called periodically during a simulation */
     public void simulationPeriodic() {
         PhysicsSim.getInstance().run();
-    }
-
-    /** Setups logging with advantageKit */
-    private void setupAdvantageKit() {
-        Logger logger = Logger.getInstance();
-
-        // Record metadata
-        logger.recordMetadata("MAC Address", MAC);
-        logger.recordMetadata("RuntimeType", getRuntimeType().toString());
-        logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-        logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-        logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-        logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-        logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-        switch (BuildConstants.DIRTY) {
-            case 0:
-                logger.recordMetadata("GitDirty", "All changes committed");
-                break;
-            case 1:
-                logger.recordMetadata("GitDirty", "Uncomitted changes");
-                break;
-            default:
-                logger.recordMetadata("GitDirty", "Unknown");
-                break;
-        }
-        // Set up data receivers & replay source
-        switch (config.getRobotType()) {
-                // Running on a comp robot, log to a USB stick
-            case COMP:
-            case PRACTICE:
-                logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
-                logger.addDataReceiver(new NT4Publisher());
-                LoggedPowerDistribution.getInstance(0, config.PowerDistributionType);
-                break;
-
-                // Running a physics simulator, log to local folder
-            case SIM:
-                logger.addDataReceiver(new WPILOGWriter(""));
-                logger.addDataReceiver(new NT4Publisher());
-                break;
-
-                // Replaying a log, set up replay source
-            case REPLAY:
-                setUseTiming(false); // Run as fast as possible
-                String logPath = LogFileUtil.findReplayLog();
-                logger.setReplaySource(new WPILOGReader(logPath));
-                logger.addDataReceiver(
-                        new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-                break;
-        }
-
-        // Start AdvantageKit logger
-        logger.start();
     }
 }

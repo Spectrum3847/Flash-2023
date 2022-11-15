@@ -12,7 +12,6 @@ import frc.SpectrumLib.util.Network;
 import frc.SpectrumLib.util.Util;
 import frc.robot.auton.Auton;
 import java.util.Map;
-import org.littletonrobotics.junction.Logger;
 
 public class RobotTelemetry extends TelemetrySubsystem {
 
@@ -108,17 +107,16 @@ public class RobotTelemetry extends TelemetrySubsystem {
     }
 
     private static void checkLogQueueAlert() {
-        logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
+        logReceiverQueueAlert.set(Robot.log.logger.getReceiverQueueFault());
     }
 
     private static void logCommands() {
         // Log scheduled commands
-        Logger.getInstance()
-                .recordOutput(
-                        "ActiveCommands/Scheduler",
-                        NetworkTableInstance.getDefault()
-                                .getEntry("/SmartDashboard/Scheduler/Names")
-                                .getStringArray(new String[] {}));
+        Robot.log.logger.recordOutput(
+                "ActiveCommands/Scheduler",
+                NetworkTableInstance.getDefault()
+                        .getEntry("/SmartDashboard/Scheduler/Names")
+                        .getStringArray(new String[] {}));
     }
 
     public static void print(String output) {

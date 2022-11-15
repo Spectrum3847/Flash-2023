@@ -1,19 +1,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import frc.robot.swerve.SwerveConfig;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class RobotConfig {
 
-    private RobotType robotType;
+    public static final Double robotInitDelay = 2.0; // Seconds to wait before starting robot code
+    public static final boolean enableLogging = true; // Enable logging to file
+
     public final String Canivore = "3847";
     public final Motors motors = new Motors();
     public final Pneumatic pneumatic = new Pneumatic();
@@ -42,22 +35,14 @@ public final class RobotConfig {
         public final int ExamplePneumatic = 0;
     }
 
+    private RobotType robotType;
+
     public RobotConfig() {
         checkRobotType();
         switch (getRobotType()) {
             case COMP:
-                // Set all the constants specifically for the competition robot
-                SwerveConfig.Mod0.angleOffset = SwerveConfig.Mod0.angleOffsetC;
-                SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetC;
-                SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetC;
-                SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetC;
                 break;
             case PRACTICE:
-                // Set all the constants specifically for the practice robot
-                SwerveConfig.Mod0.angleOffset = SwerveConfig.Mod0.angleOffsetP;
-                SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetP;
-                SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetP;
-                SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
                 break;
             case SIM:
             case REPLAY:
