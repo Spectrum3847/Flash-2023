@@ -17,30 +17,29 @@ public class LockSwerve extends CommandBase {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.swerve);
 
-        //Set the angles and minimum speeds to use when locking the swerve base
-        swerveModuleStates = new SwerveModuleState[]{
-            new SwerveModuleState(0.1, Rotation2d.fromDegrees(45)),
-            new SwerveModuleState(0.1, Rotation2d.fromDegrees(315)),
-            new SwerveModuleState(0.1, Rotation2d.fromDegrees(135)),
-            new SwerveModuleState(0.1, Rotation2d.fromDegrees(225))
-        };
+        // Set the angles and minimum speeds to use when locking the swerve base
+        swerveModuleStates =
+                new SwerveModuleState[] {
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(45)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(315)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(135)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(225))
+                };
     }
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {
-    }
+    public void initialize() {}
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        Robot.swerve.commandModuleStates(swerveModuleStates);
+        Robot.swerve.setModuleStates(swerveModuleStates);
     }
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {
-    }
+    public void end(boolean interrupted) {}
 
     // Returns true when the command should end.
     @Override

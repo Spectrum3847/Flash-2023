@@ -9,10 +9,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.SwerveConfig;
+import java.util.function.DoubleSupplier;
 
 public class PilotSwerve extends CommandBase {
 
     private double rotation;
+    private DoubleSupplier rotationSupplier;
     private Translation2d translation;
     private boolean fieldRelative;
     private boolean openLoop;
@@ -22,15 +24,33 @@ public class PilotSwerve extends CommandBase {
     /**
      * Creates a PilotSwerve Command to allow the pilot to control the swerve drive
      *
-     * @param s_Swerve
-     * @param fieldRelative
-     * @param openLoop
+     * @param rotationSupplier A supplier for the rotation value
+     * @param fieldRelative Whether the translation is field relative
+     * @param openLoop Whether the swerve drive is in open loop
      */
-    public PilotSwerve(boolean fieldRelative, boolean openLoop) {
+    public PilotSwerve(DoubleSupplier rotationSupplier, boolean fieldRelative, boolean openLoop) {
+        this.rotation = rotationSupplier.getAsDouble();
+        this.rotationSupplier = rotationSupplier;
         this.s_Swerve = Robot.swerve;
         addRequirements(s_Swerve);
         this.fieldRelative = fieldRelative;
         this.openLoop = openLoop;
+    }
+
+    public PilotSwerve(DoubleSupplier rotationSupplier) {
+        this(rotationSupplier, false, false);
+    }
+
+    public PilotSwerve(boolean fieldRelative, boolean openLoop) {
+        this(() -> 0, fieldRelative, openLoop);
+    }
+
+    public PilotSwerve(boolean fieldRelative) {
+        this(() -> 0, fieldRelative, false);
+    }
+
+    public PilotSwerve() {
+        this(() -> 0, false, false);
     }
 
     @Override
@@ -44,9 +64,14 @@ public class PilotSwerve extends CommandBase {
             // Multiply by max speed to scale the pilot inputs to velcoity in m/s
             translation = new Translation2d(yAxis, xAxis).times(SwerveConfig.maxSpeed);
 
-            // Multiply by max angular velocity to scale the pilot inputs to angular velocity in
-            // rad/s
-            rotation = rAxis * SwerveConfig.maxAngularVelocity;
+            if (rotationSupplier == null) { // Check if we got a rotation value from the constructor
+                // Multiply by max angular velocity to scale the pilot inputs to angular
+                // velocity in
+                // rad/s
+                rotation = rAxis * SwerveConfig.maxAngularVelocity;
+            } else {
+                rotation = rotationSupplier.getAsDouble();
+            }
 
             s_Swerve.drive(translation, rotation, fieldRelative, openLoop);
         } else {

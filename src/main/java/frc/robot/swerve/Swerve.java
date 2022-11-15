@@ -6,8 +6,6 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -55,14 +53,7 @@ public class Swerve extends SubsystemBase {
 
     public void drive(
             Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        // If pidTurn is getting a value override the drivers steering control
-        if (pidTurn != 0) {
-            rotation = pidTurn;
-        }
 
-        if (Math.abs(rotation) < 0.03) {
-            rotation = 0;
-        }
         ChassisSpeeds speeds;
         if (fieldRelative) {
             speeds =
@@ -83,27 +74,10 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-     * Configure the swerve modules in an X and give them a small amount of power
-     * Used to make the robot hard to push.
+     * Configure the swerve modules in an X and give them a small amount of power Used to make the
+     * robot hard to push.
      */
-    public void lockRobot(){
-
-    }
-
-    public void commandModuleStates(SwerveModuleState[] states) {
-        for (SwerveModule mod : mSwerveMods) {
-            mod.setDesiredState(states[mod.moduleNumber], false);
-        }
-    }
-
-    public void useOutput(double output) {
-        pidTurn = output * SwerveConfig.maxAngularVelocity;
-    }
-
-    // Used for control loops that give a rotational velocity directly
-    public void setRotationalVelocity(double rotationalVelocity) {
-        pidTurn = rotationalVelocity;
-    }
+    public void lockRobot() {}
 
     // Reset AngleMotors to Absolute
     public void resetSteeringToAbsolute() {

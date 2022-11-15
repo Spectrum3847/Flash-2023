@@ -121,7 +121,7 @@ public class SwerveModule {
         return position;
     }
 
-    public Rotation2d getTargetAngle(){
+    public Rotation2d getTargetAngle() {
         return lastAngle;
     }
 
