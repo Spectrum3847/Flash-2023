@@ -39,11 +39,13 @@ public class PilotGamepad extends Gamepad {
     }
 
     public double getDriveX() {
-        return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getX());
+        return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getX())
+                * (PilotConfig.xInvert ? -1 : 1);
     }
 
     public double getDriveR() {
-        return steeringCurve.calculateMappedVal(this.gamepad.triggers.getTwist());
+        return steeringCurve.calculateMappedVal(this.gamepad.triggers.getTwist())
+                * (PilotConfig.steeringInvert ? -1 : 1);
     }
 
     public void rumble(double intensity) {
