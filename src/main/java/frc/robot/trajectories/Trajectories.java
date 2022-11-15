@@ -50,8 +50,12 @@ public class Trajectories extends SubsystemBase {
         return thetaController.calculate(Robot.swerve.gyro.getRadians(), goalAngle);
     }
 
+    public DoubleSupplier calculteThetaSupplier(DoubleSupplier goalAngleSupplier) {
+        return () -> calculteTheta(goalAngleSupplier.getAsDouble());
+    }
+
     public DoubleSupplier calculteThetaSupplier(double goalAngle) {
-        return () -> calculteTheta(goalAngle);
+        return calculteThetaSupplier(() -> goalAngle);
     }
 
     @Override

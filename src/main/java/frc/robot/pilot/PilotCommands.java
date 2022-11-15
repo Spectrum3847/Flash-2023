@@ -5,8 +5,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Robot;
 import frc.robot.swerve.commands.SwerveDrive;
 import frc.robot.trajectories.TrajectoriesCommands;
+import java.util.function.DoubleSupplier;
 
-/** Add your docs here. */
+/** Should contain commands used only by the pilot controller and the rumble pilot command */
 public class PilotCommands {
 
     /** Set default command to turn off the rumble */
@@ -14,7 +15,7 @@ public class PilotCommands {
         Robot.pilotGamepad.setDefaultCommand(rumblePilot(0).withName("DisablePilotRumble"));
     }
 
-    // Field Oriented Drive
+    /** Field Oriented Drive */
     public static Command pilotSwerve() {
         return new SwerveDrive(
                         () -> Robot.pilotGamepad.getDriveX(),
@@ -25,7 +26,7 @@ public class PilotCommands {
                 .withName("PilotSwerve");
     }
 
-    // Robot Oriented Drive
+    /** Robot Oriented Drive */
     public static Command fpvPilotSwerve() {
         return new SwerveDrive(
                         () -> Robot.pilotGamepad.getDriveX(),
@@ -36,14 +37,19 @@ public class PilotCommands {
                 .withName("fpvPilotSwerve");
     }
 
-    // Drive while aiming to a specific angle, uses theta controller from Trajectories
+    /** Drive while aiming to a specific angle, uses theta controller from Trajectories */
     public static Command aimPilotDrive(double goalAngle) {
+        return aimPilotDrive(() -> goalAngle);
+    }
+
+    /** Reset the Theata Controller and then run the SwerveDrive command and pass a goal Supplier */
+    public static Command aimPilotDrive(DoubleSupplier goalAngleSupplier) {
         return TrajectoriesCommands.resetThetaController()
                 .andThen(
                         new SwerveDrive(
                                 () -> Robot.pilotGamepad.getDriveX(),
                                 () -> Robot.pilotGamepad.getDriveY(),
-                                Robot.trajectories.calculteThetaSupplier(goalAngle),
+                                Robot.trajectories.calculteThetaSupplier(goalAngleSupplier),
                                 true,
                                 false))
                 .withName("AimPilotDrive");
