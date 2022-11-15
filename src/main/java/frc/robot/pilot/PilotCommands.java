@@ -9,11 +9,12 @@ public class PilotCommands {
 
     /** Set default command to turn off the rumble */
     public static void setupDefaultCommand() {
-        Robot.pilotGamepad.setDefaultCommand(rumblePilot(0));
+        Robot.pilotGamepad.setDefaultCommand(rumblePilot(0).withName("DisablePilotRumble"));
     }
 
     /** Command that can be used to rumble the pilot controller */
     public static Command rumblePilot(double intensity) {
-        return new RunCommand(() -> Robot.pilotGamepad.rumble(intensity), Robot.pilotGamepad);
+        return new RunCommand(() -> Robot.pilotGamepad.rumble(intensity), Robot.pilotGamepad)
+                .withName("RumblePilot");
     }
 }

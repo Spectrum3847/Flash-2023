@@ -6,7 +6,7 @@ import frc.robot.Robot;
 
 public class SwerveCommands {
     public static void setupDefaultCommand() {
-        Robot.swerve.setDefaultCommand(new PilotSwerve(true, false));
+        Robot.swerve.setDefaultCommand(new PilotSwerve());
     }
 
     public static Command FPVswerve() {

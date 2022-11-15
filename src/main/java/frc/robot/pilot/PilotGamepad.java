@@ -1,7 +1,9 @@
 package frc.robot.pilot;
 
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.SpectrumLib.gamepads.Gamepad;
 import frc.SpectrumLib.gamepads.mapping.ExpCurve;
+import frc.robot.trajectories.TrajectoriesCommands;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
@@ -22,7 +24,10 @@ public class PilotGamepad extends Gamepad {
         super("PILOT", PilotConstants.port);
     }
 
-    public void setupTeleopButtons() {}
+    public void setupTeleopButtons() {
+        gamepad.aButton.whileTrue(TrajectoriesCommands.snapPilotDrive(90));
+        gamepad.bButton.whileTrue(new PrintCommand("Test"));
+    }
 
     public void setupDisabledButtons() {}
 

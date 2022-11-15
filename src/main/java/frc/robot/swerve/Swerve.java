@@ -53,14 +53,7 @@ public class Swerve extends SubsystemBase {
 
     public void drive(
             Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        // If pidTurn is getting a value override the drivers steering control
-        if (pidTurn != 0) {
-            rotation = pidTurn;
-        }
 
-        if (Math.abs(rotation) < 0.03) {
-            rotation = 0;
-        }
         ChassisSpeeds speeds;
         if (fieldRelative) {
             speeds =
@@ -85,15 +78,6 @@ public class Swerve extends SubsystemBase {
      * robot hard to push.
      */
     public void lockRobot() {}
-
-    public void useOutput(double output) {
-        pidTurn = output * SwerveConfig.maxAngularVelocity;
-    }
-
-    // Used for control loops that give a rotational velocity directly
-    public void setRotationalVelocity(double rotationalVelocity) {
-        pidTurn = rotationalVelocity;
-    }
 
     // Reset AngleMotors to Absolute
     public void resetSteeringToAbsolute() {

@@ -19,6 +19,13 @@
       "/Shuffleboard/Main/Auton Selection": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Scheduler": "Scheduler"
+    },
+    "windows": {
+      "/SmartDashboard/Scheduler": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {
