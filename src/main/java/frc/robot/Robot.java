@@ -73,6 +73,7 @@ public class Robot extends LoggedRobot {
         // Set the MAC Address for this robot, useful for adjusting comp/practice bot
         // settings
         MAC = Network.getMACaddress();
+        RobotTelemetry.print("Robot MAC: " + MAC);
 
         // Set up the config
         config = new RobotConfig();

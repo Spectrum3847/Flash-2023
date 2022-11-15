@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import frc.robot.swerve.SwerveConfig;
 
 public final class RobotConfig {
 
@@ -36,20 +35,14 @@ public final class RobotConfig {
 
     public RobotConfig() {
         checkRobotType();
+        update();
+    }
+
+    public void update() {
         switch (getRobotType()) {
             case COMP:
-                // Set all the constants specifically for the competition robot
-                SwerveConfig.Mod0.angleOffset = SwerveConfig.Mod0.angleOffsetC;
-                SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetC;
-                SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetC;
-                SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetC;
                 break;
             case PRACTICE:
-                // Set all the constants specifically for the practice robot
-                SwerveConfig.Mod0.angleOffset = SwerveConfig.Mod0.angleOffsetP;
-                SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetP;
-                SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetP;
-                SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
                 break;
             case SIM:
             case REPLAY:
