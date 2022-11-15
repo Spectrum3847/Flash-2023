@@ -6,13 +6,16 @@ package frc.robot.trajectories;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import java.util.function.DoubleSupplier;
 
 public class Trajectories extends SubsystemBase {
     public ProfiledPIDController thetaController;
     public PIDController xController;
     public PIDController yController;
+    public Rotation2d startAngle;
 
     /** Creates a new Trajectory. */
     public Trajectories() {
@@ -35,11 +38,20 @@ public class Trajectories extends SubsystemBase {
     }
 
     public void resetTheta() {
-        thetaController.reset(Robot.swerve.gyro.getRadians());
+        startAngle = Robot.swerve.gyro.getYaw();
+        thetaController.reset(startAngle.getRadians());
+    }
+
+    public Rotation2d getStartAngle() {
+        return startAngle;
     }
 
     public double calculteTheta(double goalAngle) {
         return thetaController.calculate(Robot.swerve.gyro.getRadians(), goalAngle);
+    }
+
+    public DoubleSupplier calculteThetaSupplier(double goalAngle) {
+        return () -> calculteTheta(goalAngle);
     }
 
     @Override
