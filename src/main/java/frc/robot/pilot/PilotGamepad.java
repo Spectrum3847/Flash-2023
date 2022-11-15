@@ -36,7 +36,8 @@ public class PilotGamepad extends Gamepad {
 
     public double getDriveY() {
         return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getY())
-                * SwerveConfig.maxSpeed* (PilotConstants.yInvert ? -1 : 1);
+                * SwerveConfig.maxSpeed
+                * (PilotConstants.yInvert ? -1 : 1);
     }
 
     public double getDriveX() {
