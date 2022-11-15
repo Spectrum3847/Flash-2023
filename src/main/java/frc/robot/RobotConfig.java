@@ -35,10 +35,6 @@ public final class RobotConfig {
 
     public RobotConfig() {
         checkRobotType();
-        update();
-    }
-
-    public void update() {
         switch (getRobotType()) {
             case COMP:
                 break;
