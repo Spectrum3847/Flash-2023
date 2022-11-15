@@ -8,19 +8,19 @@ import frc.robot.swerve.commands.LockSwerve;
 public class PilotGamepad extends Gamepad {
     public static ExpCurve throttleCurve =
             new ExpCurve(
-                    PilotConstants.throttleExp,
+                    PilotConfig.throttleExp,
                     0,
-                    PilotConstants.throttleScaler,
-                    PilotConstants.throttleDeadband);
+                    PilotConfig.throttleScaler,
+                    PilotConfig.throttleDeadband);
     public static ExpCurve steeringCurve =
             new ExpCurve(
-                    PilotConstants.steeringExp,
+                    PilotConfig.steeringExp,
                     0,
-                    PilotConstants.steeringScaler,
-                    PilotConstants.steeringDeadband);
+                    PilotConfig.steeringScaler,
+                    PilotConfig.steeringDeadband);
 
     public PilotGamepad() {
-        super("PILOT", PilotConstants.port);
+        super("PILOT", PilotConfig.port);
     }
 
     public void setupTeleopButtons() {
@@ -35,7 +35,7 @@ public class PilotGamepad extends Gamepad {
 
     public double getDriveY() {
         return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getY())
-                * (PilotConstants.yInvert ? -1 : 1);
+                * (PilotConfig.yInvert ? -1 : 1);
     }
 
     public double getDriveX() {

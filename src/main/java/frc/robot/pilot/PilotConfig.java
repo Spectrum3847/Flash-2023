@@ -3,7 +3,7 @@ package frc.robot.pilot;
 import frc.robot.swerve.SwerveConfig;
 
 /** Constants used by the Pilot Gamepad */
-public class PilotConstants {
+public class PilotConfig {
     public static final int port = 0;
 
     public static final double throttleExp = 1.2;
