@@ -6,6 +6,8 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -70,7 +72,6 @@ public class Swerve extends SubsystemBase {
             speeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
         }
 
-        // speeds = limitAcceleration(speeds);
         SwerveModuleState[] swerveModuleStates =
                 SwerveConfig.swerveKinematics.toSwerveModuleStates(speeds);
 
@@ -79,9 +80,20 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-        drive_y = translation.getY();
-        drive_x = translation.getX();
-        drive_rotation = rotation;
+    }
+
+    /**
+     * Configure the swerve modules in an X and give them a small amount of power
+     * Used to make the robot hard to push.
+     */
+    public void lockRobot(){
+
+    }
+
+    public void commandModuleStates(SwerveModuleState[] states) {
+        for (SwerveModule mod : mSwerveMods) {
+            mod.setDesiredState(states[mod.moduleNumber], false);
+        }
     }
 
     public void useOutput(double output) {

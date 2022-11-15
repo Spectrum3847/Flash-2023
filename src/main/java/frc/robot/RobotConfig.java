@@ -23,6 +23,10 @@ public final class RobotConfig {
     public static final int pigeonID = 0;
     public static final int ledPWMport = 0;
 
+    // Timeout constants
+    public static final int kLongCANTimeoutMs = 100;
+    public static final int kCANTimeoutMs = 10;
+
     public final class Motors {
         public static final int driveMotor0 = 1;
         public static final int angleMotor0 = 2;
