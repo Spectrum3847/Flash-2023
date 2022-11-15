@@ -2,7 +2,6 @@ package frc.robot.pilot;
 
 import frc.SpectrumLib.gamepads.Gamepad;
 import frc.SpectrumLib.gamepads.mapping.ExpCurve;
-import frc.robot.swerve.SwerveConfig;
 import frc.robot.swerve.commands.LockSwerve;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
@@ -26,7 +25,7 @@ public class PilotGamepad extends Gamepad {
 
     public void setupTeleopButtons() {
         gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(90).withName("Snap 90"));
-        gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
+        gamepad.bButton.and(gamepad.yButton).whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.xButton.whileTrue(new LockSwerve());
     }
 
@@ -36,18 +35,15 @@ public class PilotGamepad extends Gamepad {
 
     public double getDriveY() {
         return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getY())
-                * SwerveConfig.maxSpeed
                 * (PilotConstants.yInvert ? -1 : 1);
     }
 
     public double getDriveX() {
-        return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getX())
-                * SwerveConfig.maxSpeed;
+        return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getX());
     }
 
     public double getDriveR() {
-        return steeringCurve.calculateMappedVal(this.gamepad.triggers.getTwist())
-                * SwerveConfig.maxAngularVelocity;
+        return steeringCurve.calculateMappedVal(this.gamepad.triggers.getTwist());
     }
 
     public void rumble(double intensity) {
