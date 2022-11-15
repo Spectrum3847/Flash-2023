@@ -6,8 +6,6 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -83,18 +81,10 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-     * Configure the swerve modules in an X and give them a small amount of power
-     * Used to make the robot hard to push.
+     * Configure the swerve modules in an X and give them a small amount of power Used to make the
+     * robot hard to push.
      */
-    public void lockRobot(){
-
-    }
-
-    public void commandModuleStates(SwerveModuleState[] states) {
-        for (SwerveModule mod : mSwerveMods) {
-            mod.setDesiredState(states[mod.moduleNumber], false);
-        }
-    }
+    public void lockRobot() {}
 
     public void useOutput(double output) {
         pidTurn = output * SwerveConfig.maxAngularVelocity;
