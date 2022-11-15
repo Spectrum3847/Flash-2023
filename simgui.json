@@ -1,6 +1,16 @@
 {
   "HALProvider": {
     "Other Devices": {
+      "CANCoder[3]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Pigeon 2[0]": {
+        "header": {
+          "open": true
+        }
+      },
       "Talon FX[2]/Fwd Limit": {
         "header": {
           "open": true
