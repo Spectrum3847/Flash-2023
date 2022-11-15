@@ -4,10 +4,8 @@ PID configuration and commands for x, y, & theta controllers and trajectory foll
 This is seperated from Auton because we can use parts of this code in Telop as well for automated tasks, espcially the spin in place commands, and eventually the automated trajectory generation and being able to automatically drive to loading or scoring locations.
 
 ## Tasks
-* PID controllers for x, y, & theta
-* Command to snap to a heading
 * Command to follow a trajectory
-* Command to generate a trajectory
+* Command to generate a trajectory from where we currently are, to some point on the field
 * Command to write to orient wheels before following first command. (More below)
 
 "The other option is to create a command that will take in the trajectory you want to run, and orient the modules based on the first state. Here’s some example steps for that:
