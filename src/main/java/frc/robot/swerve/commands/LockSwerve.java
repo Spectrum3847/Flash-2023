@@ -20,10 +20,10 @@ public class LockSwerve extends CommandBase {
         // Set the angles and minimum speeds to use when locking the swerve base
         swerveModuleStates =
                 new SwerveModuleState[] {
-                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(45)),
-                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(315)),
                     new SwerveModuleState(0.1, Rotation2d.fromDegrees(135)),
-                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(225))
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(45)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(225)),
+                    new SwerveModuleState(0.1, Rotation2d.fromDegrees(315))
                 };
     }
 

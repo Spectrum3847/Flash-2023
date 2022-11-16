@@ -25,7 +25,7 @@ public class PilotGamepad extends Gamepad {
 
     public void setupTeleopButtons() {
         gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(90).withName("Snap 90"));
-        gamepad.bButton.and(gamepad.yButton).whileTrue(PilotCommands.fpvPilotSwerve());
+        gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.xButton.whileTrue(new LockSwerve());
     }
 
