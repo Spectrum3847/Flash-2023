@@ -17,9 +17,4 @@ public class TrajectoriesConfig {
     public static final double kDYController = kDXController;
     public static final double kPThetaController = 5;
     public static final double kDThetaController = 0.01;
-
-    // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-            new TrapezoidProfile.Constraints(
-                    kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 }

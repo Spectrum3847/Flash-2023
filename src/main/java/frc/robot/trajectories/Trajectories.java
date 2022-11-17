@@ -12,7 +12,7 @@ import frc.robot.Robot;
 import java.util.function.DoubleSupplier;
 
 public class Trajectories extends SubsystemBase {
-    public ProfiledPIDController thetaController;
+    public PIDController thetaController;
     public PIDController xController;
     public PIDController yController;
     public Rotation2d startAngle;
@@ -20,11 +20,10 @@ public class Trajectories extends SubsystemBase {
     /** Creates a new Trajectory. */
     public Trajectories() {
         thetaController =
-                new ProfiledPIDController(
+                new PIDController(
                         TrajectoriesConfig.kPThetaController,
                         0,
-                        TrajectoriesConfig.kDThetaController,
-                        TrajectoriesConfig.kThetaControllerConstraints);
+                        TrajectoriesConfig.kDThetaController);
         // Setup thetaController used for auton and automatic turns
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -39,7 +38,7 @@ public class Trajectories extends SubsystemBase {
 
     public void resetTheta() {
         startAngle = Robot.swerve.gyro.getYaw();
-        thetaController.reset(startAngle.getRadians());
+        thetaController.reset();
     }
 
     public Rotation2d getStartAngle() {
