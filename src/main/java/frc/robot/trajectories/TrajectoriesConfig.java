@@ -1,6 +1,5 @@
 package frc.robot.trajectories;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.swerve.SwerveConfig;
 
 public class TrajectoriesConfig {

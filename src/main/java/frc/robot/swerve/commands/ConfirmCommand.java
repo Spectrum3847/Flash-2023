@@ -6,30 +6,30 @@ import frc.robot.RobotTelemetry;
 
 // Uses the Pilot start/menu button to move on to the next method
 public class ConfirmCommand extends CommandBase {
-  private String text;
+    private String text;
 
-  /** Creates a new ConfirmCommand. */
-  public ConfirmCommand(String text) {
-    this.text = text;
-  }
+    /** Creates a new ConfirmCommand. */
+    public ConfirmCommand(String text) {
+        this.text = text;
+    }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    RobotTelemetry.print(text);
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        RobotTelemetry.print(text);
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {}
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return Robot.pilotGamepad.gamepad.startButton.getAsBoolean();
-  }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return Robot.pilotGamepad.gamepad.startButton.getAsBoolean();
+    }
 }

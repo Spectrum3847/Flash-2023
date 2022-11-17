@@ -11,36 +11,43 @@ import frc.robot.swerve.SwerveConfig;
 
 public class FollowTrajectory extends PPSwerveControllerCommand {
 
-  /** Creates a new FollowTrajectory. */
-  public FollowTrajectory(PathPlannerTrajectory trajectory) {
-    super(trajectory, Robot.pose::getEstimatedPosition, SwerveConfig.swerveKinematics, 
-    Robot.trajectories.xController, Robot.trajectories.yController, Robot.trajectories.thetaController, Robot.swerve::setModuleStates, Robot.swerve);
+    /** Creates a new FollowTrajectory. */
+    public FollowTrajectory(PathPlannerTrajectory trajectory) {
+        super(
+                trajectory,
+                Robot.pose::getEstimatedPosition,
+                SwerveConfig.swerveKinematics,
+                Robot.trajectories.xController,
+                Robot.trajectories.yController,
+                Robot.trajectories.thetaController,
+                Robot.swerve::setModuleStates,
+                Robot.swerve);
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.swerve);
-  }
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(Robot.swerve);
+    }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    super.initialize();
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        super.initialize();
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    super.execute();
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        super.execute();
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    super.end(interrupted);
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return super.isFinished();
-  }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return super.isFinished();
+    }
 }
