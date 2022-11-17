@@ -21,6 +21,7 @@ public class SwerveDrive extends CommandBase {
     private DoubleSupplier ySupplier;
     private DoubleSupplier xSupplier;
     private DoubleSupplier rSupplier;
+    private Translation2d centerOfRotationMeters;
 
     /**
      * Creates a SwerveDrive command that allows for simple x and y translation of the robot and r
@@ -35,7 +36,8 @@ public class SwerveDrive extends CommandBase {
             DoubleSupplier ySupplier,
             DoubleSupplier rSupplier,
             boolean fieldRelative,
-            boolean openLoop) {
+            boolean openLoop,
+            Translation2d centerOfRotationMeters) {
         this.swerve = Robot.swerve;
         addRequirements(swerve);
         this.fieldRelative = fieldRelative;
@@ -43,6 +45,29 @@ public class SwerveDrive extends CommandBase {
         this.ySupplier = ySupplier;
         this.xSupplier = xSupplier;
         this.rSupplier = rSupplier;
+        this.centerOfRotationMeters = centerOfRotationMeters;
+    }
+
+    public SwerveDrive(
+            DoubleSupplier xSupplier,
+            DoubleSupplier ySupplier,
+            DoubleSupplier rSupplier,
+            boolean fieldRelative,
+            boolean openLoop) {
+        this(xSupplier, ySupplier, rSupplier, fieldRelative, openLoop, new Translation2d());
+    }
+
+    public SwerveDrive(
+            DoubleSupplier xSupplier,
+            DoubleSupplier ySupplier,
+            DoubleSupplier rSupplier,
+            boolean fieldRelative) {
+        this(xSupplier, ySupplier, rSupplier, fieldRelative, false, new Translation2d());
+    }
+
+    public SwerveDrive(
+            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rSupplier) {
+        this(xSupplier, ySupplier, rSupplier, true, false);
     }
 
     public void intialize() {}
@@ -55,7 +80,7 @@ public class SwerveDrive extends CommandBase {
 
         translation = new Translation2d(yAxis, xAxis);
         rotation = rAxis;
-        swerve.drive(translation, rotation, fieldRelative, openLoop);
+        swerve.drive(translation, rotation, fieldRelative, openLoop, centerOfRotationMeters);
     }
 
     public void end(boolean interrupted) {

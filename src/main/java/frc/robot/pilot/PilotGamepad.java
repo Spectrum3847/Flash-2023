@@ -3,6 +3,8 @@ package frc.robot.pilot;
 import edu.wpi.first.math.util.Units;
 import frc.SpectrumLib.gamepads.Gamepad;
 import frc.SpectrumLib.gamepads.mapping.ExpCurve;
+import frc.robot.pilot.commands.DodgeDrive;
+import frc.robot.pilot.commands.PilotCommands;
 import frc.robot.swerve.commands.LockSwerve;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
@@ -26,6 +28,7 @@ public class PilotGamepad extends Gamepad {
                 PilotCommands.aimPilotDrive(Units.degreesToRadians(90)).withName("Snap 90"));
         gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.xButton.whileTrue(new LockSwerve());
+        gamepad.yButton.whileTrue(new DodgeDrive());
     }
 
     public void setupDisabledButtons() {}
@@ -44,6 +47,7 @@ public class PilotGamepad extends Gamepad {
         return y;
     }
 
+    // Positive is counter-clockwise, left Trigger is positive
     public double getDriveR() {
         double r =
                 steeringCurve.calculateMappedVal(gamepad.triggers.getTwist())

@@ -1,4 +1,4 @@
-package frc.robot.pilot;
+package frc.robot.pilot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -20,9 +20,7 @@ public class PilotCommands {
         return new SwerveDrive(
                         () -> Robot.pilotGamepad.getDriveX(),
                         () -> Robot.pilotGamepad.getDriveY(),
-                        () -> Robot.pilotGamepad.getDriveR(),
-                        true,
-                        false)
+                        () -> Robot.pilotGamepad.getDriveR())
                 .withName("PilotSwerve");
     }
 
@@ -32,7 +30,6 @@ public class PilotCommands {
                         () -> Robot.pilotGamepad.getDriveX(),
                         () -> Robot.pilotGamepad.getDriveY(),
                         () -> Robot.pilotGamepad.getDriveR(),
-                        false,
                         false)
                 .withName("fpvPilotSwerve");
     }
