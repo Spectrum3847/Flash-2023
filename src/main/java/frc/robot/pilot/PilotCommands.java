@@ -38,18 +38,18 @@ public class PilotCommands {
     }
 
     /** Drive while aiming to a specific angle, uses theta controller from Trajectories */
-    public static Command aimPilotDrive(double goalAngle) {
-        return aimPilotDrive(() -> goalAngle);
+    public static Command aimPilotDrive(double goalAngleRadians) {
+        return aimPilotDrive(() -> goalAngleRadians);
     }
 
     /** Reset the Theata Controller and then run the SwerveDrive command and pass a goal Supplier */
-    public static Command aimPilotDrive(DoubleSupplier goalAngleSupplier) {
+    public static Command aimPilotDrive(DoubleSupplier goalAngleSupplierRadians) {
         return TrajectoriesCommands.resetThetaController()
                 .andThen(
                         new SwerveDrive(
                                 () -> Robot.pilotGamepad.getDriveX(),
                                 () -> Robot.pilotGamepad.getDriveY(),
-                                Robot.trajectories.calculteThetaSupplier(goalAngleSupplier),
+                                Robot.trajectories.calculteThetaSupplier(goalAngleSupplierRadians),
                                 true,
                                 false))
                 .withName("AimPilotDrive");

@@ -1,17 +1,12 @@
 package frc.robot.pilot;
 
+import edu.wpi.first.math.util.Units;
 import frc.SpectrumLib.gamepads.Gamepad;
 import frc.SpectrumLib.gamepads.mapping.ExpCurve;
 import frc.robot.swerve.commands.LockSwerve;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
-    public static ExpCurve throttleCurve =
-            new ExpCurve(
-                    PilotConfig.throttleExp,
-                    0,
-                    PilotConfig.throttleScaler,
-                    PilotConfig.throttleDeadband);
     public static ExpCurve steeringCurve =
             new ExpCurve(
                     PilotConfig.steeringExp,
@@ -21,10 +16,14 @@ public class PilotGamepad extends Gamepad {
 
     public PilotGamepad() {
         super("PILOT", PilotConfig.port);
+        gamepad.leftStick.setDeadband(PilotConfig.throttleDeadband);
+        gamepad.leftStick.configXCurve(PilotConfig.throttleExp, PilotConfig.xScaler);
+        gamepad.leftStick.configYCurve(PilotConfig.throttleExp, PilotConfig.yScaler);
     }
 
     public void setupTeleopButtons() {
-        gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(90).withName("Snap 90"));
+        gamepad.aButton.whileTrue(
+                PilotCommands.aimPilotDrive(Units.degreesToRadians(90)).withName("Snap 90"));
         gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.xButton.whileTrue(new LockSwerve());
     }
@@ -33,19 +32,24 @@ public class PilotGamepad extends Gamepad {
 
     public void setupTestButtons() {}
 
-    public double getDriveY() {
-        return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getY())
-                * (PilotConfig.yInvert ? -1 : 1);
+    public double getDriveX() {
+        double x = gamepad.leftStick.getX();
+        // Robot.log.logger.recordOutput("Pilot/X", x);
+        return x;
     }
 
-    public double getDriveX() {
-        return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getX())
-                * (PilotConfig.xInvert ? -1 : 1);
+    public double getDriveY() {
+        double y = gamepad.leftStick.getY();
+        // Robot.log.logger.recordOutput("Pilot/Y", y);
+        return y;
     }
 
     public double getDriveR() {
-        return steeringCurve.calculateMappedVal(this.gamepad.rightStick.getX())
-                * (PilotConfig.steeringInvert ? -1 : 1);
+        double r =
+                steeringCurve.calculateMappedVal(gamepad.triggers.getTwist())
+                        * PilotConfig.steeringScaler;
+
+        return r;
     }
 
     public void rumble(double intensity) {
