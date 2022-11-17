@@ -62,7 +62,7 @@ public class SwerveModule {
         desiredState = CTREModuleState.optimize(desiredState, getState().angle);
 
         if (isOpenLoop) {
-            double percentOutput = desiredState.speedMetersPerSecond / SwerveConfig.maxSpeed;
+            double percentOutput = desiredState.speedMetersPerSecond / SwerveConfig.maxVelocity;
             mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
         } else {
             double velocity =
@@ -77,11 +77,11 @@ public class SwerveModule {
                     feedforward.calculate(desiredState.speedMetersPerSecond));
         }
 
-        // Prevent rotating module if speed is less then 1% and the angle change is less than 5deg.
+        // Prevent rotating module if speed is less then 1%
         // Prevents Jittering.
         Rotation2d angle = desiredState.angle;
-        if ((Math.abs(desiredState.speedMetersPerSecond) < (SwerveConfig.maxSpeed * 0.01))
-                && Math.abs(lastAngle.minus(angle).getDegrees()) < 5) {
+
+        if ((Math.abs(desiredState.speedMetersPerSecond) < (SwerveConfig.maxVelocity * 0.01))) {
             angle = lastAngle;
         }
 

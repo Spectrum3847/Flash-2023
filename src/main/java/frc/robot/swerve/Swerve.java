@@ -20,11 +20,6 @@ public class Swerve extends SubsystemBase {
     public SwerveTelemetry telemetry;
     public SwerveModule[] mSwerveMods;
     private SwerveModuleState[] mSwerveModStates;
-    public double pidTurn = 0;
-    public double drive_x = 0;
-    public double drive_y = 0;
-    public double drive_rotation = 0;
-    ChassisSpeeds lastRequestedVelocity = new ChassisSpeeds(0, 0, 0);
 
     public Swerve() {
         setName("Swerve");
@@ -66,18 +61,13 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] swerveModuleStates =
                 SwerveConfig.swerveKinematics.toSwerveModuleStates(speeds);
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConfig.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConfig.maxVelocity);
 
+        telemetry.logModuleStates("SwerveModuleStates/Desired", swerveModuleStates);
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
     }
-
-    /**
-     * Configure the swerve modules in an X and give them a small amount of power Used to make the
-     * robot hard to push.
-     */
-    public void lockRobot() {}
 
     // Reset AngleMotors to Absolute
     public void resetSteeringToAbsolute() {
@@ -88,7 +78,7 @@ public class Swerve extends SubsystemBase {
 
     /* Used by SwerveFollowCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConfig.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConfig.maxVelocity);
 
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);

@@ -23,17 +23,16 @@ public class SwerveDrive extends CommandBase {
     private DoubleSupplier rSupplier;
 
     /**
-     * Creates a SwerveDrive command that allows for simple x and y translation of the robot. This
-     * can be used for simiple autonomous driving like drive forward 2 secs when used with a
-     * timeout.
+     * Creates a SwerveDrive command that allows for simple x and y translation of the robot and r
+     * rotation.
      *
      * @param fieldRelative
      * @param ySupplier
      * @param xSupplier
      */
     public SwerveDrive(
-            DoubleSupplier ySupplier,
             DoubleSupplier xSupplier,
+            DoubleSupplier ySupplier,
             DoubleSupplier rSupplier,
             boolean fieldRelative,
             boolean openLoop) {
@@ -50,8 +49,8 @@ public class SwerveDrive extends CommandBase {
 
     @Override
     public void execute() {
-        double yAxis = ySupplier.getAsDouble();
         double xAxis = xSupplier.getAsDouble();
+        double yAxis = ySupplier.getAsDouble();
         double rAxis = rSupplier.getAsDouble();
 
         translation = new Translation2d(yAxis, xAxis);

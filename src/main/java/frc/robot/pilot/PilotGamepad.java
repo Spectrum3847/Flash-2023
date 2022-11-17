@@ -44,7 +44,7 @@ public class PilotGamepad extends Gamepad {
     }
 
     public double getDriveR() {
-        return steeringCurve.calculateMappedVal(this.gamepad.triggers.getTwist())
+        return steeringCurve.calculateMappedVal(this.gamepad.rightStick.getX())
                 * (PilotConfig.steeringInvert ? -1 : 1);
     }
 
