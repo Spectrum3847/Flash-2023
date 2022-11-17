@@ -3,6 +3,7 @@ package frc.robot.pilot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Robot;
+import frc.robot.pilot.PilotConfig;
 import frc.robot.swerve.commands.SwerveDrive;
 import frc.robot.trajectories.TrajectoriesCommands;
 import java.util.function.DoubleSupplier;
@@ -34,6 +35,23 @@ public class PilotCommands {
                 .withName("fpvPilotSwerve");
     }
 
+    public static Command snakeDrive() {
+        return TrajectoriesCommands.resetThetaController()
+                .andThen(
+                        new SwerveDrive(
+                                () -> Robot.pilotGamepad.getDriveX(),
+                                () -> Robot.pilotGamepad.getDriveY(),
+                                Robot.trajectories.calculateThetaSupplier(
+                                        () -> Robot.pilotGamepad.getDriveAngle()),
+                                true,
+                                false,
+                                PilotConfig.intakeCoRmeters))
+                .withName("AimPilotDrive");
+    }
+
+    public static Command stickSteer() {
+        return aimPilotDrive(() -> Robot.pilotGamepad.getRightStickAngle());
+    }
     /** Drive while aiming to a specific angle, uses theta controller from Trajectories */
     public static Command aimPilotDrive(double goalAngleRadians) {
         return aimPilotDrive(() -> goalAngleRadians);
@@ -46,7 +64,7 @@ public class PilotCommands {
                         new SwerveDrive(
                                 () -> Robot.pilotGamepad.getDriveX(),
                                 () -> Robot.pilotGamepad.getDriveY(),
-                                Robot.trajectories.calculteThetaSupplier(goalAngleSupplierRadians),
+                                Robot.trajectories.calculateThetaSupplier(goalAngleSupplierRadians),
                                 true,
                                 false))
                 .withName("AimPilotDrive");

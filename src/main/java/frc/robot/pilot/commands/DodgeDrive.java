@@ -11,6 +11,7 @@ import java.util.function.DoubleSupplier;
 public class DodgeDrive extends CommandBase {
     private double rotation;
     private Translation2d translation;
+    private boolean centerHasBeenSet = false;
 
     private Swerve swerve;
     private DoubleSupplier ySupplier;
@@ -49,34 +50,36 @@ public class DodgeDrive extends CommandBase {
 
         Rotation2d heading = translationAngle.minus(gyroAngle);
         double angle = heading.getDegrees();
-        if (rotation != 0) {
+        if (rotation != 0 && !centerHasBeenSet) {
             if (angle < 45 || angle >= 315) {
                 // negative rotation is clockwise
                 // positive rotation is counter-clockwise
-                if (rotation < 0) {
+                if (rotation > 0) {
                     centerOfRotationMeters = SwerveConfig.frontRightLocation;
                 } else {
                     centerOfRotationMeters = SwerveConfig.frontLeftLocation;
                 }
             } else if (angle >= 45 && angle < 135) {
-                if (rotation < 0) {
+                if (rotation > 0) {
                     centerOfRotationMeters = SwerveConfig.frontLeftLocation;
                 } else {
                     centerOfRotationMeters = SwerveConfig.backLeftLocation;
                 }
             } else if (angle >= 135 && angle < 225) {
-                if (rotation < 0) {
+                if (rotation > 0) {
                     centerOfRotationMeters = SwerveConfig.backLeftLocation;
                 } else {
                     centerOfRotationMeters = SwerveConfig.backRightLocation;
                 }
             } else if (angle >= 225 && angle < 315) {
-                if (rotation < 0) {
+                if (rotation > 0) {
                     centerOfRotationMeters = SwerveConfig.backRightLocation;
                 } else {
                     centerOfRotationMeters = SwerveConfig.frontRightLocation;
                 }
             }
+            Robot.log.logger.recordOutput("CoR", centerOfRotationMeters);
+            centerHasBeenSet = true;
         }
         swerve.drive(translation, rotation, true, false, centerOfRotationMeters);
     }

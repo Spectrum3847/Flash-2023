@@ -47,13 +47,16 @@ public class Swerve extends SubsystemBase {
     }
 
     public void drive(
-            Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        drive(translation, rotation, fieldRelative, isOpenLoop, new Translation2d());
+            Translation2d translation,
+            double rotationRadiansPS,
+            boolean fieldRelative,
+            boolean isOpenLoop) {
+        drive(translation, rotationRadiansPS, fieldRelative, isOpenLoop, new Translation2d());
     }
 
     public void drive(
             Translation2d translation,
-            double rotation,
+            double rotationRadiansPS,
             boolean fieldRelative,
             boolean isOpenLoop,
             Translation2d centerOfRotationMeters) {
@@ -62,9 +65,12 @@ public class Swerve extends SubsystemBase {
         if (fieldRelative) {
             speeds =
                     ChassisSpeeds.fromFieldRelativeSpeeds(
-                            translation.getX(), translation.getY(), rotation, gyro.getYaw());
+                            translation.getX(),
+                            translation.getY(),
+                            rotationRadiansPS,
+                            gyro.getYaw());
         } else {
-            speeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+            speeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotationRadiansPS);
         }
 
         SwerveModuleState[] swerveModuleStates =
