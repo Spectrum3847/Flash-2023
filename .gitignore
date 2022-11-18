@@ -25,7 +25,10 @@ hs_err_pid*
 
 # Build Files
 build/*
+bin/*
 .gradle/buildOutputCleanup/*
+.gradle/file-system.probe
+src/main/java/frc/robot/BuildConstants.java
 
 #lock files
 *.lock

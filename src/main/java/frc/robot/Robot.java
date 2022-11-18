@@ -1,42 +1,49 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.SpectrumLib.sim.PhysicsSim;
 import frc.SpectrumLib.util.Network;
 import frc.robot.auton.Auton;
-import frc.robot.pilot.PilotCommands;
+import frc.robot.leds.LEDs;
 import frc.robot.pilot.PilotGamepad;
+import frc.robot.pilot.commands.PilotCommands;
+import frc.robot.pose.Pose;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.commands.SwerveCommands;
+import frc.robot.trajectories.Trajectories;
+import org.littletonrobotics.junction.LoggedRobot;
 
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
     public static RobotConfig config;
+    public static RobotLog log;
     public static Swerve swerve;
-    public static RobotTelemetry telemetry;
+    public static Pose pose;
+    public static Trajectories trajectories;
+    public static LEDs leds;
     public static PilotGamepad pilotGamepad;
+    public static RobotTelemetry telemetry;
+
+    public static String MAC = "";
 
     // Intialize subsystems and run their setupDefaultCommand methods here
     private void intializeSystems() {
-        config = new RobotConfig();
         swerve = new Swerve();
+        pose = new Pose();
+        trajectories = new Trajectories();
+
+        leds = new LEDs();
         pilotGamepad = new PilotGamepad();
         telemetry = new RobotTelemetry();
 
-        // Set Default Commands, this method should exist for each subsystem that has commands
+        // Set Default Commands, this method should exist for each subsystem that has
+        // commands
         PilotCommands.setupDefaultCommand();
         SwerveCommands.setupDefaultCommand();
     }
-
-    public static String MAC = "";
 
     /**
      * Used in all robot mode intialize methods to cancel previous commands and reset button
@@ -58,11 +65,23 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        // Set the MAC Address for this robot, useful for adjusting comp/practice bot settings
+        RobotTelemetry.print("--- Robot Init Starting ---");
+        Timer.delay(RobotConfig.robotInitDelay); // Wait for the robot to fully boot up
+        // Set the MAC Address for this robot, useful for adjusting comp/practice bot
+        // settings
         MAC = Network.getMACaddress();
+        RobotTelemetry.print("Robot MAC: " + MAC);
+
+        // Set up the config
+        config = new RobotConfig();
+
+        // Setup the logger
+        log = new RobotLog(this);
 
         // Initialize all systems, do this after getting the MAC address
         intializeSystems();
+
+        RobotTelemetry.print("--- Robot Init Complete ---");
     }
 
     /**
@@ -74,33 +93,49 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        // Runs the Scheduler. This is responsible for polling buttons, adding
-        // newly-scheduled
-        // commands, running already-scheduled commands, removing finished or
-        // interrupted commands,
-        // and running subsystem periodic() methods. This must be called from the
-        // robot's periodic
-        // block in order for anything in the Command-based framework to work.
+        // Ensures that the main thread is the highest priority thread
+        Threads.setCurrentThreadPriority(true, 99);
+        /**
+         * Runs the Scheduler. This is responsible for polling buttons, adding newly-scheduled
+         * commands, running already-scheduled commands, removing finished or interrupted commands,
+         * and running subsystem periodic() methods. This must be called from the robot's periodic
+         * block in order for anything in the Command-based framework to work.
+         */
         CommandScheduler.getInstance().run();
+
+        Auton.printAutoDuration(); // Prints auton command duration if it finishes or cancelled
+
+        Threads.setCurrentThreadPriority(true, 10); // Set the main thread back to normal priority
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
+        RobotTelemetry.print("## Disabled Init Starting");
         resetCommandsAndButtons();
+
+        RobotTelemetry.print("## Disabled Init Complete");
     }
 
     @Override
     public void disabledPeriodic() {}
 
     @Override
+    public void disabledExit() {
+        RobotTelemetry.print("## Disabled Exit");
+    }
+
+    @Override
     public void autonomousInit() {
+        RobotTelemetry.print("@@ Auton Init Starting");
         resetCommandsAndButtons();
 
         Command autonCommand = Auton.getAutonomousCommand();
         if (autonCommand != null) {
             autonCommand.schedule();
+            Auton.startAutonTimer();
         }
+        RobotTelemetry.print("@@ Auton Init Complete");
     }
 
     /** This function is called periodically during autonomous. */
@@ -108,11 +143,16 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {}
 
     @Override
-    public void autonomousExit() {}
+    public void autonomousExit() {
+        RobotTelemetry.print("@@ Auton Exit");
+    }
 
     @Override
     public void teleopInit() {
+        RobotTelemetry.print("$$ Teleop Init Starting");
         resetCommandsAndButtons();
+
+        RobotTelemetry.print("$$ Teleop Init Complete");
     }
 
     /** This function is called periodically during operator control. */
@@ -120,19 +160,33 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {}
 
     @Override
-    public void teleopExit() {}
+    public void teleopExit() {
+        RobotTelemetry.print("$$ Teleop Exit");
+    }
 
     @Override
     public void testInit() {
+        RobotTelemetry.print("~~ Test Init Starting");
         resetCommandsAndButtons();
+
+        RobotTelemetry.print("~~ Test Init Complete");
     }
 
     /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {}
 
+    @Override
+    public void testExit() {
+        RobotTelemetry.print("~~ Test Exit");
+    }
+
     /** This function is called once when a simulation starts */
-    public void simulationInit() {}
+    public void simulationInit() {
+        RobotTelemetry.print("--- Simulation Init Starting ---");
+
+        RobotTelemetry.print("--- Simulation Init Complete ---");
+    }
 
     /** This function is called periodically during a simulation */
     public void simulationPeriodic() {

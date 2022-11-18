@@ -1,43 +1,94 @@
 package frc.robot.pilot;
 
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.SpectrumLib.gamepads.AxisButton;
+import frc.SpectrumLib.gamepads.AxisButton.ThresholdType;
 import frc.SpectrumLib.gamepads.Gamepad;
-import frc.SpectrumLib.gamepads.mapping.ExpCurve;
+import frc.SpectrumLib.gamepads.XboxGamepad.XboxAxis;
+import frc.robot.leds.commands.BlinkLEDCommand;
+import frc.robot.leds.commands.OneColorLEDCommand;
+import frc.robot.leds.commands.RainbowLEDCommand;
+import frc.robot.leds.commands.SnowfallLEDCommand;
+import frc.robot.pilot.commands.PilotCommands;
+import frc.robot.swerve.commands.LockSwerve;
+import frc.robot.swerve.commands.SwerveCommands;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
-    public static ExpCurve throttleCurve =
-            new ExpCurve(
-                    PilotConstants.throttleExp,
-                    0,
-                    PilotConstants.throttleScaler,
-                    PilotConstants.throttleDeadband);
-    public static ExpCurve steeringCurve =
-            new ExpCurve(
-                    PilotConstants.steeringExp,
-                    0,
-                    PilotConstants.steeringScaler,
-                    PilotConstants.steeringDeadband);
 
     public PilotGamepad() {
-        super("PILOT", PilotConstants.port);
+        super("PILOT", PilotConfig.port);
+        gamepad.leftStick.setDeadband(PilotConfig.throttleDeadband);
+        gamepad.leftStick.configCurves(PilotConfig.throttleExp, PilotConfig.throttleScaler);
+        gamepad.leftStick.setXinvert(PilotConfig.xInvert);
+        gamepad.leftStick.setYinvert(PilotConfig.yInvert);
+
+        gamepad.triggers.setTwistDeadband(PilotConfig.steeringDeadband);
+        gamepad.triggers.configTwistCurve(PilotConfig.steeringExp, PilotConfig.steeringScaler);
+        gamepad.triggers.setTwistInvert(PilotConfig.steeringInvert);
     }
 
-    public void setupTeleopButtons() {}
+    public void setupTeleopButtons() {
+        gamepad.aButton.whileTrue(
+                PilotCommands.aimPilotDrive(Math.PI * -1 / 2).withName("Snap 90"));
+        gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
+        gamepad.xButton.whileTrue(new LockSwerve());
+        gamepad.yButton.whileTrue(PilotCommands.snakeDrive());
 
-    public void setupDisabledButtons() {}
+        // Right Stick points the robot in that direction
+        Trigger rightX =
+                new AxisButton(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND).trigger();
+        Trigger rightY =
+                new AxisButton(gamepad, XboxAxis.RIGHT_Y, 0.5, ThresholdType.DEADBAND).trigger();
+        rightX.or(rightY).whileTrue(PilotCommands.stickSteer());
+
+        gamepad.rightBumper.whileTrue(PilotCommands.stickSteer());
+
+        // Reorient the robot to the current heading
+        gamepad.Dpad.Up.whileTrue(
+                SwerveCommands.setHeadingDeg(0).alongWith(PilotCommands.rumble(0.5, 1)));
+        gamepad.Dpad.Left.whileTrue(
+                SwerveCommands.setHeadingDeg(90).alongWith(PilotCommands.rumble(0.5, 1)));
+        gamepad.Dpad.Down.whileTrue(
+                SwerveCommands.setHeadingDeg(180).alongWith(PilotCommands.rumble(0.5, 1)));
+        gamepad.Dpad.Right.whileTrue(
+                SwerveCommands.setHeadingDeg(270).alongWith(PilotCommands.rumble(0.5, 1)));
+    }
+
+    public void setupDisabledButtons() {
+        gamepad.aButton.whileTrue(new OneColorLEDCommand(Color.kGreen, "Green", 5, 3));
+        gamepad.bButton.whileTrue(new BlinkLEDCommand(Color.kPink, "Blink Pink", 10, 3));
+        gamepad.xButton.whileTrue(new RainbowLEDCommand("rainbow", 15, 3));
+        gamepad.yButton.whileTrue(new SnowfallLEDCommand("Snowfall", 20, 3));
+    }
 
     public void setupTestButtons() {}
 
-    public double getDriveY() {
-        return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getY());
-    }
-
     public double getDriveX() {
-        return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getX());
+        double x = gamepad.leftStick.getX();
+        return x;
     }
 
+    public double getDriveY() {
+        double y = gamepad.leftStick.getY();
+        return y;
+    }
+
+    // Positive is counter-clockwise, left Trigger is positive
     public double getDriveR() {
-        return steeringCurve.calculateMappedVal(this.gamepad.triggers.getTwist());
+        double r = gamepad.triggers.getTwist();
+        return r;
+    }
+
+    // Return the angle created by the left stick in radians, 0 is up, 90 is left
+    public Double getDriveAngle() {
+        return gamepad.leftStick.getDirectionRadians();
+    }
+
+    // Return the angle created by the right stick in radians, 0 is up, 90 is left
+    public double getRightStickAngle() {
+        return gamepad.rightStick.getDirectionRadians();
     }
 
     public void rumble(double intensity) {
