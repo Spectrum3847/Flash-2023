@@ -33,7 +33,9 @@ public class LEDScheduler {
     }
 
     private void intialAnimation() {
-        setDefaultAnimation("Default LED Animation", new BlinkLEDCommand(new Color(90, 10, 255)));
+        setDefaultAnimation(
+                "Default LED Animation",
+                new BlinkLEDCommand(new Color(90, 10, 255), "Default", 1, -101));
     }
 
     private void runScheduler() {

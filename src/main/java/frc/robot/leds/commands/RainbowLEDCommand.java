@@ -9,10 +9,10 @@ public class RainbowLEDCommand extends LEDCommandBase {
 
     private int rainbowFirstPixelHue;
 
-    public RainbowLEDCommand(int rainbowFirstPixelHue) {
-        super();
+    public RainbowLEDCommand(String name, int priority, int timeout) {
+        super(name, priority, timeout);
         this.ledSubsystem = Robot.leds;
-        this.rainbowFirstPixelHue = rainbowFirstPixelHue;
+        this.rainbowFirstPixelHue = 20;
     }
 
     public void ledInitialize() {}

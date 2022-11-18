@@ -1,10 +1,15 @@
 package frc.robot.pilot;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.SpectrumLib.gamepads.AxisButton;
 import frc.SpectrumLib.gamepads.AxisButton.ThresholdType;
 import frc.SpectrumLib.gamepads.Gamepad;
 import frc.SpectrumLib.gamepads.XboxGamepad.XboxAxis;
+import frc.robot.leds.commands.BlinkLEDCommand;
+import frc.robot.leds.commands.OneColorLEDCommand;
+import frc.robot.leds.commands.RainbowLEDCommand;
+import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
 import frc.robot.swerve.commands.LockSwerve;
 import frc.robot.swerve.commands.SwerveCommands;
@@ -51,7 +56,12 @@ public class PilotGamepad extends Gamepad {
                 SwerveCommands.setHeadingDeg(270).alongWith(PilotCommands.rumble(0.5, 1)));
     }
 
-    public void setupDisabledButtons() {}
+    public void setupDisabledButtons() {
+        gamepad.aButton.whileTrue(new OneColorLEDCommand(Color.kGreen, "Green", 5, 3));
+        gamepad.bButton.whileTrue(new BlinkLEDCommand(Color.kPink, "Blink Pink", 10, 3));
+        gamepad.xButton.whileTrue(new RainbowLEDCommand("rainbow", 15, 3));
+        gamepad.yButton.whileTrue(new SnowfallLEDCommand("Snowfall", 20, 3));
+    }
 
     public void setupTestButtons() {}
 

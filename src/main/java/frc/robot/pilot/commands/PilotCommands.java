@@ -13,7 +13,8 @@ public class PilotCommands {
 
     /** Set default command to turn off the rumble */
     public static void setupDefaultCommand() {
-        Robot.pilotGamepad.setDefaultCommand(rumble(0, 9999).withName("DisablePilotRumble"));
+        Robot.pilotGamepad.setDefaultCommand(
+                rumble(0, 9999).repeatedly().withName("DisablePilotRumble"));
     }
 
     /** Field Oriented Drive */

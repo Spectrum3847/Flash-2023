@@ -4,16 +4,22 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
 public abstract class LEDCommandBase extends CommandBase {
+    String name;
+    int priority;
+    int timeout;
 
-    public LEDCommandBase() {
-        super();
-        addRequirements(Robot.leds);
-    }
-
-    public LEDCommandBase(String name) {
+    public LEDCommandBase(String name, int priority, int timeout) {
         super();
         setName(name);
         addRequirements(Robot.leds);
+        this.name = name;
+        this.priority = priority;
+        this.timeout = timeout;
+    }
+
+    @Override
+    public void initialize() {
+        Robot.leds.scheduler.addAnimation(name, this, priority, timeout);
     }
 
     public abstract void ledInitialize();
