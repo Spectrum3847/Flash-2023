@@ -14,6 +14,6 @@ public class TrajectoriesConfig {
     public static final double kDXController = 0;
     public static final double kPYController = kPXController;
     public static final double kDYController = kDXController;
-    public static final double kPThetaController = 5;
+    public static final double kPThetaController = 4;
     public static final double kDThetaController = 0.01;
 }

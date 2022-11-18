@@ -13,7 +13,7 @@ public class PilotCommands {
 
     /** Set default command to turn off the rumble */
     public static void setupDefaultCommand() {
-        Robot.pilotGamepad.setDefaultCommand(rumblePilot(0).withName("DisablePilotRumble"));
+        Robot.pilotGamepad.setDefaultCommand(rumble(0, 9999).withName("DisablePilotRumble"));
     }
 
     /** Field Oriented Drive */
@@ -46,12 +46,13 @@ public class PilotCommands {
                                 true,
                                 false,
                                 PilotConfig.intakeCoRmeters))
-                .withName("AimPilotDrive");
+                .withName("SnakeDrive");
     }
 
     public static Command stickSteer() {
-        return aimPilotDrive(() -> Robot.pilotGamepad.getRightStickAngle());
+        return aimPilotDrive(() -> Robot.pilotGamepad.getRightStickAngle()).withName("StickSteer");
     }
+
     /** Drive while aiming to a specific angle, uses theta controller from Trajectories */
     public static Command aimPilotDrive(double goalAngleRadians) {
         return aimPilotDrive(() -> goalAngleRadians);
@@ -71,8 +72,9 @@ public class PilotCommands {
     }
 
     /** Command that can be used to rumble the pilot controller */
-    public static Command rumblePilot(double intensity) {
+    public static Command rumble(double intensity, double durationSeconds) {
         return new RunCommand(() -> Robot.pilotGamepad.rumble(intensity), Robot.pilotGamepad)
+                .withTimeout(durationSeconds)
                 .withName("RumblePilot");
     }
 }

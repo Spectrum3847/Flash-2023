@@ -77,12 +77,11 @@ public final class SwerveConfig {
 
     /* Swerve Profiling Values */
     public static final double maxVelocity =
-            ((6380 / 60) / driveGearRatio) * wheelDiameter * Math.PI; // meters per second
+            ((6380 / 60) / driveGearRatio) * wheelDiameter * Math.PI * 0.95; // meters per second
     public static final double maxAccel = maxVelocity * 1.5; // take 1/2 sec to get to max speed.
-    public static final double maxAngularVelocity = 12;
-    // maxVelocity / Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
-    public static final double maxAngularAcceleration =
-            maxAngularVelocity * 2; // take 1/2 sec to get to max angular velocity
+    public static final double maxAngularVelocity =
+            maxVelocity / Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
+    public static final double maxAngularAcceleration = Math.pow(maxAngularVelocity, 2);
 
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;

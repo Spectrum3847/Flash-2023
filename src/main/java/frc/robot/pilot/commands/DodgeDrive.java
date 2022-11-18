@@ -42,7 +42,7 @@ public class DodgeDrive extends CommandBase {
         double yAxis = ySupplier.getAsDouble();
         double rAxis = rSupplier.getAsDouble();
 
-        translation = new Translation2d(yAxis, xAxis);
+        translation = new Translation2d(xAxis, yAxis);
         rotation = rAxis;
 
         Rotation2d gyroAngle = swerve.gyro.getYaw();

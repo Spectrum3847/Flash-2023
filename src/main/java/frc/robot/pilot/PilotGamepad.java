@@ -40,10 +40,15 @@ public class PilotGamepad extends Gamepad {
 
         gamepad.rightBumper.whileTrue(PilotCommands.stickSteer());
 
-        gamepad.Dpad.Up.whileTrue(SwerveCommands.setHeadingDeg(0));
-        gamepad.Dpad.Left.whileTrue(SwerveCommands.setHeadingDeg(90));
-        gamepad.Dpad.Down.whileTrue(SwerveCommands.setHeadingDeg(180));
-        gamepad.Dpad.Right.whileTrue(SwerveCommands.setHeadingDeg(270));
+        // Reorient the robot to the current heading
+        gamepad.Dpad.Up.whileTrue(
+                SwerveCommands.setHeadingDeg(0).alongWith(PilotCommands.rumble(0.5, 1)));
+        gamepad.Dpad.Left.whileTrue(
+                SwerveCommands.setHeadingDeg(90).alongWith(PilotCommands.rumble(0.5, 1)));
+        gamepad.Dpad.Down.whileTrue(
+                SwerveCommands.setHeadingDeg(180).alongWith(PilotCommands.rumble(0.5, 1)));
+        gamepad.Dpad.Right.whileTrue(
+                SwerveCommands.setHeadingDeg(270).alongWith(PilotCommands.rumble(0.5, 1)));
     }
 
     public void setupDisabledButtons() {}

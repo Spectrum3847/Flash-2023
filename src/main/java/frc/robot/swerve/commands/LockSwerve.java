@@ -20,6 +20,7 @@ public class LockSwerve extends CommandBase {
         addRequirements(Robot.swerve);
 
         double minSpeed = 0.01 * SwerveConfig.maxVelocity;
+
         // Set the angles and minimum speeds to use when locking the swerve base
         swerveModuleStates =
                 new SwerveModuleState[] {
