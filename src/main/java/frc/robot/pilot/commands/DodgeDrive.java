@@ -9,23 +9,22 @@ import frc.robot.swerve.SwerveConfig;
 import java.util.function.DoubleSupplier;
 
 public class DodgeDrive extends CommandBase {
-    private double rotation;
     private Translation2d translation;
     private boolean centerHasBeenSet = false;
 
     private Swerve swerve;
-    private DoubleSupplier ySupplier;
-    private DoubleSupplier xSupplier;
-    private DoubleSupplier rSupplier;
+    private DoubleSupplier leftPositiveSupplier;
+    private DoubleSupplier fwdPositiveSupplier;
+    private DoubleSupplier ccwPositiveSupplier;
     private Translation2d centerOfRotationMeters;
 
     /** Creates a new DodgeDrive. */
     public DodgeDrive() {
         swerve = Robot.swerve;
         centerOfRotationMeters = new Translation2d();
-        xSupplier = Robot.pilotGamepad::getDriveX;
-        ySupplier = Robot.pilotGamepad::getDriveY;
-        rSupplier = Robot.pilotGamepad::getDriveR;
+        fwdPositiveSupplier = Robot.pilotGamepad::getDriveFwdPositive;
+        leftPositiveSupplier = Robot.pilotGamepad::getDriveLeftPositive;
+        ccwPositiveSupplier = Robot.pilotGamepad::getDriveCCWPositive;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(swerve);
@@ -38,41 +37,40 @@ public class DodgeDrive extends CommandBase {
     @Override
     public void execute() {
 
-        double xAxis = xSupplier.getAsDouble();
-        double yAxis = ySupplier.getAsDouble();
-        double rAxis = rSupplier.getAsDouble();
+        double fwdPositive = fwdPositiveSupplier.getAsDouble();
+        double leftPositive = leftPositiveSupplier.getAsDouble();
+        double ccwPositive = ccwPositiveSupplier.getAsDouble();
 
-        translation = new Translation2d(xAxis, yAxis);
-        rotation = rAxis;
+        translation = new Translation2d(fwdPositive, leftPositive);
 
         Rotation2d gyroAngle = swerve.gyro.getYaw();
         Rotation2d translationAngle = translation.getAngle();
 
         Rotation2d heading = translationAngle.minus(gyroAngle);
         double angle = heading.getDegrees();
-        if (rotation != 0 && !centerHasBeenSet) {
+        if (ccwPositive != 0 && !centerHasBeenSet) {
             if (angle < 45 || angle >= 315) {
                 // negative rotation is clockwise
                 // positive rotation is counter-clockwise
-                if (rotation > 0) {
+                if (ccwPositive > 0) {
                     centerOfRotationMeters = SwerveConfig.frontRightLocation;
                 } else {
                     centerOfRotationMeters = SwerveConfig.frontLeftLocation;
                 }
             } else if (angle >= 45 && angle < 135) {
-                if (rotation > 0) {
+                if (ccwPositive > 0) {
                     centerOfRotationMeters = SwerveConfig.frontLeftLocation;
                 } else {
                     centerOfRotationMeters = SwerveConfig.backLeftLocation;
                 }
             } else if (angle >= 135 && angle < 225) {
-                if (rotation > 0) {
+                if (ccwPositive > 0) {
                     centerOfRotationMeters = SwerveConfig.backLeftLocation;
                 } else {
                     centerOfRotationMeters = SwerveConfig.backRightLocation;
                 }
             } else if (angle >= 225 && angle < 315) {
-                if (rotation > 0) {
+                if (ccwPositive > 0) {
                     centerOfRotationMeters = SwerveConfig.backRightLocation;
                 } else {
                     centerOfRotationMeters = SwerveConfig.frontRightLocation;
@@ -81,7 +79,7 @@ public class DodgeDrive extends CommandBase {
             Robot.log.logger.recordOutput("CoR", centerOfRotationMeters);
             centerHasBeenSet = true;
         }
-        swerve.drive(translation, rotation, true, false, centerOfRotationMeters);
+        swerve.drive(fwdPositive, leftPositive, ccwPositive, true, false, centerOfRotationMeters);
     }
 
     public void end(boolean interrupted) {

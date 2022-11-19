@@ -20,18 +20,18 @@ public class PilotCommands {
     /** Field Oriented Drive */
     public static Command pilotSwerve() {
         return new SwerveDrive(
-                        () -> Robot.pilotGamepad.getDriveX(),
-                        () -> Robot.pilotGamepad.getDriveY(),
-                        () -> Robot.pilotGamepad.getDriveR())
+                        () -> Robot.pilotGamepad.getDriveFwdPositive(),
+                        () -> Robot.pilotGamepad.getDriveLeftPositive(),
+                        () -> Robot.pilotGamepad.getDriveCCWPositive())
                 .withName("PilotSwerve");
     }
 
     /** Robot Oriented Drive */
     public static Command fpvPilotSwerve() {
         return new SwerveDrive(
-                        () -> Robot.pilotGamepad.getDriveX(),
-                        () -> Robot.pilotGamepad.getDriveY(),
-                        () -> Robot.pilotGamepad.getDriveR(),
+                        () -> Robot.pilotGamepad.getDriveFwdPositive(),
+                        () -> Robot.pilotGamepad.getDriveLeftPositive(),
+                        () -> Robot.pilotGamepad.getDriveCCWPositive(),
                         false)
                 .withName("fpvPilotSwerve");
     }
@@ -40,8 +40,8 @@ public class PilotCommands {
         return TrajectoriesCommands.resetThetaController()
                 .andThen(
                         new SwerveDrive(
-                                () -> Robot.pilotGamepad.getDriveX(),
-                                () -> Robot.pilotGamepad.getDriveY(),
+                                () -> Robot.pilotGamepad.getDriveFwdPositive(),
+                                () -> Robot.pilotGamepad.getDriveLeftPositive(),
                                 Robot.trajectories.calculateThetaSupplier(
                                         () -> Robot.pilotGamepad.getDriveAngle()),
                                 true,
@@ -64,8 +64,8 @@ public class PilotCommands {
         return TrajectoriesCommands.resetThetaController()
                 .andThen(
                         new SwerveDrive(
-                                () -> Robot.pilotGamepad.getDriveX(),
-                                () -> Robot.pilotGamepad.getDriveY(),
+                                () -> Robot.pilotGamepad.getDriveFwdPositive(),
+                                () -> Robot.pilotGamepad.getDriveLeftPositive(),
                                 Robot.trajectories.calculateThetaSupplier(goalAngleSupplierRadians),
                                 true,
                                 false))
