@@ -41,10 +41,8 @@ public class PilotGamepad extends Gamepad {
         gamepad.yButton.whileTrue(PilotCommands.snakeDrive());
 
         // Right Stick points the robot in that direction
-        Trigger rightX =
-                new AxisButton(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND).trigger();
-        Trigger rightY =
-                new AxisButton(gamepad, XboxAxis.RIGHT_Y, 0.5, ThresholdType.DEADBAND).trigger();
+        Trigger rightX = AxisButton.create(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND);
+        Trigger rightY = AxisButton.create(gamepad, XboxAxis.RIGHT_Y, 0.5, ThresholdType.DEADBAND);
         rightX.or(rightY).whileTrue(PilotCommands.stickSteer());
 
         gamepad.rightBumper.whileTrue(PilotCommands.stickSteer());
