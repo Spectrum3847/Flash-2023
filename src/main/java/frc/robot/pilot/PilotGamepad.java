@@ -11,6 +11,7 @@ import frc.robot.leds.commands.OneColorLEDCommand;
 import frc.robot.leds.commands.RainbowLEDCommand;
 import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
+import frc.robot.pilot.commands.SpinMove;
 import frc.robot.swerve.commands.LockSwerve;
 import frc.robot.swerve.commands.SwerveCommands;
 
@@ -38,7 +39,7 @@ public class PilotGamepad extends Gamepad {
         gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(Math.PI * 1 / 2).withName("Snap 90"));
         gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.xButton.whileTrue(new LockSwerve());
-        gamepad.yButton.whileTrue(PilotCommands.snakeDrive());
+        gamepad.yButton.whileTrue(new SpinMove());
 
         // Right Stick points the robot in that direction
         Trigger rightX = AxisButton.create(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND);

@@ -196,4 +196,21 @@ public final class SwerveConfig {
                 SensorInitializationStrategy.BootToAbsolutePosition;
         swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
     }
+
+    public static Translation2d[] moduleOffsets(double meters) {
+        return moduleOffsets(new Translation2d(meters, meters));
+    }
+
+    public static Translation2d[] moduleOffsets(Translation2d frontLeft) {
+        // ++ +- -+ --
+        Translation2d fl = frontLeftLocation.plus(frontLeft);
+        Translation2d fr =
+                frontRightLocation.plus(new Translation2d(frontLeft.getX(), -frontLeft.getY()));
+        Translation2d bl =
+                frontRightLocation.plus(new Translation2d(-frontLeft.getX(), frontLeft.getY()));
+        Translation2d br =
+                frontRightLocation.plus(new Translation2d(-frontLeft.getX(), -frontLeft.getY()));
+        Translation2d a[] = {fl, fr, bl, br};
+        return a;
+    }
 }

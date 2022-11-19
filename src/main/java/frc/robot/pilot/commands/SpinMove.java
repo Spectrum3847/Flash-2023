@@ -2,13 +2,14 @@ package frc.robot.pilot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.SwerveConfig;
 import java.util.function.DoubleSupplier;
 
-public class DodgeDrive extends CommandBase {
+public class SpinMove extends CommandBase {
     private Translation2d translation;
     private boolean centerHasBeenSet = false;
 
@@ -19,7 +20,7 @@ public class DodgeDrive extends CommandBase {
     private Translation2d centerOfRotationMeters;
 
     /** Creates a new DodgeDrive. */
-    public DodgeDrive() {
+    public SpinMove() {
         swerve = Robot.swerve;
         centerOfRotationMeters = new Translation2d();
         fwdPositiveSupplier = Robot.pilotGamepad::getDriveFwdPositive;
@@ -32,7 +33,9 @@ public class DodgeDrive extends CommandBase {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+        centerHasBeenSet = false;
+    }
 
     @Override
     public void execute() {
@@ -48,32 +51,36 @@ public class DodgeDrive extends CommandBase {
 
         Rotation2d heading = translationAngle.minus(gyroAngle);
         double angle = heading.getDegrees();
-        if (ccwPositive != 0 && !centerHasBeenSet) {
-            if (angle < 45 || angle >= 315) {
+
+        System.out.println("Angle: " + angle);
+
+        if (Math.abs(ccwPositive) >= 0.2 && !centerHasBeenSet) {
+            Translation2d offsets[] = SwerveConfig.moduleOffsets(Units.inchesToMeters(3));
+            if (angle < 45 && angle >= -45) {
                 // negative rotation is clockwise
                 // positive rotation is counter-clockwise
                 if (ccwPositive > 0) {
-                    centerOfRotationMeters = SwerveConfig.frontRightLocation;
+                    centerOfRotationMeters = SwerveConfig.frontRightLocation.plus(offsets[1]);
                 } else {
-                    centerOfRotationMeters = SwerveConfig.frontLeftLocation;
+                    centerOfRotationMeters = SwerveConfig.frontLeftLocation.plus(offsets[0]);
                 }
             } else if (angle >= 45 && angle < 135) {
                 if (ccwPositive > 0) {
-                    centerOfRotationMeters = SwerveConfig.frontLeftLocation;
+                    centerOfRotationMeters = SwerveConfig.frontLeftLocation.plus(offsets[0]);
                 } else {
-                    centerOfRotationMeters = SwerveConfig.backLeftLocation;
+                    centerOfRotationMeters = SwerveConfig.backLeftLocation.plus(offsets[2]);
                 }
-            } else if (angle >= 135 && angle < 225) {
+            } else if (angle >= 135 || angle < -135) {
                 if (ccwPositive > 0) {
-                    centerOfRotationMeters = SwerveConfig.backLeftLocation;
+                    centerOfRotationMeters = SwerveConfig.backLeftLocation.plus(offsets[2]);
                 } else {
-                    centerOfRotationMeters = SwerveConfig.backRightLocation;
+                    centerOfRotationMeters = SwerveConfig.backRightLocation.plus(offsets[3]);
                 }
-            } else if (angle >= 225 && angle < 315) {
+            } else if (angle >= -135 && angle < -45) {
                 if (ccwPositive > 0) {
-                    centerOfRotationMeters = SwerveConfig.backRightLocation;
+                    centerOfRotationMeters = SwerveConfig.backRightLocation.plus(offsets[3]);
                 } else {
-                    centerOfRotationMeters = SwerveConfig.frontRightLocation;
+                    centerOfRotationMeters = SwerveConfig.frontRightLocation.plus(offsets[1]);
                 }
             }
             Robot.log.logger.recordOutput("CoR", centerOfRotationMeters);
