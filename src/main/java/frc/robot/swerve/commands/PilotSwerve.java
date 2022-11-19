@@ -41,7 +41,7 @@ public class PilotSwerve extends CommandBase {
             double xAxis = Robot.pilotGamepad.getDriveX();
             double rAxis = Robot.pilotGamepad.getDriveR();
 
-            // Multiply by max speed to scale the pilot inputs to velcoity in m/s
+            // Multiply by max speed to scale the pilot inputs to velocity in m/s
             translation = new Translation2d(yAxis, xAxis).times(SwerveConfig.maxSpeed);
 
             // Multiply by max angular velocity to scale the pilot inputs to angular velocity in

@@ -50,6 +50,11 @@ public class SwerveModule {
         lastAngle = getState().angle.getDegrees();
     }
 
+    /** Set motors to desired speed using state
+     * 
+     *  @param desiredState
+     *  @param isOpenLoop - if true, use percent output for motors, if false, use velocity
+     *  **/
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
         desiredState =
                 CTREModuleState.optimize(
