@@ -28,6 +28,7 @@ public class PilotGamepad extends Gamepad {
 
     public void setupTestButtons() {}
 
+    /* Transforming raw input to exponentially curved */
     public double getDriveY() {
         return throttleCurve.calculateMappedVal(this.gamepad.leftStick.getY());
     }
