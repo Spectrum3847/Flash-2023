@@ -15,6 +15,7 @@ import frc.robot.pose.Pose;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.commands.SwerveCommands;
 import frc.robot.trajectories.Trajectories;
+import frc.robot.vision.Vision;
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class Robot extends LoggedRobot {
@@ -24,6 +25,7 @@ public class Robot extends LoggedRobot {
     public static Pose pose;
     public static Trajectories trajectories;
     public static LEDs leds;
+    public static Vision vision;
     public static PilotGamepad pilotGamepad;
     public static RobotTelemetry telemetry;
 
@@ -36,6 +38,7 @@ public class Robot extends LoggedRobot {
         trajectories = new Trajectories();
 
         leds = new LEDs();
+        vision = new Vision();
         pilotGamepad = new PilotGamepad();
         telemetry = new RobotTelemetry();
 
