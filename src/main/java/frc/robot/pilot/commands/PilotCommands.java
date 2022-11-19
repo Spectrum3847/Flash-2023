@@ -8,7 +8,7 @@ import frc.robot.swerve.commands.SwerveDrive;
 import frc.robot.trajectories.TrajectoriesCommands;
 import java.util.function.DoubleSupplier;
 
-/** Should contain commands used only by the pilot controller and the rumble pilot command */
+/** Should contain commands used only by the pilot controller and to rumble pilot command */
 public class PilotCommands {
 
     /** Set default command to turn off the rumble */
