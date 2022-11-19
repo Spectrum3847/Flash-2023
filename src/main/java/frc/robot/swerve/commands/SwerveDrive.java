@@ -12,15 +12,13 @@ import java.util.function.DoubleSupplier;
 
 public class SwerveDrive extends CommandBase {
 
-    private double rotation;
-    private Translation2d translation;
     private boolean fieldRelative;
     private boolean openLoop;
 
     private Swerve swerve;
-    private DoubleSupplier ySupplier;
-    private DoubleSupplier xSupplier;
-    private DoubleSupplier rSupplier;
+    private DoubleSupplier fwdPositiveSupplier;
+    private DoubleSupplier leftPositiveSupplier;
+    private DoubleSupplier ccwPositiveSupplier;
     private Translation2d centerOfRotationMeters;
 
     /**
@@ -28,13 +26,13 @@ public class SwerveDrive extends CommandBase {
      * rotation.
      *
      * @param fieldRelative
-     * @param ySupplier
-     * @param xSupplier
+     * @param leftPositiveSupplier
+     * @param fwdPositiveSupplier
      */
     public SwerveDrive(
-            DoubleSupplier xSupplier,
-            DoubleSupplier ySupplier,
-            DoubleSupplier rSupplier,
+            DoubleSupplier fwdPositiveSupplier,
+            DoubleSupplier leftPositiveSupplier,
+            DoubleSupplier ccwPositiveSupplier,
             boolean fieldRelative,
             boolean openLoop,
             Translation2d centerOfRotationMeters) {
@@ -42,45 +40,63 @@ public class SwerveDrive extends CommandBase {
         addRequirements(swerve);
         this.fieldRelative = fieldRelative;
         this.openLoop = openLoop;
-        this.ySupplier = ySupplier;
-        this.xSupplier = xSupplier;
-        this.rSupplier = rSupplier;
+        this.leftPositiveSupplier = leftPositiveSupplier;
+        this.fwdPositiveSupplier = fwdPositiveSupplier;
+        this.ccwPositiveSupplier = ccwPositiveSupplier;
         this.centerOfRotationMeters = centerOfRotationMeters;
     }
 
     public SwerveDrive(
-            DoubleSupplier xSupplier,
-            DoubleSupplier ySupplier,
-            DoubleSupplier rSupplier,
+            DoubleSupplier fwdPositiveSupplier,
+            DoubleSupplier leftPositiveSupplier,
+            DoubleSupplier ccwPositiveSupplier,
             boolean fieldRelative,
             boolean openLoop) {
-        this(xSupplier, ySupplier, rSupplier, fieldRelative, openLoop, new Translation2d());
+        this(
+                fwdPositiveSupplier,
+                leftPositiveSupplier,
+                ccwPositiveSupplier,
+                fieldRelative,
+                openLoop,
+                new Translation2d());
     }
 
     public SwerveDrive(
-            DoubleSupplier xSupplier,
-            DoubleSupplier ySupplier,
-            DoubleSupplier rSupplier,
+            DoubleSupplier fwdPositiveSupplier,
+            DoubleSupplier leftPositiveSupplier,
+            DoubleSupplier ccwPositiveSupplier,
             boolean fieldRelative) {
-        this(xSupplier, ySupplier, rSupplier, fieldRelative, false, new Translation2d());
+        this(
+                fwdPositiveSupplier,
+                leftPositiveSupplier,
+                ccwPositiveSupplier,
+                fieldRelative,
+                false,
+                new Translation2d());
     }
 
     public SwerveDrive(
-            DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rSupplier) {
-        this(xSupplier, ySupplier, rSupplier, true, false);
+            DoubleSupplier fwdPositiveSupplier,
+            DoubleSupplier leftPositiveSupplier,
+            DoubleSupplier ccwPositiveSupplier) {
+        this(fwdPositiveSupplier, leftPositiveSupplier, ccwPositiveSupplier, true, false);
     }
 
     public void intialize() {}
 
     @Override
     public void execute() {
-        double xAxis = xSupplier.getAsDouble();
-        double yAxis = ySupplier.getAsDouble();
-        double rAxis = rSupplier.getAsDouble();
+        double fwdPositive = fwdPositiveSupplier.getAsDouble();
+        double leftPositive = leftPositiveSupplier.getAsDouble();
+        double ccwPositive = ccwPositiveSupplier.getAsDouble();
 
-        translation = new Translation2d(yAxis, xAxis);
-        rotation = rAxis;
-        swerve.drive(translation, rotation, fieldRelative, openLoop, centerOfRotationMeters);
+        swerve.drive(
+                fwdPositive,
+                leftPositive,
+                ccwPositive,
+                fieldRelative,
+                openLoop,
+                centerOfRotationMeters);
     }
 
     public void end(boolean interrupted) {

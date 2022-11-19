@@ -47,16 +47,34 @@ public class Swerve extends SubsystemBase {
     }
 
     public void drive(
-            Translation2d translation,
+            double fwdPositive,
+            double leftPositive,
             double rotationRadiansPS,
             boolean fieldRelative,
             boolean isOpenLoop) {
-        drive(translation, rotationRadiansPS, fieldRelative, isOpenLoop, new Translation2d());
+        drive(
+                fwdPositive,
+                leftPositive,
+                rotationRadiansPS,
+                fieldRelative,
+                isOpenLoop,
+                new Translation2d());
     }
 
+    /**
+     * Used to drive the swerve robot, should be called from commands that require swerve.
+     *
+     * @param fwdPositive Forward Positive meters per second
+     * @param leftPositive Left Positive meters per secound
+     * @param omegaRadiansPerSecond Rotation Radians per second
+     * @param fieldRelative If the robot should drive in field relative
+     * @param isOpenLoop If the robot should drive in open loop
+     * @param centerOfRotationMeters The center of rotation in meters
+     */
     public void drive(
-            Translation2d translation,
-            double rotationRadiansPS,
+            double fwdPositive,
+            double leftPositive,
+            double omegaRadiansPerSecond,
             boolean fieldRelative,
             boolean isOpenLoop,
             Translation2d centerOfRotationMeters) {
@@ -65,12 +83,9 @@ public class Swerve extends SubsystemBase {
         if (fieldRelative) {
             speeds =
                     ChassisSpeeds.fromFieldRelativeSpeeds(
-                            translation.getX(),
-                            translation.getY(),
-                            rotationRadiansPS,
-                            gyro.getYaw());
+                            fwdPositive, leftPositive, omegaRadiansPerSecond, gyro.getYaw());
         } else {
-            speeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotationRadiansPS);
+            speeds = new ChassisSpeeds(fwdPositive, leftPositive, omegaRadiansPerSecond);
         }
 
         SwerveModuleState[] swerveModuleStates =
@@ -84,14 +99,18 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    // Reset AngleMotors to Absolute
+    /** Reset AngleMotors to Absolute This is used to reset the angle motors to absolute position */
     public void resetSteeringToAbsolute() {
         for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
     }
 
-    /* Used by SwerveFollowCommand in Auto */
+    /**
+     * Used by SwerveFollowCommand in Auto, assumes closed loop control
+     *
+     * @param desiredStates Meters per second and radians per second
+     */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConfig.maxVelocity);
 
