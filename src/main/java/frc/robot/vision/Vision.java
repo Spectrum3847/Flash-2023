@@ -18,6 +18,7 @@ public class Vision extends SubsystemBase {
     private DecimalFormat df = new DecimalFormat();
     private double previousCaptureTime = 0;
     private double previousYaw = 0;
+    private boolean targetFound = true;
 
     public Vision() {
         setName("Vision");
@@ -49,18 +50,23 @@ public class Vision extends SubsystemBase {
             }
 
             if (Math.round(previousYaw) != Math.round(yaw)) {
-                printDebug(targetId, yaw, pitch, area, poseAmbiguity, captureTime);
+                // printDebug(targetId, yaw, pitch, area, poseAmbiguity, captureTime);
             }
 
             previousCaptureTime = captureTime;
             previousYaw = yaw;
+            targetFound = true;
         } else {
             yaw = 0.0;
-            System.out.println("Lost target");
+            if (targetFound) {
+                System.out.println("Lost target");
+                targetFound = false;
+            }
         }
     }
 
     public double getRadiansToTarget() {
+        System.out.println("Yaw (D): " + yaw + "|| gyro (D): " + Robot.swerve.gyro.getDegrees());
         return Units.degreesToRadians(yaw) + Robot.swerve.gyro.getRadians();
     }
 
@@ -74,8 +80,8 @@ public class Vision extends SubsystemBase {
         System.out.println(
                 "Target ID: "
                         + targetId
-                        + " | Yaw: "
-                        + df.format(Units.radiansToDegrees(getRadiansToTarget()))
+                        + " | Target Yaw: "
+                        + df.format(yaw)
                         + " | Pitch: "
                         + df.format(pitch)
                         + " | Area: "
