@@ -15,7 +15,7 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
     public FollowTrajectory(PathPlannerTrajectory trajectory) {
         super(
                 trajectory,
-                Robot.pose::getEstimatedPosition,
+                Robot.pose::getPosition,
                 SwerveConfig.swerveKinematics,
                 Robot.trajectories.xController,
                 Robot.trajectories.yController,

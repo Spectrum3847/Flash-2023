@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.SpectrumLib.telemetry.Alert;
@@ -28,11 +29,9 @@ public class RobotTelemetry extends TelemetrySubsystem {
 
     private String IPaddress = "UNKOWN";
 
-    public RobotTelemetry() {
-        super("Main");
-        // Allows us to see all running commands on the robot, needed to log commands
-        SmartDashboard.putData(CommandScheduler.getInstance());
-
+    public RobotTelemetry(String name) {
+        super(name);
+        logCommands();
         // Column 0
         // Setup the auton selector to display on shuffleboard
         Auton.setupSelectors();
@@ -55,6 +54,10 @@ public class RobotTelemetry extends TelemetrySubsystem {
         tab.add("Alerts", SmartDashboard.getData("Alerts")).withPosition(4, 0).withSize(2, 2);
         tab.add("MAC Address", Robot.MAC).withPosition(4, 2).withSize(2, 1);
         tab.addString("IP Address", () -> getIP()).withPosition(4, 3).withSize(2, 1);
+    }
+
+    public static void createTab(String name) {
+        Shuffleboard.getTab(name);
     }
 
     @Override
@@ -111,6 +114,9 @@ public class RobotTelemetry extends TelemetrySubsystem {
     }
 
     private static void logCommands() {
+        // Allows us to see all running commands on the robot, needed to log commands
+        SmartDashboard.putData(CommandScheduler.getInstance());
+
         // Log scheduled commands
         Robot.log.logger.recordOutput(
                 "ActiveCommands/Scheduler",

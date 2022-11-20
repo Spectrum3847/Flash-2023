@@ -49,22 +49,4 @@ public class Gyro {
     public Rotation2d getRawYaw() {
         return Rotation2d.fromDegrees(pigeon.getYaw());
     }
-
-    /**
-     * Get the yaw of the robot in degrees
-     *
-     * @return the yaw of the robot in degrees including the yawOffset
-     */
-    public double getDegrees() {
-        return getYaw().getDegrees();
-    }
-
-    /**
-     * Get the raw yaw of the robot in Radians
-     *
-     * @return the yaw of the robot in radians including the yawOffset
-     */
-    public double getRadians() {
-        return getYaw().getRadians();
-    }
 }

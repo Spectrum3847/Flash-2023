@@ -36,7 +36,7 @@ public class Trajectories extends SubsystemBase {
     }
 
     public void resetTheta() {
-        startAngle = Robot.swerve.gyro.getYaw();
+        startAngle = Robot.pose.getHeading();
         thetaController.reset();
     }
 
@@ -45,7 +45,7 @@ public class Trajectories extends SubsystemBase {
     }
 
     public double calculteTheta(double goalAngleRadians) {
-        return thetaController.calculate(Robot.swerve.gyro.getRadians(), goalAngleRadians);
+        return thetaController.calculate(Robot.pose.getHeading().getRadians(), goalAngleRadians);
     }
 
     public DoubleSupplier calculateThetaSupplier(DoubleSupplier goalAngleSupplierRadians) {

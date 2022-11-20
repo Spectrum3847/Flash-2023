@@ -39,20 +39,14 @@ public class SpinMove extends CommandBase {
 
     @Override
     public void execute() {
-
         double fwdPositive = fwdPositiveSupplier.getAsDouble();
         double leftPositive = leftPositiveSupplier.getAsDouble();
         double ccwPositive = ccwPositiveSupplier.getAsDouble();
 
         translation = new Translation2d(fwdPositive, leftPositive);
 
-        Rotation2d gyroAngle = swerve.gyro.getYaw();
-        Rotation2d translationAngle = translation.getAngle();
-
-        Rotation2d heading = translationAngle.minus(gyroAngle);
+        Rotation2d heading = translation.getAngle().minus(Robot.pose.getHeading());
         double angle = heading.getDegrees();
-
-        System.out.println("Angle: " + angle);
 
         if (Math.abs(ccwPositive) >= 0.2 && !centerHasBeenSet) {
             Translation2d offsets[] = SwerveConfig.moduleOffsets(Units.inchesToMeters(3));
@@ -83,7 +77,6 @@ public class SpinMove extends CommandBase {
                     centerOfRotationMeters = SwerveConfig.frontRightLocation.plus(offsets[1]);
                 }
             }
-            Robot.log.logger.recordOutput("CoR", centerOfRotationMeters);
             centerHasBeenSet = true;
         }
         swerve.drive(fwdPositive, leftPositive, ccwPositive, true, false, centerOfRotationMeters);

@@ -15,6 +15,8 @@ import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
 import frc.robot.pilot.commands.SpinMove;
 import frc.robot.swerve.commands.SwerveCommands;
+import frc.robot.pose.commands.PoseCommands;
+import frc.robot.swerve.commands.LockSwerve;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
@@ -53,17 +55,15 @@ public class PilotGamepad extends Gamepad {
         Trigger rightY = AxisButton.create(gamepad, XboxAxis.RIGHT_Y, 0.5, ThresholdType.DEADBAND);
         rightX.or(rightY).whileTrue(PilotCommands.stickSteer());
 
-        gamepad.rightBumper.whileTrue(PilotCommands.stickSteer());
-
         // Reorient the robot to the current heading
         gamepad.Dpad.Up.whileTrue(
-                SwerveCommands.setHeadingDeg(0).alongWith(PilotCommands.rumble(0.5, 1)));
+                PoseCommands.resetHeading(0).alongWith(PilotCommands.rumble(0.5, 1)));
         gamepad.Dpad.Left.whileTrue(
-                SwerveCommands.setHeadingDeg(90).alongWith(PilotCommands.rumble(0.5, 1)));
+                PoseCommands.resetHeading(90).alongWith(PilotCommands.rumble(0.5, 1)));
         gamepad.Dpad.Down.whileTrue(
-                SwerveCommands.setHeadingDeg(180).alongWith(PilotCommands.rumble(0.5, 1)));
+                PoseCommands.resetHeading(180).alongWith(PilotCommands.rumble(0.5, 1)));
         gamepad.Dpad.Right.whileTrue(
-                SwerveCommands.setHeadingDeg(270).alongWith(PilotCommands.rumble(0.5, 1)));
+                PoseCommands.resetHeading(270).alongWith(PilotCommands.rumble(0.5, 1)));
     }
 
     public void setupDisabledButtons() {
