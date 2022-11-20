@@ -4,20 +4,25 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.RobotTelemetry;
+
 import java.text.DecimalFormat;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+@SuppressWarnings("unused")
 public class Vision extends SubsystemBase {
     public VisionConfig config;
     public final PhotonCamera camera;
-    private double yaw = 0.0;
+
+    private double yaw, pitch, area, poseAmbiguity, captureTime;
+    private int targetId;
 
     // testing
     private DecimalFormat df = new DecimalFormat();
-    private double previousCaptureTime = 0;
-    private double previousYaw = 0;
+    private double lastCaptureTime = 0;
+    private double lastYaw = 0;
     private boolean targetFound = true;
 
     public Vision() {
@@ -31,42 +36,42 @@ public class Vision extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // get targets
+        // get targets & basic data
         PhotonPipelineResult results = camera.getLatestResult();
         if (results.hasTargets()) {
             PhotonTrackedTarget target = results.getBestTarget();
             yaw = target.getYaw();
-            double pitch = target.getPitch();
-            double area = target.getArea();
-            int targetId = target.getFiducialId();
-            double poseAmbiguity = target.getPoseAmbiguity();
-            double captureTime = Timer.getFPGATimestamp() - (results.getLatencyMillis() / 1000d);
+            pitch = target.getPitch();
+            area = target.getArea();
+            targetId = target.getFiducialId();
+            poseAmbiguity = target.getPoseAmbiguity();
+            captureTime = Timer.getFPGATimestamp() - (results.getLatencyMillis() / 1000d);
 
-            if (previousCaptureTime == 0) {
-                previousCaptureTime = captureTime;
+            if (lastCaptureTime == 0) {
+                lastCaptureTime = captureTime;
             }
-            if (previousYaw == 0) {
-                previousYaw = yaw;
+            if (lastYaw == 0) {
+                lastYaw = yaw;
             }
 
-            if (Math.round(previousYaw) != Math.round(yaw)) {
+            if (Math.round(lastYaw) != Math.round(yaw)) {
                 // printDebug(targetId, yaw, pitch, area, poseAmbiguity, captureTime);
             }
 
-            previousCaptureTime = captureTime;
-            previousYaw = yaw;
+            lastCaptureTime = captureTime;
+            lastYaw = yaw;
             targetFound = true;
         } else {
             yaw = 0.0;
             if (targetFound) {
-                System.out.println("Lost target");
+                RobotTelemetry.print("Lost target");
                 targetFound = false;
             }
         }
     }
 
     public double getRadiansToTarget() {
-        System.out.println("Yaw (D): " + yaw + "|| gyro (D): " + Robot.swerve.gyro.getDegrees());
+        RobotTelemetry.print("Yaw (D): " + yaw + "|| gyro (D): " + Robot.swerve.gyro.getDegrees());
         return Units.degreesToRadians(yaw) + Robot.swerve.gyro.getRadians();
     }
 
@@ -77,7 +82,7 @@ public class Vision extends SubsystemBase {
             double area,
             double poseAmbiguity,
             double captureTime) {
-        System.out.println(
+        RobotTelemetry.print(
                 "Target ID: "
                         + targetId
                         + " | Target Yaw: "

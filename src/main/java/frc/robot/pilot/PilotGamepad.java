@@ -39,7 +39,7 @@ public class PilotGamepad extends Gamepad {
     public void setupTeleopButtons() {
         // gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(Math.PI * 1 / 2).withName("Snap
         // 90"));
-        gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(0).withName("Aim tob  0"));
+        gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(0).withName("Aim to 0"));
         // gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.bButton.whileTrue(
                 PilotCommands.aimPilotDrive(() -> Robot.vision.getRadiansToTarget())

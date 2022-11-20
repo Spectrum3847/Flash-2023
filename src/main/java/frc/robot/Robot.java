@@ -24,8 +24,8 @@ public class Robot extends LoggedRobot {
     public static Swerve swerve;
     public static Pose pose;
     public static Trajectories trajectories;
-    public static LEDs leds;
     public static Vision vision;
+    public static LEDs leds;
     public static PilotGamepad pilotGamepad;
     public static RobotTelemetry telemetry;
 
@@ -36,9 +36,9 @@ public class Robot extends LoggedRobot {
         swerve = new Swerve();
         pose = new Pose();
         trajectories = new Trajectories();
+        vision = new Vision();
 
         leds = new LEDs();
-        vision = new Vision();
         pilotGamepad = new PilotGamepad();
         telemetry = new RobotTelemetry();
 
