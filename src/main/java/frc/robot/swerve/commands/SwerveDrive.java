@@ -8,55 +8,98 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.swerve.Swerve;
-import frc.robot.swerve.SwerveConfig;
+import java.util.function.DoubleSupplier;
 
 public class SwerveDrive extends CommandBase {
 
-    private double rotation;
-    private Translation2d translation;
     private boolean fieldRelative;
     private boolean openLoop;
 
-    private Swerve s_Swerve;
-    private double m_x;
-    private double m_y;
+    private Swerve swerve;
+    private DoubleSupplier fwdPositiveSupplier;
+    private DoubleSupplier leftPositiveSupplier;
+    private DoubleSupplier ccwPositiveSupplier;
+    private Translation2d centerOfRotationMeters;
 
     /**
-     * Creates a SwerveDrive command that allows for simple x and y translation of the robot. This
-     * can be used for simiple autonomous driving like drive forward 2 secs when used with a
-     * timeout.
+     * Creates a SwerveDrive command that allows for simple x and y translation of the robot and r
+     * rotation.
      *
      * @param fieldRelative
-     * @param y
-     * @param x
+     * @param leftPositiveSupplier
+     * @param fwdPositiveSupplier
      */
-    public SwerveDrive(boolean fieldRelative, double y, double x) {
-        this.s_Swerve = Robot.swerve;
-        addRequirements(s_Swerve);
+    public SwerveDrive(
+            DoubleSupplier fwdPositiveSupplier,
+            DoubleSupplier leftPositiveSupplier,
+            DoubleSupplier ccwPositiveSupplier,
+            boolean fieldRelative,
+            boolean openLoop,
+            Translation2d centerOfRotationMeters) {
+        this.swerve = Robot.swerve;
+        addRequirements(swerve);
         this.fieldRelative = fieldRelative;
-        this.openLoop = false;
-        m_y = y;
-        m_x = x;
+        this.openLoop = openLoop;
+        this.leftPositiveSupplier = leftPositiveSupplier;
+        this.fwdPositiveSupplier = fwdPositiveSupplier;
+        this.ccwPositiveSupplier = ccwPositiveSupplier;
+        this.centerOfRotationMeters = centerOfRotationMeters;
     }
 
-    public void intialize() {
-        s_Swerve.brakeMode(true);
+    public SwerveDrive(
+            DoubleSupplier fwdPositiveSupplier,
+            DoubleSupplier leftPositiveSupplier,
+            DoubleSupplier ccwPositiveSupplier,
+            boolean fieldRelative,
+            boolean openLoop) {
+        this(
+                fwdPositiveSupplier,
+                leftPositiveSupplier,
+                ccwPositiveSupplier,
+                fieldRelative,
+                openLoop,
+                new Translation2d());
     }
+
+    public SwerveDrive(
+            DoubleSupplier fwdPositiveSupplier,
+            DoubleSupplier leftPositiveSupplier,
+            DoubleSupplier ccwPositiveSupplier,
+            boolean fieldRelative) {
+        this(
+                fwdPositiveSupplier,
+                leftPositiveSupplier,
+                ccwPositiveSupplier,
+                fieldRelative,
+                false,
+                new Translation2d());
+    }
+
+    public SwerveDrive(
+            DoubleSupplier fwdPositiveSupplier,
+            DoubleSupplier leftPositiveSupplier,
+            DoubleSupplier ccwPositiveSupplier) {
+        this(fwdPositiveSupplier, leftPositiveSupplier, ccwPositiveSupplier, true, false);
+    }
+
+    public void intialize() {}
 
     @Override
     public void execute() {
-        double yAxis = m_y;
-        double xAxis = m_x;
-        double rAxis = 0;
+        double fwdPositive = fwdPositiveSupplier.getAsDouble();
+        double leftPositive = leftPositiveSupplier.getAsDouble();
+        double ccwPositive = ccwPositiveSupplier.getAsDouble();
 
-        translation = new Translation2d(yAxis, xAxis).times(SwerveConfig.maxSpeed);
-        rotation = rAxis * SwerveConfig.maxAngularVelocity;
-        s_Swerve.drive(translation, rotation, fieldRelative, openLoop);
+        swerve.drive(
+                fwdPositive,
+                leftPositive,
+                ccwPositive,
+                fieldRelative,
+                openLoop,
+                centerOfRotationMeters);
     }
 
     public void end(boolean interrupted) {
-        super.end(interrupted);
-        s_Swerve.brakeMode(false);
-        s_Swerve.stop();
+        swerve.stop();
     }
 }

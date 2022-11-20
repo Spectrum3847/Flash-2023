@@ -12,18 +12,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.SpectrumLib.util.Conversions;
 
 public class Swerve extends SubsystemBase {
     public SwerveConfig config;
     public Gyro gyro;
     public Odometry odometry;
+    public SwerveTelemetry telemetry;
     public SwerveModule[] mSwerveMods;
-    public double pidTurn = 0;
-    public double drive_x = 0;
-    public double drive_y = 0;
-    public double drive_rotation = 0;
-    ChassisSpeeds lastRequestedVelocity = new ChassisSpeeds(0, 0, 0);
+    private SwerveModuleState[] mSwerveModStates;
 
     public Swerve() {
         setName("Swerve");
@@ -39,65 +35,84 @@ public class Swerve extends SubsystemBase {
                 };
         resetSteeringToAbsolute();
         odometry = new Odometry(this);
+        telemetry = new SwerveTelemetry(this);
     }
 
     @Override
     public void periodic() {
         odometry.update();
+        mSwerveModStates = getStatesCAN(); // Get the states once a loop
+        telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModStates);
+        telemetry.logModuleAbsolutePositions();
     }
 
     public void drive(
-            Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        // If pidTurn is getting a value override the drivers steering control
-        if (pidTurn != 0) {
-            rotation = pidTurn;
-        }
+            double fwdPositive,
+            double leftPositive,
+            double rotationRadiansPS,
+            boolean fieldRelative,
+            boolean isOpenLoop) {
+        drive(
+                fwdPositive,
+                leftPositive,
+                rotationRadiansPS,
+                fieldRelative,
+                isOpenLoop,
+                new Translation2d());
+    }
 
-        if (Math.abs(rotation) < 0.03) {
-            rotation = 0;
-        }
+    /**
+     * Used to drive the swerve robot, should be called from commands that require swerve.
+     *
+     * @param fwdPositive Forward Positive meters per second
+     * @param leftPositive Left Positive meters per secound
+     * @param omegaRadiansPerSecond Rotation Radians per second
+     * @param fieldRelative If the robot should drive in field relative
+     * @param isOpenLoop If the robot should drive in open loop
+     * @param centerOfRotationMeters The center of rotation in meters
+     */
+    public void drive(
+            double fwdPositive,
+            double leftPositive,
+            double omegaRadiansPerSecond,
+            boolean fieldRelative,
+            boolean isOpenLoop,
+            Translation2d centerOfRotationMeters) {
+
         ChassisSpeeds speeds;
         if (fieldRelative) {
             speeds =
                     ChassisSpeeds.fromFieldRelativeSpeeds(
-                            translation.getX(), translation.getY(), rotation, gyro.getYaw());
+                            fwdPositive, leftPositive, omegaRadiansPerSecond, gyro.getYaw());
         } else {
-            speeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+            speeds = new ChassisSpeeds(fwdPositive, leftPositive, omegaRadiansPerSecond);
         }
 
-        // speeds = limitAcceleration(speeds);
         SwerveModuleState[] swerveModuleStates =
-                SwerveConfig.swerveKinematics.toSwerveModuleStates(speeds);
+                SwerveConfig.swerveKinematics.toSwerveModuleStates(speeds, centerOfRotationMeters);
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConfig.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConfig.maxVelocity);
 
+        telemetry.logModuleStates("SwerveModuleStates/Desired", swerveModuleStates);
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
-        drive_y = translation.getY();
-        drive_x = translation.getX();
-        drive_rotation = rotation;
     }
 
-    public void useOutput(double output) {
-        pidTurn = output * SwerveConfig.maxAngularVelocity;
-    }
-
-    // Used for control loops that give a rotational velocity directly
-    public void setRotationalVelocity(double rotationalVelocity) {
-        pidTurn = rotationalVelocity;
-    }
-
-    // Reset AngleMotors to Absolute
+    /** Reset AngleMotors to Absolute This is used to reset the angle motors to absolute position */
     public void resetSteeringToAbsolute() {
         for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
     }
 
-    /* Used by SwerveFollowCommand in Auto */
+    /**
+     * Used by SwerveFollowCommand in Auto, assumes closed loop control
+     *
+     * @param desiredStates Meters per second and radians per second
+     */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConfig.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConfig.maxVelocity);
 
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
@@ -114,7 +129,14 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public SwerveModuleState[] getStates() {
+    public void stop() {
+        for (SwerveModule mod : mSwerveMods) {
+            mod.mDriveMotor.stopMotor();
+            mod.mAngleMotor.stopMotor();
+        }
+    }
+
+    private SwerveModuleState[] getStatesCAN() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
             states[mod.moduleNumber] = mod.getState();
@@ -122,47 +144,16 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
+    public SwerveModuleState[] getStates() {
+        return mSwerveModStates;
+    }
+
     public SwerveModulePosition[] getPositions() {
-        SwerveModulePosition[] states = new SwerveModulePosition[4];
+        SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : mSwerveMods) {
-            states[mod.moduleNumber] = mod.getPosition();
+            positions[mod.moduleNumber] = mod.getPosition();
         }
-        return states;
-    }
-
-    // Characterization methods
-    public void resetFalconPositions() {
-        for (SwerveModule mod : mSwerveMods) {
-            mod.mDriveMotor.setSelectedSensorPosition(0);
-        }
-    }
-
-    public double getLeftPositionMeters() {
-        return Conversions.FalconToMeters(
-                mSwerveMods[0].mDriveMotor.getSelectedSensorPosition(),
-                SwerveConfig.wheelCircumference,
-                SwerveConfig.driveGearRatio);
-    }
-
-    public double getRightPositionMeters() {
-        return Conversions.FalconToMeters(
-                mSwerveMods[1].mDriveMotor.getSelectedSensorPosition(),
-                SwerveConfig.wheelCircumference,
-                SwerveConfig.driveGearRatio);
-    }
-
-    public double getLeftMetersPerSec() {
-        return Conversions.falconToMPS(
-                mSwerveMods[0].mDriveMotor.getSelectedSensorVelocity(),
-                SwerveConfig.wheelCircumference,
-                SwerveConfig.driveGearRatio);
-    }
-
-    public double getRightMetersPerSec() {
-        return Conversions.falconToMPS(
-                mSwerveMods[1].mDriveMotor.getSelectedSensorVelocity(),
-                SwerveConfig.wheelCircumference,
-                SwerveConfig.driveGearRatio);
+        return positions;
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -170,12 +161,5 @@ public class Swerve extends SubsystemBase {
         mSwerveMods[2].mDriveMotor.setVoltage(leftVolts);
         mSwerveMods[1].mDriveMotor.setVoltage(rightVolts);
         mSwerveMods[3].mDriveMotor.setVoltage(rightVolts);
-    }
-
-    public void stop() {
-        for (SwerveModule mod : mSwerveMods) {
-            mod.mDriveMotor.stopMotor();
-            mod.mAngleMotor.stopMotor();
-        }
     }
 }

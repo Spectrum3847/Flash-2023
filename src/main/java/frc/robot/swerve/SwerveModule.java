@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.SpectrumLib.swerve.CTREModuleState;
 import frc.SpectrumLib.swerve.SwerveModuleConfig;
 import frc.SpectrumLib.util.Conversions;
+import frc.robot.Robot;
+import frc.robot.RobotConfig.RobotType;
 
 public class SwerveModule {
     public int moduleNumber;
@@ -22,7 +24,7 @@ public class SwerveModule {
     public WPI_TalonFX mAngleMotor;
     public WPI_TalonFX mDriveMotor;
     private WPI_CANCoder angleEncoder;
-    private double lastAngle;
+    private Rotation2d lastAngle;
     private SwerveConfig swerveConfig;
 
     SimpleMotorFeedforward feedforward =
@@ -33,7 +35,11 @@ public class SwerveModule {
             int moduleNumber, SwerveConfig swerveConfig, SwerveModuleConfig moduleConfig) {
         this.moduleNumber = moduleNumber;
         this.swerveConfig = swerveConfig;
-        angleOffset = moduleConfig.angleOffset;
+        if (Robot.config.getRobotType() == RobotType.PRACTICE) {
+            angleOffset = moduleConfig.angleOffsetPractice;
+        } else {
+            angleOffset = moduleConfig.angleOffset;
+        }
 
         /* Angle Encoder Config */
         angleEncoder = new WPI_CANCoder(moduleConfig.cancoderID);
@@ -47,7 +53,7 @@ public class SwerveModule {
         mDriveMotor = new WPI_TalonFX(moduleConfig.driveMotorID);
         configDriveMotor();
 
-        lastAngle = getState().angle.getDegrees();
+        lastAngle = getState().angle;
     }
 
     /** Set motors to desired speed using state
@@ -56,14 +62,12 @@ public class SwerveModule {
      *  @param isOpenLoop - if true, use percent output for motors, if false, use velocity
      *  **/
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-        desiredState =
-                CTREModuleState.optimize(
-                        desiredState,
-                        getState().angle); // Custom optimize command, since default WPILib optimize
-        // assumes continuous controller which CTRE is not
+        // Custom optimize command, since default WPILib optimize assumes continuous controller
+        // which CTRE is not
+        desiredState = CTREModuleState.optimize(desiredState, getState().angle);
 
         if (isOpenLoop) {
-            double percentOutput = desiredState.speedMetersPerSecond / SwerveConfig.maxSpeed;
+            double percentOutput = desiredState.speedMetersPerSecond / SwerveConfig.maxVelocity;
             mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
         } else {
             double velocity =
@@ -78,15 +82,17 @@ public class SwerveModule {
                     feedforward.calculate(desiredState.speedMetersPerSecond));
         }
 
-        double angle =
-                (Math.abs(desiredState.speedMetersPerSecond) <= (SwerveConfig.maxSpeed * 0.01))
-                        ? lastAngle
-                        : desiredState.angle
-                                .getDegrees(); // Prevent rotating module if speed is less then 1%.
+        // Prevent rotating module if speed is less then 1%
         // Prevents Jittering.
+        Rotation2d angle = desiredState.angle;
+
+        if ((Math.abs(desiredState.speedMetersPerSecond) < (SwerveConfig.maxVelocity * 0.01))) {
+            angle = lastAngle;
+        }
+
         mAngleMotor.set(
                 ControlMode.Position,
-                Conversions.degreesToFalcon(angle, SwerveConfig.angleGearRatio));
+                Conversions.degreesToFalcon(angle.getDegrees(), SwerveConfig.angleGearRatio));
         lastAngle = angle;
     }
 
@@ -94,14 +100,15 @@ public class SwerveModule {
         double offset = angleOffset;
         double absolutePosition =
                 Conversions.degreesToFalcon(
-                        getCanCoder().getDegrees() - offset, SwerveConfig.angleGearRatio);
+                        getCanCoderAngle().getDegrees() - offset, SwerveConfig.angleGearRatio);
         mAngleMotor.setSelectedSensorPosition(absolutePosition);
     }
 
     private void configAngleEncoder() {
         angleEncoder.configFactoryDefault();
         angleEncoder.configAllSettings(swerveConfig.swerveCanCoderConfig);
-        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 200);
+        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 249);
+        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 253);
     }
 
     private void configAngleMotor() {
@@ -120,17 +127,13 @@ public class SwerveModule {
         mDriveMotor.setSelectedSensorPosition(0);
     }
 
-    public Rotation2d getCanCoder() {
+    public Rotation2d getCanCoderAngle() {
         Rotation2d position = Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
         return position;
     }
 
-    public void slowCANcoderStatusFrames() {
-        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 200);
-    }
-
-    public void fastCANcoderSatusFrames() {
-        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10);
+    public Rotation2d getTargetAngle() {
+        return lastAngle;
     }
 
     public SwerveModuleState getState() {
