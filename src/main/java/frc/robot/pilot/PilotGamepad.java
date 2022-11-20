@@ -1,6 +1,5 @@
 package frc.robot.pilot;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.SpectrumLib.gamepads.AxisButton;
@@ -14,9 +13,8 @@ import frc.robot.leds.commands.RainbowLEDCommand;
 import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
 import frc.robot.pilot.commands.SpinMove;
-import frc.robot.swerve.commands.SwerveCommands;
 import frc.robot.pose.commands.PoseCommands;
-import frc.robot.swerve.commands.LockSwerve;
+import frc.robot.vision.VisionCommands;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
@@ -39,15 +37,14 @@ public class PilotGamepad extends Gamepad {
     }
 
     public void setupTeleopButtons() {
-        // gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(Math.PI * 1 / 2).withName("Snap
-        // 90"));
-        gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(0).withName("Aim to 0"));
+        gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(Math.PI * 1 / 2).withName("Snap 90"));
         // gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.bButton.whileTrue(
                 PilotCommands.aimPilotDrive(() -> Robot.vision.getRadiansToTarget())
                         .withName("Aim to target"));
         // gamepad.xButton.whileTrue(new LockSwerve());
-        gamepad.xButton.whileTrue(PilotCommands.aimPilotDrive(Units.degreesToRadians(90)));
+        //get information about target and robot yaw 
+        gamepad.xButton.whileTrue(VisionCommands.printYawInfo());
         gamepad.yButton.whileTrue(new SpinMove());
 
         // Right Stick points the robot in that direction

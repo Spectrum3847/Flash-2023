@@ -10,7 +10,7 @@ public final class VisionConfig {
             Units.degreesToRadians(26.138); // angle from looking straight forward
 
     // testing
-    
+
     private final double TARGET_HEIGHT_METERS = Units.inchesToMeters(36.2); // 36.2 inches
 
     /* Location of camera relative to robot center */

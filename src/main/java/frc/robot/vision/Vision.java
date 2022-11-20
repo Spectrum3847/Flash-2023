@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
-
 import java.text.DecimalFormat;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -21,7 +20,6 @@ public class Vision extends SubsystemBase {
 
     // testing
     private DecimalFormat df = new DecimalFormat();
-    private double lastCaptureTime = 0;
     private double lastYaw = 0;
     private boolean targetFound = true;
 
@@ -40,16 +38,17 @@ public class Vision extends SubsystemBase {
         PhotonPipelineResult results = camera.getLatestResult();
         if (results.hasTargets()) {
             PhotonTrackedTarget target = results.getBestTarget();
-            yaw = target.getYaw();
+            // negate it because the target.getYaw is the yaw of the robot from the target which is
+            // the opposite direction. Or photonvision yaw is CW+ CCW-
+            yaw = -target.getYaw();
             pitch = target.getPitch();
             area = target.getArea();
             targetId = target.getFiducialId();
             poseAmbiguity = target.getPoseAmbiguity();
             captureTime = Timer.getFPGATimestamp() - (results.getLatencyMillis() / 1000d);
 
-            if (lastCaptureTime == 0) {
-                lastCaptureTime = captureTime;
-            }
+
+            //printing 
             if (lastYaw == 0) {
                 lastYaw = yaw;
             }
@@ -58,10 +57,10 @@ public class Vision extends SubsystemBase {
                 // printDebug(targetId, yaw, pitch, area, poseAmbiguity, captureTime);
             }
 
-            lastCaptureTime = captureTime;
             lastYaw = yaw;
             targetFound = true;
         } else {
+            //no target found
             yaw = 0.0;
             if (targetFound) {
                 RobotTelemetry.print("Lost target");
@@ -71,8 +70,14 @@ public class Vision extends SubsystemBase {
     }
 
     public double getRadiansToTarget() {
-        RobotTelemetry.print("Yaw (D): " + yaw + "|| gyro (D): " + Robot.swerve.getHeading().getDegrees());
-        return Units.degreesToRadians(yaw) + Robot.swerve.getHeading().getDegrees();
+        RobotTelemetry.print(
+                "Yaw (D): "
+                        + yaw
+                        + "|| gyro (D): "
+                        + Robot.swerve.getHeading().getDegrees()
+                        + " || Aiming at: "
+                        + (yaw + Robot.swerve.getHeading().getDegrees()));
+        return Units.degreesToRadians(yaw) + Robot.swerve.getHeading().getRadians();
     }
 
     private void printDebug(
@@ -95,5 +100,9 @@ public class Vision extends SubsystemBase {
                         + poseAmbiguity
                         + " | Capture Time: "
                         + df.format(captureTime));
+    }
+
+    public double getYaw() {
+        return yaw;
     }
 }
