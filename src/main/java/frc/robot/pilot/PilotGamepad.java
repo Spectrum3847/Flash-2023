@@ -11,8 +11,8 @@ import frc.robot.leds.commands.OneColorLEDCommand;
 import frc.robot.leds.commands.RainbowLEDCommand;
 import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
+import frc.robot.pose.commands.PoseCommands;
 import frc.robot.swerve.commands.LockSwerve;
-import frc.robot.swerve.commands.SwerveCommands;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
@@ -42,23 +42,19 @@ public class PilotGamepad extends Gamepad {
         gamepad.yButton.whileTrue(PilotCommands.snakeDrive());
 
         // Right Stick points the robot in that direction
-        Trigger rightX =
-                new AxisButton(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND).trigger();
-        Trigger rightY =
-                new AxisButton(gamepad, XboxAxis.RIGHT_Y, 0.5, ThresholdType.DEADBAND).trigger();
+        Trigger rightX = AxisButton.create(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND);
+        Trigger rightY = AxisButton.create(gamepad, XboxAxis.RIGHT_Y, 0.5, ThresholdType.DEADBAND);
         rightX.or(rightY).whileTrue(PilotCommands.stickSteer());
-
-        gamepad.rightBumper.whileTrue(PilotCommands.stickSteer());
 
         // Reorient the robot to the current heading
         gamepad.Dpad.Up.whileTrue(
-                SwerveCommands.setHeadingDeg(0).alongWith(PilotCommands.rumble(0.5, 1)));
+                PoseCommands.resetHeading(0).alongWith(PilotCommands.rumble(0.5, 1)));
         gamepad.Dpad.Left.whileTrue(
-                SwerveCommands.setHeadingDeg(90).alongWith(PilotCommands.rumble(0.5, 1)));
+                PoseCommands.resetHeading(90).alongWith(PilotCommands.rumble(0.5, 1)));
         gamepad.Dpad.Down.whileTrue(
-                SwerveCommands.setHeadingDeg(180).alongWith(PilotCommands.rumble(0.5, 1)));
+                PoseCommands.resetHeading(180).alongWith(PilotCommands.rumble(0.5, 1)));
         gamepad.Dpad.Right.whileTrue(
-                SwerveCommands.setHeadingDeg(270).alongWith(PilotCommands.rumble(0.5, 1)));
+                PoseCommands.resetHeading(270).alongWith(PilotCommands.rumble(0.5, 1)));
     }
 
     public void setupDisabledButtons() {

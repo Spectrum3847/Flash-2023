@@ -6,6 +6,7 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -34,9 +35,9 @@ public class Pose extends SubsystemBase {
                         Nat.N7(),
                         Nat.N7(),
                         Nat.N5(),
-                        Robot.swerve.gyro.getRawYaw(),
-                        new Pose2d(),
+                        Robot.swerve.getHeading(),
                         Robot.swerve.getPositions(),
+                        new Pose2d(),
                         SwerveConfig.swerveKinematics,
                         createStateStdDevs(
                                 config.kPositionStdDevX,
@@ -54,10 +55,10 @@ public class Pose extends SubsystemBase {
     @Override
     public void periodic() {
         updateOdometryEstimate();
-        setEstimatedPose(getEstimatedPosition());
-        setOdometryPose(Robot.swerve.odometry.getPoseMeters());
+        setEstimatedPose(getPosition());
+        setOdometryPose(Robot.swerve.getPoseMeters());
 
-        updatePose("DesiredPose", desiredPose);
+        // updatePose("DesiredPose", desiredPose);
         updatePose("OdometryPose", odometryPose);
         updatePose("EstimatedPose", estimatePose);
     }
@@ -89,7 +90,7 @@ public class Pose extends SubsystemBase {
     /** Updates the field relative position of the robot. */
     public void updateOdometryEstimate() {
         poseEstimator.update(
-                Robot.swerve.gyro.getYaw(), Robot.swerve.getStates(), Robot.swerve.getPositions());
+                Robot.swerve.getHeading(), Robot.swerve.getStates(), Robot.swerve.getPositions());
     }
 
     /**
@@ -98,9 +99,19 @@ public class Pose extends SubsystemBase {
      * @param poseMeters
      * @param gyroAngle
      */
-    public void resetPosition(Pose2d poseMeters, Rotation2d gyroAngle) {
+    public void resetPoseEstimate(Pose2d poseMeters) {
         Robot.swerve.odometry.resetOdometry(poseMeters);
-        poseEstimator.resetPosition(poseMeters, gyroAngle, Robot.swerve.getPositions());
+        poseEstimator.resetPosition(
+                Robot.swerve.getHeading(), Robot.swerve.getPositions(), poseMeters);
+    }
+
+    public void resetHeading(Rotation2d angle) {
+        Robot.swerve.odometry.resetHeading(angle);
+        resetPoseEstimate(new Pose2d(estimatePose.getTranslation(), angle));
+    }
+
+    public void resetLocationEstimate(Translation2d translation) {
+        resetPoseEstimate(new Pose2d(translation, estimatePose.getRotation()));
     }
 
     /**
@@ -108,8 +119,22 @@ public class Pose extends SubsystemBase {
      *
      * @return The estimated robot pose in meters.
      */
-    public Pose2d getEstimatedPosition() {
+    public Pose2d getPosition() {
         return poseEstimator.getEstimatedPosition();
+    }
+
+    /**
+     * Get the heading of the robot estimated by the poseEstimator. Use this in most places we would
+     * use the gyro.
+     *
+     * @return
+     */
+    public Rotation2d getHeading() {
+        return estimatePose.getRotation();
+    }
+
+    public Translation2d getLocation() {
+        return estimatePose.getTranslation();
     }
 
     /**

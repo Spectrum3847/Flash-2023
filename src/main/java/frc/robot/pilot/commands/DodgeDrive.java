@@ -43,7 +43,7 @@ public class DodgeDrive extends CommandBase {
 
         translation = new Translation2d(fwdPositive, leftPositive);
 
-        Rotation2d gyroAngle = swerve.gyro.getYaw();
+        Rotation2d gyroAngle = Robot.pose.getHeading();
         Rotation2d translationAngle = translation.getAngle();
 
         Rotation2d heading = translationAngle.minus(gyroAngle);

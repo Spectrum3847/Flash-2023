@@ -6,6 +6,8 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -15,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
     public SwerveConfig config;
-    public Gyro gyro;
+    protected Gyro gyro;
     public Odometry odometry;
     public SwerveTelemetry telemetry;
     public SwerveModule[] mSwerveMods;
@@ -64,8 +66,8 @@ public class Swerve extends SubsystemBase {
     /**
      * Used to drive the swerve robot, should be called from commands that require swerve.
      *
-     * @param fwdPositive Forward Positive meters per second
-     * @param leftPositive Left Positive meters per secound
+     * @param fwdPositive Velocity of the robot fwd/rev, Forward Positive meters per second
+     * @param leftPositive Velocity of the robot left/right, Left Positive meters per secound
      * @param omegaRadiansPerSecond Rotation Radians per second
      * @param fieldRelative If the robot should drive in field relative
      * @param isOpenLoop If the robot should drive in open loop
@@ -83,7 +85,7 @@ public class Swerve extends SubsystemBase {
         if (fieldRelative) {
             speeds =
                     ChassisSpeeds.fromFieldRelativeSpeeds(
-                            fwdPositive, leftPositive, omegaRadiansPerSecond, gyro.getYaw());
+                            fwdPositive, leftPositive, omegaRadiansPerSecond, getHeading());
         } else {
             speeds = new ChassisSpeeds(fwdPositive, leftPositive, omegaRadiansPerSecond);
         }
@@ -104,6 +106,14 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
+    }
+
+    public Rotation2d getHeading() {
+        return odometry.getHeading();
+    }
+
+    public Pose2d getPoseMeters() {
+        return odometry.getPoseMeters();
     }
 
     /**
