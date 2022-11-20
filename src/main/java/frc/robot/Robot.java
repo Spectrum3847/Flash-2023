@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.SpectrumLib.sim.PhysicsSim;
@@ -83,7 +84,7 @@ public class Robot extends LoggedRobot {
 
         // Initialize all systems, do this after getting the MAC address
         intializeSystems();
-
+        SmartDashboard.putData(CommandScheduler.getInstance());
         RobotTelemetry.print("--- Robot Init Complete ---");
     }
 
