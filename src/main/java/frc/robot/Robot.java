@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.SpectrumLib.sim.PhysicsSim;
@@ -29,6 +28,10 @@ public class Robot extends LoggedRobot {
 
     public static String MAC = "";
 
+    public Robot(double period) {
+        super(period);
+    }
+
     // Intialize subsystems and run their setupDefaultCommand methods here
     private void intializeSystems() {
         swerve = new Swerve();
@@ -37,7 +40,7 @@ public class Robot extends LoggedRobot {
 
         leds = new LEDs();
         pilotGamepad = new PilotGamepad();
-        telemetry = new RobotTelemetry();
+        telemetry = new RobotTelemetry(RobotConfig.mainTabName);
 
         // Set Default Commands, this method should exist for each subsystem that has
         // commands
@@ -52,8 +55,8 @@ public class Robot extends LoggedRobot {
     public static void resetCommandsAndButtons() {
         CommandScheduler.getInstance().cancelAll(); // Disable any currently running commands
         CommandScheduler.getInstance().getActiveButtonLoop().clear();
-        LiveWindow.setEnabled(false); // Disable Live Window we don't need that data being sent
-        LiveWindow.disableAllTelemetry();
+        // LiveWindow.setEnabled(false); // Disable Live Window we don't need that data being sent
+        // LiveWindow.disableAllTelemetry();
 
         // Reset Config for all gamepads and other button bindings
         pilotGamepad.resetConfig();
@@ -168,6 +171,7 @@ public class Robot extends LoggedRobot {
     public void testInit() {
         RobotTelemetry.print("~~ Test Init Starting");
         resetCommandsAndButtons();
+        swerve.telemetry.testMode();
 
         RobotTelemetry.print("~~ Test Init Complete");
     }

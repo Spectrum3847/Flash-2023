@@ -9,8 +9,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.swerve.SwerveConfig;
@@ -18,8 +16,7 @@ import frc.robot.swerve.SwerveConfig;
 /** Reports our expected, desired, and actual poses to dashboards */
 public class Pose extends SubsystemBase {
     PoseConfig config;
-    Field2d field = new Field2d();
-
+    PoseTelemetry telemetry;
     Pose2d odometryPose = new Pose2d();
     Pose2d desiredPose = new Pose2d();
     Pose2d estimatePose = new Pose2d();
@@ -28,7 +25,7 @@ public class Pose extends SubsystemBase {
 
     public Pose() {
         config = new PoseConfig();
-        createField();
+        telemetry = new PoseTelemetry(this);
 
         poseEstimator =
                 new SwerveDrivePoseEstimator<N7, N7, N5>(
@@ -59,17 +56,8 @@ public class Pose extends SubsystemBase {
         setOdometryPose(Robot.swerve.getPoseMeters());
 
         // updatePose("DesiredPose", desiredPose);
-        updatePose("OdometryPose", odometryPose);
-        updatePose("EstimatedPose", estimatePose);
-    }
-
-    private void createField() {
-        SmartDashboard.putData("Field", field);
-    }
-
-    private void updatePose(String name, Pose2d pose) {
-        field.getObject(name).setPose(pose);
-        Robot.log.logger.recordOutput(name, pose);
+        telemetry.updatePoseOnField("OdometryPose", odometryPose);
+        telemetry.updatePoseOnField("EstimatedPose", estimatePose);
     }
 
     /** Sets the Odometry Pose to the given post */
@@ -198,14 +186,5 @@ public class Pose extends SubsystemBase {
      */
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
         poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
-    }
-
-    /**
-     * get the current field2d object
-     *
-     * @return field2d object
-     */
-    public Field2d getField() {
-        return field;
     }
 }
