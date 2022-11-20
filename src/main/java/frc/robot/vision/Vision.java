@@ -71,8 +71,8 @@ public class Vision extends SubsystemBase {
     }
 
     public double getRadiansToTarget() {
-        RobotTelemetry.print("Yaw (D): " + yaw + "|| gyro (D): " + Robot.swerve.gyro.getDegrees());
-        return Units.degreesToRadians(yaw) + Robot.swerve.gyro.getRadians();
+        RobotTelemetry.print("Yaw (D): " + yaw + "|| gyro (D): " + Robot.swerve.getHeading().getDegrees());
+        return Units.degreesToRadians(yaw) + Robot.swerve.getHeading().getDegrees();
     }
 
     private void printDebug(
