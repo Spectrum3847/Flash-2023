@@ -108,6 +108,10 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    public void resetHeading(Rotation2d heading) {
+        odometry.resetHeading(heading);
+    }
+
     public Rotation2d getHeading() {
         return odometry.getHeading();
     }
