@@ -12,6 +12,7 @@ import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
 import frc.robot.vision.RobotPoseEstimator.PoseStrategy;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -19,39 +20,35 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 @SuppressWarnings("unused")
 public class Vision extends SubsystemBase {
-    public VisionConfig config;
-    public final PhotonCamera camera;
-    public RobotPoseEstimator poseEstimator;
+    public final VisionConfig config;
+    public final RobotPoseEstimator poseEstimator;
+    public final PhotonCamera[] cameras;
 
+    private ArrayList<Pair<PhotonCamera, Transform3d>> cameraPairs;
     private double yaw, pitch, area, poseAmbiguity, captureTime;
     private int targetId;
 
     // testing
-    private DecimalFormat df = new DecimalFormat();
+    private final DecimalFormat df = new DecimalFormat();
     private double lastYaw = 0;
     private boolean targetFound = true;
 
-    // there is probably a better way to interact with config
     public Vision() {
         setName("Vision");
         config = new VisionConfig();
-        camera = new PhotonCamera(config.CAMERA_NAME);
-
-        // setting up the pair(s) of camera and their 3d transformation from the center of the robot
-        config.cameraPair =
-                new Pair<PhotonCamera, Transform3d>(
-                        camera,
-                        new Transform3d(
-                                new Translation3d(
-                                        config.CAMERA_TO_ROBOT_X_METERS,
-                                        config.CAMERA_TO_ROBOT_Y_METERS,
-                                        config.CAMERA_TO_ROBOT_Z_METERS),
-                                new Rotation3d(0, config.CAMERA_PITCH_RADIANS, 0)));
-        config.cameras.add(config.cameraPair);
+        cameras = 
+            new PhotonCamera[] {
+                VisionConfig.LL.config.camera
+                /* Add cameras here */
+            };
+        // setting up the pair(s) of camera and their 3d transformation from the center of the robot to give to the pose estimator
+        for(int i = 0; i < cameras.length; i++) {
+            cameraPairs.add(getCameraPair(getCameraConfig(i)));
+        }
 
         poseEstimator =
                 new RobotPoseEstimator(
-                        config.tagMap, PoseStrategy.LOWEST_AMBIGUITY, config.cameras);
+                        VisionConfig.tagMap, VisionConfig.strategy, cameraPairs);
 
         // printing purposes
         df.setMaximumFractionDigits(2);
@@ -59,15 +56,15 @@ public class Vision extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // get targets & basic data
-        PhotonPipelineResult results = camera.getLatestResult();
+        // get targets & basic data from a single camera
+        PhotonPipelineResult results = cameras[0].getLatestResult();
         if (results.hasTargets()) {
             PhotonTrackedTarget target = results.getBestTarget();
             // negate it because the target.getYaw is the yaw of the robot from the target which is
             // the opposite direction. Or photonvision yaw is CW+ CCW-
             yaw = -target.getYaw();
             pitch = target.getPitch();
-            area = target.getArea();
+            area = target.getArea(); 
             targetId = target.getFiducialId();
             poseAmbiguity = target.getPoseAmbiguity();
             captureTime = Timer.getFPGATimestamp() - (results.getLatencyMillis() / 1000d);
@@ -134,5 +131,29 @@ public class Vision extends SubsystemBase {
 
     public double getYaw() {
         return yaw;
+    }
+
+    public Pair<PhotonCamera, Transform3d> getCameraPair(CameraConfig config) { 
+        return new Pair<PhotonCamera, Transform3d>(
+            config.camera, 
+            new Transform3d(
+                new Translation3d(
+                    config.cameraToRobotX, 
+                    config.cameraToRobotY, 
+                    config.cameraToRobotZ), 
+                new Rotation3d(
+                    config.cameraRollRadians, config.cameraPitchRadians, config.cameraYawRadians)));
+        
+    }
+
+    public CameraConfig getCameraConfig(int iteration) {
+        switch (iteration) {
+            case 0: 
+                return VisionConfig.LL.config;
+            /* add camera configs here */
+            default:
+                RobotTelemetry.print("Something went wrong trying to get camera config");
+                return VisionConfig.LL.config;
+        }
     }
 }
