@@ -14,10 +14,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+import frc.robot.swerve.gyros.GyroIO;
+import frc.robot.swerve.gyros.Pigeon1;
+import frc.robot.swerve.gyros.Pigeon2;
 
 public class Swerve extends SubsystemBase {
     public SwerveConfig config;
-    protected Gyro gyro;
+    protected GyroIO gyro;
     public Odometry odometry;
     public SwerveTelemetry telemetry;
     public SwerveModule[] mSwerveMods;
@@ -26,7 +30,21 @@ public class Swerve extends SubsystemBase {
     public Swerve() {
         setName("Swerve");
         config = new SwerveConfig();
-        gyro = new Gyro();
+
+        switch (Robot.config.getRobotType()) {
+            case PRACTICE:
+                gyro = new Pigeon1();
+                SwerveConfig.Mod0.angleOffset = SwerveConfig.Mod0.angleOffsetP;
+                SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetP;
+                SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetP;
+                SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
+                break;
+            case COMP:
+            case REPLAY:
+            case SIM:
+                gyro = new Pigeon2();
+                break;
+        }
 
         mSwerveMods =
                 new SwerveModule[] {
@@ -106,6 +124,10 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
+    }
+
+    public void resetHeading(Rotation2d heading) {
+        odometry.resetHeading(heading);
     }
 
     public Rotation2d getHeading() {
