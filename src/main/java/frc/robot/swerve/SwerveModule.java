@@ -102,8 +102,8 @@ public class SwerveModule {
     private void configAngleEncoder() {
         angleEncoder.configFactoryDefault();
         angleEncoder.configAllSettings(swerveConfig.swerveCanCoderConfig);
-        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 249);
-        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 253);
+        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 253);
+        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 249);
     }
 
     private void configAngleMotor() {
@@ -123,8 +123,8 @@ public class SwerveModule {
     }
 
     public Rotation2d getCanCoderAngle() {
-        Rotation2d position = Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
-        return position;
+        Rotation2d rotation = Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
+        return rotation;
     }
 
     public Rotation2d getTargetAngle() {
