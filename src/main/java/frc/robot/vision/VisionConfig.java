@@ -14,7 +14,9 @@ public final class VisionConfig {
     /* Pose Estimation Strategy */
     public static PoseStrategy strategy = PoseStrategy.LOWEST_AMBIGUITY;
 
-    /* April Tag setup */
+    private final AprilTag[] tags;
+
+    /* Individual AprilTag setup */
     public static final AprilTag tag0 =
             new AprilTag(0, new Pose3d(1.515, 7.286, 1.07, new Rotation3d(0, 0, -Math.PI / 2)));
 
@@ -46,10 +48,17 @@ public final class VisionConfig {
     }
 
     public VisionConfig() {
-        // eventually move to vision.java
-        // setting up the map of April Tags
-        // change it to be able to use multiple tags (in an array)
+        //setup maps and tags
         tagMap = new HashMap<Integer, Pose3d>();
-        tagMap.put(tag0.ID, tag0.pose);
+        
+        tags = 
+            new AprilTag[] {
+                tag0
+            /* Add tags here */
+            };
+            
+        for(AprilTag tag : tags) {
+            tagMap.put(tag.ID, tag.pose);
+        }
     }
 }
