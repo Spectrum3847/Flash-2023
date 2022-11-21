@@ -24,23 +24,24 @@ public class PilotGamepad extends Gamepad {
         gamepad.leftStick.setXinvert(PilotConfig.xInvert);
         gamepad.leftStick.setYinvert(PilotConfig.yInvert);
 
+        gamepad.rightStick.setDeadband(PilotConfig.throttleDeadband);
+        gamepad.rightStick.configCurves(PilotConfig.steeringExp, PilotConfig.steeringScaler);
+        gamepad.rightStick.setXinvert(PilotConfig.xInvert);
+        gamepad.rightStick.setYinvert(PilotConfig.yInvert);
+
         gamepad.triggers.setTwistDeadband(PilotConfig.steeringDeadband);
         gamepad.triggers.configTwistCurve(PilotConfig.steeringExp, PilotConfig.steeringScaler);
         gamepad.triggers.setTwistInvert(PilotConfig.steeringInvert);
     }
 
     public void setupTeleopButtons() {
-        gamepad.aButton.whileTrue(
-                PilotCommands.aimPilotDrive(Math.PI * -1 / 2).withName("Snap 90"));
+        gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(Math.PI * 1 / 2).withName("Snap 90"));
         gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.xButton.whileTrue(new LockSwerve());
-        gamepad.yButton.whileTrue(PilotCommands.snakeDrive());
 
         // Right Stick points the robot in that direction
-        Trigger rightX =
-                new AxisButton(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND).trigger();
-        Trigger rightY =
-                new AxisButton(gamepad, XboxAxis.RIGHT_Y, 0.5, ThresholdType.DEADBAND).trigger();
+        Trigger rightX = AxisButton.create(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND);
+        Trigger rightY = AxisButton.create(gamepad, XboxAxis.RIGHT_Y, 0.5, ThresholdType.DEADBAND);
         rightX.or(rightY).whileTrue(PilotCommands.stickSteer());
 
         gamepad.rightBumper.whileTrue(PilotCommands.stickSteer());
@@ -65,30 +66,31 @@ public class PilotGamepad extends Gamepad {
 
     public void setupTestButtons() {}
 
-    public double getDriveX() {
-        double x = gamepad.leftStick.getX();
-        return x;
+    public double getDriveFwdPositive() {
+        double fwdPositive = gamepad.leftStick.getY();
+        return fwdPositive;
     }
 
-    public double getDriveY() {
-        double y = gamepad.leftStick.getY();
-        return y;
+    public double getDriveLeftPositive() {
+        double leftPositive = gamepad.leftStick.getX();
+        return leftPositive;
     }
 
     // Positive is counter-clockwise, left Trigger is positive
-    public double getDriveR() {
-        double r = gamepad.triggers.getTwist();
-        return r;
+    public double getDriveCCWPositive() {
+        double ccwPositive = gamepad.triggers.getTwist();
+        return ccwPositive;
     }
 
-    // Return the angle created by the left stick in radians, 0 is up, 90 is left
+    // Return the angle created by the left stick in radians, 0 is up, pi/2 is left
     public Double getDriveAngle() {
-        return gamepad.leftStick.getDirectionRadians();
+        return gamepad.leftStick.getDirectionRadians(getDriveFwdPositive(), getDriveLeftPositive());
     }
 
-    // Return the angle created by the right stick in radians, 0 is up, 90 is left
+    // Return the angle created by the right stick in radians, 0 is up, pi/2 is left
     public double getRightStickAngle() {
-        return gamepad.rightStick.getDirectionRadians();
+        return gamepad.rightStick.getDirectionRadians(
+                gamepad.rightStick.getY(), gamepad.rightStick.getX());
     }
 
     public void rumble(double intensity) {

@@ -8,12 +8,15 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.auton.AutonConstants;
 import java.util.function.DoubleSupplier;
 
 public class Trajectories extends SubsystemBase {
-    public PIDController thetaController;
-    public PIDController xController;
-    public PIDController yController;
+    public static PIDController thetaController;
+    public static PIDController xController =
+            new PIDController(AutonConstants.kPXController, 0, AutonConstants.kDXController);;
+    public static PIDController yController =
+            new PIDController(AutonConstants.kPYController, 0, AutonConstants.kDYController);;
     public Rotation2d startAngle;
 
     /** Creates a new Trajectory. */
