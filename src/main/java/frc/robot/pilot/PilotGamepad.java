@@ -12,7 +12,6 @@ import frc.robot.leds.commands.OneColorLEDCommand;
 import frc.robot.leds.commands.RainbowLEDCommand;
 import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
-import frc.robot.pilot.commands.SpinMove;
 import frc.robot.pose.commands.PoseCommands;
 import frc.robot.vision.VisionCommands;
 
@@ -43,9 +42,10 @@ public class PilotGamepad extends Gamepad {
                 PilotCommands.aimPilotDrive(() -> Robot.vision.getRadiansToTarget())
                         .withName("Aim to target"));
         // gamepad.xButton.whileTrue(new LockSwerve());
-        //get information about target and robot yaw 
+        // get information about target and robot yaw
         gamepad.xButton.whileTrue(VisionCommands.printYawInfo());
-        gamepad.yButton.whileTrue(new SpinMove());
+        // gamepad.yButton.whileTrue(new SpinMove());
+        gamepad.yButton.whileTrue(VisionCommands.printEstimatedPoseInfo());
 
         // Right Stick points the robot in that direction
         Trigger rightX = AxisButton.create(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND);
