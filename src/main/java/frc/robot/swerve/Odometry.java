@@ -1,6 +1,8 @@
 package frc.robot.swerve;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 
 public class Odometry {
@@ -24,11 +26,15 @@ public class Odometry {
     }
 
     public void resetOdometry(Pose2d pose) {
-        swerveOdometry.resetPosition(pose, swerve.gyro.getYaw());
+        swerveOdometry.resetPosition(swerve.gyro.getYaw(), swerve.getPositions(), pose);
     }
 
     public Pose2d getPoseMeters() {
         return swerveOdometry.getPoseMeters();
+    }
+
+    public Translation2d getTranslationMeters() {
+        return swerveOdometry.getPoseMeters().getTranslation();
     }
 
     public double getXDistance() {
@@ -41,5 +47,13 @@ public class Odometry {
 
     public double getDistance() {
         return getPoseMeters().getTranslation().getNorm();
+    }
+
+    public Rotation2d getHeading() {
+        return getPoseMeters().getRotation();
+    }
+
+    public void resetHeading(Rotation2d newHeading) {
+        resetOdometry(new Pose2d(getTranslationMeters(), newHeading));
     }
 }
