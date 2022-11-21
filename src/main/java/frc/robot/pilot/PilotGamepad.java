@@ -13,7 +13,6 @@ import frc.robot.leds.commands.RainbowLEDCommand;
 import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
 import frc.robot.pose.commands.PoseCommands;
-import frc.robot.swerve.commands.LockSwerve;
 import frc.robot.vision.VisionCommands;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
@@ -38,8 +37,13 @@ public class PilotGamepad extends Gamepad {
 
     public void setupTeleopButtons() {
         gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(Math.PI * 1 / 2).withName("Snap 90"));
-        gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
-        gamepad.xButton.whileTrue(new LockSwerve());
+        // gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
+        gamepad.bButton.whileTrue(
+                PilotCommands.aimPilotDrive(() -> Robot.vision.getRadiansToTarget())
+                        .withName("Aim to target"));
+        // gamepad.xButton.whileTrue(new LockSwerve());
+        // get information about target and robot yaw
+        gamepad.xButton.whileTrue(VisionCommands.printYawInfo());
         // gamepad.yButton.whileTrue(new SpinMove());
         gamepad.yButton.whileTrue(VisionCommands.printEstimatedPoseInfo());
 

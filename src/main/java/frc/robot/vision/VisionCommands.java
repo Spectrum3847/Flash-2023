@@ -9,6 +9,16 @@ import frc.robot.Robot;
 
 public class VisionCommands {
 
+    public static Command printYawInfo() {
+        return new PrintCommand(
+                "Yaw (D): "
+                        + Robot.vision.getYaw()
+                        + "|| gyro (D): "
+                        + Robot.swerve.getHeading().getDegrees()
+                        + " || Aiming at: "
+                        + (Robot.vision.getYaw() + Robot.swerve.getHeading().getDegrees()));
+    }
+
     public static Command printEstimatedPoseInfo() {
         Pair<Pose3d, Double> estimatedPose = Robot.vision.getEstimatedPose();
         return new PrintCommand(

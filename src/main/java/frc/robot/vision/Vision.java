@@ -23,6 +23,13 @@ public class Vision extends SubsystemBase {
     public final PhotonCamera[] cameras;
 
     private ArrayList<Pair<PhotonCamera, Transform3d>> cameraPairs;
+    private double yaw, pitch, area, poseAmbiguity, captureTime;
+    private int targetId;
+
+    // testing
+    private final DecimalFormat df = new DecimalFormat();
+    private double lastYaw = 0;
+    private boolean targetFound = true;
 
     public Vision() {
         setName("Vision");
@@ -39,14 +46,88 @@ public class Vision extends SubsystemBase {
 
         poseEstimator =
                 new RobotPoseEstimator(VisionConfig.tagMap, VisionConfig.strategy, cameraPairs);
+
+        // printing purposes
+        df.setMaximumFractionDigits(2);
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        // get targets & basic data from a single camera
+        PhotonPipelineResult results = cameras[0].getLatestResult();
+        if (results.hasTargets()) {
+            PhotonTrackedTarget target = results.getBestTarget();
+            // negate it because the target.getYaw is the yaw of the robot from the target which is
+            // the opposite direction. Or photonvision yaw is CW+ CCW-
+            yaw = -target.getYaw();
+            pitch = target.getPitch();
+            area = target.getArea();
+            targetId = target.getFiducialId();
+            poseAmbiguity = target.getPoseAmbiguity();
+            captureTime = Timer.getFPGATimestamp() - (results.getLatencyMillis() / 1000d);
 
-    // pose estimation
+            // printing
+            if (lastYaw == 0) {
+                lastYaw = yaw;
+            }
+
+            if (Math.round(lastYaw) != Math.round(yaw)) {
+                // printDebug(targetId, yaw, pitch, area, poseAmbiguity, captureTime);
+            }
+
+            lastYaw = yaw;
+            targetFound = true;
+        } else {
+            // no target found
+            yaw = 0.0;
+            if (targetFound) {
+                RobotTelemetry.print("Lost target");
+                targetFound = false;
+            }
+        }
+    }
+
+    // pose estimating
     public Pair<Pose3d, Double> getEstimatedPose() {
         return poseEstimator.update();
+    }
+
+    // aiming
+    public double getRadiansToTarget() {
+        RobotTelemetry.print(
+                "Yaw (D): "
+                        + yaw
+                        + "|| gyro (D): "
+                        + Robot.swerve.getHeading().getDegrees()
+                        + " || Aiming at: "
+                        + (yaw + Robot.swerve.getHeading().getDegrees()));
+        return Units.degreesToRadians(yaw) + Robot.swerve.getHeading().getRadians();
+    }
+
+    private void printDebug(
+            int targetId,
+            double yaw,
+            double pitch,
+            double area,
+            double poseAmbiguity,
+            double captureTime) {
+        RobotTelemetry.print(
+                "Target ID: "
+                        + targetId
+                        + " | Target Yaw: "
+                        + df.format(yaw)
+                        + " | Pitch: "
+                        + df.format(pitch)
+                        + " | Area: "
+                        + df.format(area)
+                        + " | Pose Ambiguity: "
+                        + poseAmbiguity
+                        + " | Capture Time: "
+                        + df.format(captureTime));
+    }
+
+    public double getYaw() {
+        return yaw;
     }
 
     public Pair<PhotonCamera, Transform3d> getCameraPair(CameraConfig config) {
