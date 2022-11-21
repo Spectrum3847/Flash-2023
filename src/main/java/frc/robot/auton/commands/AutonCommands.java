@@ -3,6 +3,7 @@ package frc.robot.auton.commands;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -30,8 +31,10 @@ public class AutonCommands {
     }
 
     public static Command setGryoDegrees(double deg) {
-        return new InstantCommand(() -> Robot.swerve.setGyroDegrees(deg))
-                .andThen(new PrintCommand("Gyro Degrees: " + Robot.swerve.getDegrees()));
+        return new InstantCommand(() -> Robot.swerve.resetHeading(Rotation2d.fromDegrees(deg)))
+                .andThen(
+                        new PrintCommand(
+                                "Gyro Degrees: " + Robot.swerve.getHeading().getDegrees()));
     }
 
     public static Command intializeGyroAngle(PathPlannerTrajectory path) {
@@ -43,6 +46,6 @@ public class AutonCommands {
         Pose2d tempPose = path.getInitialPose();
         PathPlannerState s = (PathPlannerState) path.getStates().get(0);
         Pose2d tempPose2 = new Pose2d(tempPose.getTranslation(), s.holonomicRotation);
-        return new InstantCommand(() -> Robot.swerve.resetOdometry(tempPose2));
+        return new InstantCommand(() -> Robot.swerve.odometry.resetOdometry(tempPose2));
     }
 }
