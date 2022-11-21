@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 public final class RobotConfig {
 
+    public static final String mainTabName = "Main";
     public static final Double robotInitDelay = 2.0; // Seconds to wait before starting robot code
     public static final boolean enableLogging = true; // Enable logging to file
 
@@ -38,6 +39,7 @@ public final class RobotConfig {
     private RobotType robotType;
 
     public RobotConfig() {
+        RobotTelemetry.createTab(mainTabName);
         checkRobotType();
         switch (getRobotType()) {
             case COMP:
@@ -52,7 +54,7 @@ public final class RobotConfig {
     }
 
     /** Set the RobotType based on if simulation or the MAC address of the RIO */
-    public void checkRobotType() {
+    public RobotType checkRobotType() {
         if (Robot.isSimulation()) {
             robotType = RobotType.SIM;
             RobotTelemetry.print("Robot Type: Simulation");
@@ -63,6 +65,7 @@ public final class RobotConfig {
             robotType = RobotType.COMP;
             RobotTelemetry.print("Robot Type: Competition");
         }
+        return robotType;
     }
 
     public RobotType getRobotType() {
