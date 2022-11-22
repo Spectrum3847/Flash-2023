@@ -40,11 +40,11 @@ public class Swerve extends SubsystemBase {
                 SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetP;
                 SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetP;
                 SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
+                RobotTelemetry.print("Practice Bot Pigeon1 and Swerve Angles");
                 break;
-            case COMP:
-            case REPLAY:
-            case SIM:
+            default:
                 gyro = new Pigeon2();
+                RobotTelemetry.print("Pigeon2 and comp swerve angles");
                 break;
         }
 
@@ -55,9 +55,9 @@ public class Swerve extends SubsystemBase {
                     new SwerveModule(2, config, SwerveConfig.Mod2.config),
                     new SwerveModule(3, config, SwerveConfig.Mod3.config)
                 };
-        resetSteeringToAbsolute();
+        // resetSteeringToAbsolute();
         odometry = new Odometry(this);
-        angleOffset = getHeading();
+        angleOffset = gyro.getRawYaw().unaryMinus();
         telemetry = new SwerveTelemetry(this);
     }
 

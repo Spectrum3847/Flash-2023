@@ -33,7 +33,7 @@ public class SwerveModule {
             int moduleNumber, SwerveConfig swerveConfig, SwerveModuleConfig moduleConfig) {
         this.moduleNumber = moduleNumber;
         this.swerveConfig = swerveConfig;
-
+        angleOffset = moduleConfig.angleOffset;
         /* Angle Encoder Config */
         angleEncoder = new WPI_CANCoder(moduleConfig.cancoderID);
         configAngleEncoder();
