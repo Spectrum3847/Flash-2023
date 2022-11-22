@@ -39,9 +39,7 @@ public class Swerve extends SubsystemBase {
                 SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetP;
                 SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
                 break;
-            case COMP:
-            case REPLAY:
-            case SIM:
+            default:
                 gyro = new Pigeon2();
                 break;
         }
@@ -53,7 +51,6 @@ public class Swerve extends SubsystemBase {
                     new SwerveModule(2, config, SwerveConfig.Mod2.config),
                     new SwerveModule(3, config, SwerveConfig.Mod3.config)
                 };
-        resetSteeringToAbsolute();
         odometry = new Odometry(this);
         telemetry = new SwerveTelemetry(this);
     }
@@ -139,6 +136,7 @@ public class Swerve extends SubsystemBase {
 
     /**
      * Reset the pose2d of the robot
+     *
      * @param pose
      */
     public void resetOdometry(Pose2d pose) {

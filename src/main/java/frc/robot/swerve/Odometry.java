@@ -39,18 +39,6 @@ public class Odometry {
         return swerveOdometry.getPoseMeters().getTranslation();
     }
 
-    public double getXDistance() {
-        return getPoseMeters().getX();
-    }
-
-    public double getYDistance() {
-        return getPoseMeters().getY();
-    }
-
-    public double getDistance() {
-        return getPoseMeters().getTranslation().getNorm();
-    }
-
     public Rotation2d getHeading() {
         return getPoseMeters().getRotation();
     }
