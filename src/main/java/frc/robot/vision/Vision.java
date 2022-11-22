@@ -16,7 +16,6 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-@SuppressWarnings("unused")
 public class Vision extends SubsystemBase {
     public final VisionConfig config;
     public final RobotPoseEstimator poseEstimator;
@@ -35,21 +34,21 @@ public class Vision extends SubsystemBase {
     public Vision() {
         setName("Vision");
         config = new VisionConfig();
+        cameraPairs = new ArrayList<Pair<PhotonCamera, Transform3d>>();
+        currentPose = new Pair<Pose3d, Double>(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), 0.0);
+
         cameras =
                 new PhotonCamera[] {VisionConfig.LL.config.camera
                     /* Add cameras here */
                 };
-        // setting up the pair(s) of camera and their 3d transformation from the center of the robot
-        // to give to the pose estimator
-        cameraPairs = new ArrayList<Pair<PhotonCamera, Transform3d>>();
+        /* setting up the pair(s) of cameras and their 3d transformation from the center of the robot
+        to give to the pose estimator */
         for (int i = 0; i < cameras.length; i++) {
             cameraPairs.add(getCameraPair(getCameraConfig(i)));
         }
 
         poseEstimator =
                 new RobotPoseEstimator(VisionConfig.tagMap, VisionConfig.strategy, cameraPairs);
-
-        currentPose = new Pair<Pose3d, Double>(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), 0.0);
 
         // printing purposes
         df.setMaximumFractionDigits(2);
@@ -58,7 +57,7 @@ public class Vision extends SubsystemBase {
     @Override
     public void periodic() {
         currentPose = getEstimatedPose();
-        // get targets & basic data from a single camera
+        /* get targets & basic data from a single camera */
         PhotonPipelineResult results = cameras[0].getLatestResult();
         if (results.hasTargets()) {
             PhotonTrackedTarget target = results.getBestTarget();
@@ -76,6 +75,7 @@ public class Vision extends SubsystemBase {
                 lastYaw = yaw;
             }
 
+            /* If robot has moved, print new target data */
             if (Math.round(lastYaw) != Math.round(yaw)) {
                 // printDebug(targetId, yaw, pitch, area, poseAmbiguity, captureTime);
             }
@@ -92,30 +92,25 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    // pose estimating
+    /**
+     * Gets the estimated pose of the robot.
+     *
+     * @return the estimated pose of the robot
+     */
     public Pair<Pose3d, Double> getEstimatedPose() {
         return poseEstimator.update();
     }
 
-    // aiming
+    /**
+     * Gets the yaw of the target relative to the field for aiming.
+     *
+     * @return Yaw in radians
+     */
     public double getRadiansToTarget() {
-        // RobotTelemetry.print(
-        //         "Yaw (D): "
-        //                 + yaw
-        //                 + "|| gyro (D): "
-        //                 + Robot.swerve.getHeading().getDegrees()
-        //                 + " || Aiming at: "
-        //                 + (yaw + Robot.swerve.getHeading().getDegrees()));
         return Units.degreesToRadians(yaw) + Robot.swerve.getHeading().getRadians();
     }
 
-    private void printDebug(
-            int targetId,
-            double yaw,
-            double pitch,
-            double area,
-            double poseAmbiguity,
-            double captureTime) {
+    private void printDebug() {
         RobotTelemetry.print(
                 "Target ID: "
                         + targetId
@@ -135,6 +130,12 @@ public class Vision extends SubsystemBase {
         return yaw;
     }
 
+    /**
+     * Gets the camera pair for the pose estimator.
+     *
+     * @param cameraConfig the camera config
+     * @return the camera pair
+     */
     public Pair<PhotonCamera, Transform3d> getCameraPair(CameraConfig config) {
         return new Pair<PhotonCamera, Transform3d>(
                 config.camera,
@@ -149,6 +150,12 @@ public class Vision extends SubsystemBase {
                                 config.cameraYawRadians)));
     }
 
+    /**
+     * Gets the camera config for the camera.
+     *
+     * @param cameraIndex the camera index
+     * @return the camera config
+     */
     public CameraConfig getCameraConfig(int iteration) {
         switch (iteration) {
             case 0:

@@ -8,7 +8,6 @@ import frc.robot.vision.RobotPoseEstimator.PoseStrategy;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("unused")
 public final class VisionConfig {
     public static Map<Integer, Pose3d> tagMap;
     /* Pose Estimation Strategy */

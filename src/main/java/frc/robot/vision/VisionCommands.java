@@ -1,5 +1,7 @@
 package frc.robot.vision;
 
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -22,35 +24,20 @@ public class VisionCommands {
     }
 
     public static Command printEstimatedPoseInfo() {
+        Pair<Pose3d, Double> pose = Robot.vision.currentPose;
         return new InstantCommand(
                 () ->
                         RobotTelemetry.print(
                                 "Estimated Pose: | X: "
-                                        + Robot.vision
-                                                .currentPose
-                                                .getFirst()
-                                                .getTranslation()
-                                                .getX()
+                                        + pose.getFirst().getTranslation().getX()
                                         + " | Y: "
-                                        + Robot.vision
-                                                .currentPose
-                                                .getFirst()
-                                                .getTranslation()
-                                                .getY()
+                                        + pose.getFirst().getTranslation().getY()
                                         + " | Z: "
-                                        + Robot.vision
-                                                .currentPose
-                                                .getFirst()
-                                                .getTranslation()
-                                                .getZ()
+                                        + pose.getFirst().getTranslation().getZ()
                                         + " | Rotation (D): "
                                         + Units.radiansToDegrees(
-                                                Robot.vision
-                                                        .currentPose
-                                                        .getFirst()
-                                                        .getRotation()
-                                                        .getZ())
+                                                pose.getFirst().getRotation().getZ())
                                         + " | Latency: "
-                                        + Robot.vision.currentPose.getSecond().doubleValue()));
+                                        + pose.getSecond().doubleValue()));
     }
 }
