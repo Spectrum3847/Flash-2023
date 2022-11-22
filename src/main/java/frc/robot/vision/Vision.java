@@ -1,6 +1,7 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -57,6 +58,13 @@ public class Vision extends SubsystemBase {
     @Override
     public void periodic() {
         currentPose = getEstimatedPose();
+
+        /* Adding vision estimate to pose */
+        // if(isValidPose()) {
+        //     Robot.pose.addVisionMeasurement(currentPose.getFirst().toPose2d(),
+        // getTimestampSeconds());
+        // }
+
         /* get targets & basic data from a single camera */
         PhotonPipelineResult results = cameras[0].getLatestResult();
         if (results.hasTargets()) {
@@ -93,15 +101,6 @@ public class Vision extends SubsystemBase {
     }
 
     /**
-     * Gets the estimated pose of the robot.
-     *
-     * @return the estimated pose of the robot
-     */
-    public Pair<Pose3d, Double> getEstimatedPose() {
-        return poseEstimator.update();
-    }
-
-    /**
      * Gets the yaw of the target relative to the field for aiming.
      *
      * @return Yaw in radians
@@ -110,24 +109,36 @@ public class Vision extends SubsystemBase {
         return Units.degreesToRadians(yaw) + Robot.swerve.getHeading().getRadians();
     }
 
-    private void printDebug() {
-        RobotTelemetry.print(
-                "Target ID: "
-                        + targetId
-                        + " | Target Yaw: "
-                        + df.format(yaw)
-                        + " | Pitch: "
-                        + df.format(pitch)
-                        + " | Area: "
-                        + df.format(area)
-                        + " | Pose Ambiguity: "
-                        + poseAmbiguity
-                        + " | Capture Time: "
-                        + df.format(captureTime));
-    }
-
     public double getYaw() {
         return yaw;
+    }
+
+    /** Gets the camera capture time in seconds. */
+    public double getTimestampSeconds() {
+        return Timer.getFPGATimestamp() - (currentPose.getSecond().doubleValue() / 1000d);
+    }
+
+    /**
+     * Gets the estimated pose of the robot.
+     *
+     * @return the estimated pose of the robot
+     */
+    private Pair<Pose3d, Double> getEstimatedPose() {
+        return poseEstimator.update();
+    }
+
+    /**
+     * Projects 3d pose to 2d to compare against odometry estimate. Does not account for difference
+     * in rotation.
+     *
+     * @return whether or not the vision estimated pose is within 1 meter of the odometry estimated
+     *     pose
+     */
+    private boolean isValidPose() {
+        Pose2d pose = currentPose.getFirst().toPose2d();
+        Pose2d odometryPose = Robot.pose.getPosition();
+        return (Math.abs(pose.getX() - odometryPose.getX()) <= 1)
+                && (Math.abs(pose.getY() - odometryPose.getY()) <= 1);
     }
 
     /**
@@ -136,7 +147,7 @@ public class Vision extends SubsystemBase {
      * @param cameraConfig the camera config
      * @return the camera pair
      */
-    public Pair<PhotonCamera, Transform3d> getCameraPair(CameraConfig config) {
+    private Pair<PhotonCamera, Transform3d> getCameraPair(CameraConfig config) {
         return new Pair<PhotonCamera, Transform3d>(
                 config.camera,
                 new Transform3d(
@@ -156,7 +167,7 @@ public class Vision extends SubsystemBase {
      * @param cameraIndex the camera index
      * @return the camera config
      */
-    public CameraConfig getCameraConfig(int iteration) {
+    private CameraConfig getCameraConfig(int iteration) {
         switch (iteration) {
             case 0:
                 return VisionConfig.LL.config;
@@ -165,5 +176,21 @@ public class Vision extends SubsystemBase {
                 RobotTelemetry.print("Something went wrong trying to get camera config");
                 return VisionConfig.LL.config;
         }
+    }
+
+    private void printDebug() {
+        RobotTelemetry.print(
+                "Target ID: "
+                        + targetId
+                        + " | Target Yaw: "
+                        + df.format(yaw)
+                        + " | Pitch: "
+                        + df.format(pitch)
+                        + " | Area: "
+                        + df.format(area)
+                        + " | Pose Ambiguity: "
+                        + poseAmbiguity
+                        + " | Capture Time: "
+                        + df.format(captureTime));
     }
 }
