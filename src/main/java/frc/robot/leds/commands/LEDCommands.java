@@ -15,6 +15,10 @@ public class LEDCommands {
         return new ScheduleAnimation(name, new BlinkLEDCommand(color), priority, timeout);
     }
 
+    public static Command chase(Color color, String name, int priority, int timeout) {
+        return new ScheduleAnimation(name, new ChaseLEDCommand(), priority, timeout);
+    }
+
     public static Command rainbow(String name, int priority, int timeout) {
         return new ScheduleAnimation(name, new RainbowLEDCommand(20), priority, timeout);
     }

@@ -6,8 +6,8 @@
       "style": "0",
       "userScale": "2",
       "width": "1280",
-      "xpos": "816",
-      "ypos": "925"
+      "xpos": "78",
+      "ypos": "40"
     }
   },
   "Table": {
@@ -24,15 +24,20 @@
       "Pos": "147,60",
       "Size": "400,200"
     },
+    "###Addressable LEDs": {
+      "Collapsed": "0",
+      "Pos": "327,33",
+      "Size": "142,303"
+    },
     "###FMS": {
       "Collapsed": "0",
-      "Pos": "5,540",
-      "Size": "336,164"
+      "Pos": "17,307",
+      "Size": "283,146"
     },
     "###Joysticks": {
       "Collapsed": "0",
       "Pos": "250,465",
-      "Size": "976,179"
+      "Size": "796,155"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
@@ -61,13 +66,13 @@
     },
     "###System Joysticks": {
       "Collapsed": "0",
-      "Pos": "5,350",
-      "Size": "232,254"
+      "Pos": "466,91",
+      "Size": "192,218"
     },
     "###Timing": {
       "Collapsed": "0",
       "Pos": "5,150",
-      "Size": "169,142"
+      "Size": "141,127"
     },
     "Debug##Default": {
       "Collapsed": "0",
@@ -77,7 +82,7 @@
     "Robot State": {
       "Collapsed": "0",
       "Pos": "5,20",
-      "Size": "109,114"
+      "Size": "92,99"
     }
   }
 }
