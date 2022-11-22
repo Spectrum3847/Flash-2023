@@ -107,10 +107,11 @@ public class Swerve extends SubsystemBase {
         SwerveModDesiredStates =
                 SwerveConfig.swerveKinematics.toSwerveModuleStates(speeds, centerOfRotationMeters);
 
+
+        //LOOK INTO THE OTHER CONSTRUCTOR FOR desaturateWheelSpeeds to see if it is better
         SwerveDriveKinematics.desaturateWheelSpeeds(
                 SwerveModDesiredStates, SwerveConfig.maxVelocity);
 
-        telemetry.logModuleStates("SwerveModuleStates/Desired", SwerveModDesiredStates);
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(SwerveModDesiredStates[mod.moduleNumber], isOpenLoop);
         }
