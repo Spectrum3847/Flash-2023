@@ -24,7 +24,6 @@ public class Swerve extends SubsystemBase {
     protected Odometry odometry;
     public SwerveTelemetry telemetry;
     protected SwerveModule[] mSwerveMods;
-    private SwerveModuleState[] mSwerveModCANStates;
     private SwerveModuleState[] SwerveModDesiredStates;
 
     public Swerve() {
@@ -58,9 +57,8 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update();
-        mSwerveModCANStates = getStatesCAN(); // Get the states once a loop
-        telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModCANStates);
-        telemetry.logModuleStates("SwerveModuleStates/Desired", SwerveModDesiredStates);
+        telemetry.logModuleStates("SwerveModuleStates/Measured", getStates());
+        telemetry.logModuleStates("SwerveModuleStates/Desired", getDesiredStates());
         telemetry.logModuleAbsolutePositions();
     }
 
@@ -169,6 +167,7 @@ public class Swerve extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConfig.maxVelocity);
 
+        SwerveModDesiredStates = desiredStates;
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
         }
@@ -185,11 +184,17 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    /** Stop the drive and angle motor of each module */
+    /**
+     * Stop the drive and angle motor of each module And set desired states to 0 meters per second
+     * and current module angles
+     */
     public void stop() {
+        SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
             mod.stop();
+            states[mod.moduleNumber] = new SwerveModuleState(0, mod.getTargetAngle());
         }
+        SwerveModDesiredStates = states;
     }
 
     /**
@@ -197,21 +202,12 @@ public class Swerve extends SubsystemBase {
      *
      * @return the current module states
      */
-    private SwerveModuleState[] getStatesCAN() {
+    public SwerveModuleState[] getStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
             states[mod.moduleNumber] = mod.getState();
         }
         return states;
-    }
-
-    /**
-     * Accesst the stored module states
-     *
-     * @return the modules states that we reiceved this loop
-     */
-    public SwerveModuleState[] getStates() {
-        return mSwerveModCANStates;
     }
 
     public SwerveModuleState[] getDesiredStates() {
