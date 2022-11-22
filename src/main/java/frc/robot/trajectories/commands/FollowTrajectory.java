@@ -6,13 +6,25 @@ package frc.robot.trajectories.commands;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.auton.commands.*;
+import frc.robot.swerve.*;
 import frc.robot.swerve.SwerveConfig;
+import java.util.HashMap;
 
 public class FollowTrajectory extends PPSwerveControllerCommand {
 
     /** Creates a new FollowTrajectory. */
     public FollowTrajectory(PathPlannerTrajectory trajectory) {
+        this(trajectory, new HashMap<>());
+
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(Robot.swerve);
+    }
+
+    /** Creates a new FollowTrajectory. */
+    public FollowTrajectory(PathPlannerTrajectory trajectory, HashMap<String, Command> eventMap) {
         super(
                 trajectory,
                 Robot.pose::getPosition,
@@ -21,6 +33,7 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
                 Robot.trajectories.yController,
                 Robot.trajectories.thetaController,
                 Robot.swerve::setModuleStates,
+                eventMap,
                 Robot.swerve);
 
         // Use addRequirements() here to declare subsystem dependencies.

@@ -35,5 +35,18 @@
       "waitTime": 0
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.5,
+      "name": "marker2"
+    },
+    {
+      "position": 0.5,
+      "name": "marker2"
+    },
+    {
+      "position": 0.25,
+      "name": "marker1"
+    }
+  ]
 }
