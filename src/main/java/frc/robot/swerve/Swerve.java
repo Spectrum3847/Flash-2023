@@ -21,11 +21,11 @@ import frc.robot.swerve.gyros.Pigeon2;
 public class Swerve extends SubsystemBase {
     public SwerveConfig config;
     protected GyroIO gyro;
-    public Odometry odometry;
+    protected Odometry odometry;
     public SwerveTelemetry telemetry;
-    public SwerveModule[] mSwerveMods;
+    protected SwerveModule[] mSwerveMods;
     private SwerveModuleState[] mSwerveModCANStates;
-    public SwerveModuleState[] SwerveModDesiredStates;
+    private SwerveModuleState[] SwerveModDesiredStates;
 
     public Swerve() {
         setName("Swerve");
@@ -138,6 +138,14 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
+     * Reset the pose2d of the robot
+     * @param pose
+     */
+    public void resetOdometry(Pose2d pose) {
+        odometry.resetOdometry(pose);
+    }
+
+    /**
      * Get the heading of the robot
      *
      * @return current heading using the offset from Odometry class
@@ -206,6 +214,10 @@ public class Swerve extends SubsystemBase {
      */
     public SwerveModuleState[] getStates() {
         return mSwerveModCANStates;
+    }
+
+    public SwerveModuleState[] getDesiredStates() {
+        return SwerveModDesiredStates;
     }
 
     /**

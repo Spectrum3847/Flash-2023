@@ -88,13 +88,13 @@ public class Pose extends SubsystemBase {
      * @param gyroAngle
      */
     public void resetPoseEstimate(Pose2d poseMeters) {
-        Robot.swerve.odometry.resetOdometry(poseMeters);
+        Robot.swerve.resetOdometry(poseMeters);
         poseEstimator.resetPosition(
                 Robot.swerve.getHeading(), Robot.swerve.getPositions(), poseMeters);
     }
 
     public void resetHeading(Rotation2d angle) {
-        Robot.swerve.odometry.resetHeading(angle);
+        Robot.swerve.resetHeading(angle);
         resetPoseEstimate(new Pose2d(estimatePose.getTranslation(), angle));
     }
 
