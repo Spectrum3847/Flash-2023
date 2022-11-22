@@ -16,9 +16,11 @@ public final class VisionConfig {
 
     private final AprilTag[] tags;
 
-    /* Individual AprilTag setup */
+    /* Individual AprilTag setup -- make sure to add them to tags in constructor */
     public static final AprilTag tag0 =
             new AprilTag(0, new Pose3d(1.515, 7.286, 1.07, new Rotation3d(0, 0, -Math.PI / 2)));
+    public static final AprilTag tag1 =
+            new AprilTag(1, new Pose3d(0.734, 7.286, 1.33, new Rotation3d(0, 0, -Math.PI / 2)));
 
     /* Camera setup
     Robot coordinate plane || away from driverstation is +x, left is +y, up is +z
@@ -48,16 +50,15 @@ public final class VisionConfig {
     }
 
     public VisionConfig() {
-        //setup maps and tags
+        // setup maps and tags
         tagMap = new HashMap<Integer, Pose3d>();
-        
-        tags = 
-            new AprilTag[] {
-                tag0
-            /* Add tags here */
-            };
-            
-        for(AprilTag tag : tags) {
+
+        tags =
+                new AprilTag[] {tag0, tag1
+                    /* Add tags here */
+                };
+
+        for (AprilTag tag : tags) {
             tagMap.put(tag.ID, tag.pose);
         }
     }

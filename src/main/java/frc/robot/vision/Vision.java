@@ -21,6 +21,7 @@ public class Vision extends SubsystemBase {
     public final VisionConfig config;
     public final RobotPoseEstimator poseEstimator;
     public final PhotonCamera[] cameras;
+    public Pair<Pose3d, Double> currentPose;
 
     private ArrayList<Pair<PhotonCamera, Transform3d>> cameraPairs;
     private double yaw, pitch, area, poseAmbiguity, captureTime;
@@ -40,6 +41,7 @@ public class Vision extends SubsystemBase {
                 };
         // setting up the pair(s) of camera and their 3d transformation from the center of the robot
         // to give to the pose estimator
+        cameraPairs = new ArrayList<Pair<PhotonCamera, Transform3d>>();
         for (int i = 0; i < cameras.length; i++) {
             cameraPairs.add(getCameraPair(getCameraConfig(i)));
         }
@@ -47,12 +49,15 @@ public class Vision extends SubsystemBase {
         poseEstimator =
                 new RobotPoseEstimator(VisionConfig.tagMap, VisionConfig.strategy, cameraPairs);
 
+        currentPose = new Pair<Pose3d, Double>(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), 0.0);
+
         // printing purposes
         df.setMaximumFractionDigits(2);
     }
 
     @Override
     public void periodic() {
+        currentPose = getEstimatedPose();
         // get targets & basic data from a single camera
         PhotonPipelineResult results = cameras[0].getLatestResult();
         if (results.hasTargets()) {
@@ -94,13 +99,13 @@ public class Vision extends SubsystemBase {
 
     // aiming
     public double getRadiansToTarget() {
-        RobotTelemetry.print(
-                "Yaw (D): "
-                        + yaw
-                        + "|| gyro (D): "
-                        + Robot.swerve.getHeading().getDegrees()
-                        + " || Aiming at: "
-                        + (yaw + Robot.swerve.getHeading().getDegrees()));
+        // RobotTelemetry.print(
+        //         "Yaw (D): "
+        //                 + yaw
+        //                 + "|| gyro (D): "
+        //                 + Robot.swerve.getHeading().getDegrees()
+        //                 + " || Aiming at: "
+        //                 + (yaw + Robot.swerve.getHeading().getDegrees()));
         return Units.degreesToRadians(yaw) + Robot.swerve.getHeading().getRadians();
     }
 
