@@ -5,7 +5,6 @@
 
 package frc.robot.swerve;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,7 +20,7 @@ public class Swerve extends SubsystemBase {
     public Odometry odometry;
     public SwerveTelemetry telemetry;
     public SwerveModule[] mSwerveMods;
-    private SwerveModuleState[] mSwerveModStates;
+    private SwerveModuleState[] mSwerveModCANStates;
 
     public Swerve() {
         setName("Swerve");
@@ -43,8 +42,8 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update();
-        mSwerveModStates = getStatesCAN(); // Get the states once a loop
-        telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModStates);
+        mSwerveModCANStates = getStatesCAN(); // Get the states once a loop
+        telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModCANStates);
         telemetry.logModuleAbsolutePositions();
     }
 
@@ -129,20 +128,15 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public void brakeMode(boolean enabled) {
+    public void setBrakeMode(boolean enabled) {
         for (SwerveModule mod : mSwerveMods) {
-            if (enabled) {
-                mod.mDriveMotor.setNeutralMode(NeutralMode.Brake);
-            } else {
-                mod.mDriveMotor.setNeutralMode(NeutralMode.Coast);
-            }
+            mod.setBrakeMode(enabled);
         }
     }
 
     public void stop() {
         for (SwerveModule mod : mSwerveMods) {
-            mod.mDriveMotor.stopMotor();
-            mod.mAngleMotor.stopMotor();
+            mod.stop();
         }
     }
 
@@ -155,7 +149,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public SwerveModuleState[] getStates() {
-        return mSwerveModStates;
+        return mSwerveModCANStates;
     }
 
     public SwerveModulePosition[] getPositions() {
@@ -167,9 +161,9 @@ public class Swerve extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        mSwerveMods[0].mDriveMotor.setVoltage(leftVolts);
-        mSwerveMods[2].mDriveMotor.setVoltage(leftVolts);
-        mSwerveMods[1].mDriveMotor.setVoltage(rightVolts);
-        mSwerveMods[3].mDriveMotor.setVoltage(rightVolts);
+        mSwerveMods[0].setVoltage(leftVolts);
+        mSwerveMods[2].setVoltage(leftVolts);
+        mSwerveMods[1].setVoltage(rightVolts);
+        mSwerveMods[3].setVoltage(rightVolts);
     }
 }
