@@ -30,6 +30,7 @@ public class Swerve extends SubsystemBase {
         setName("Swerve");
         config = new SwerveConfig();
 
+        //Check robot type to set the gyro type and module offsets
         switch (Robot.config.getRobotType()) {
             case PRACTICE:
                 gyro = new Pigeon1();
@@ -60,21 +61,6 @@ public class Swerve extends SubsystemBase {
         telemetry.logModuleStates("SwerveModuleStates/Measured", getStates());
         telemetry.logModuleStates("SwerveModuleStates/Desired", getDesiredStates());
         telemetry.logModuleAbsolutePositions();
-    }
-
-    public void drive(
-            double fwdPositive,
-            double leftPositive,
-            double rotationRadiansPS,
-            boolean fieldRelative,
-            boolean isOpenLoop) {
-        drive(
-                fwdPositive,
-                leftPositive,
-                rotationRadiansPS,
-                fieldRelative,
-                isOpenLoop,
-                new Translation2d());
     }
 
     /**
