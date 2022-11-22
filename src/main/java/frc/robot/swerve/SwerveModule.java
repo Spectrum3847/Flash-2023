@@ -15,8 +15,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.SpectrumLib.swerve.CTREModuleState;
 import frc.SpectrumLib.swerve.SwerveModuleConfig;
 import frc.SpectrumLib.util.Conversions;
-import frc.robot.Robot;
-import frc.robot.RobotConfig.RobotType;
 
 public class SwerveModule {
     public int moduleNumber;
@@ -35,11 +33,6 @@ public class SwerveModule {
             int moduleNumber, SwerveConfig swerveConfig, SwerveModuleConfig moduleConfig) {
         this.moduleNumber = moduleNumber;
         this.swerveConfig = swerveConfig;
-        if (Robot.config.getRobotType() == RobotType.PRACTICE) {
-            angleOffset = moduleConfig.angleOffsetPractice;
-        } else {
-            angleOffset = moduleConfig.angleOffset;
-        }
 
         /* Angle Encoder Config */
         angleEncoder = new WPI_CANCoder(moduleConfig.cancoderID);

@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.RobotTelemetry;
 import frc.robot.swerve.gyros.GyroIO;
 import frc.robot.swerve.gyros.Pigeon1;
 import frc.robot.swerve.gyros.Pigeon2;
@@ -26,6 +27,7 @@ public class Swerve extends SubsystemBase {
     public SwerveTelemetry telemetry;
     public SwerveModule[] mSwerveMods;
     private SwerveModuleState[] mSwerveModStates;
+    Rotation2d angleOffset;
 
     public Swerve() {
         setName("Swerve");
@@ -55,6 +57,7 @@ public class Swerve extends SubsystemBase {
                 };
         resetSteeringToAbsolute();
         odometry = new Odometry(this);
+        angleOffset = getHeading();
         telemetry = new SwerveTelemetry(this);
     }
 
@@ -64,6 +67,8 @@ public class Swerve extends SubsystemBase {
         mSwerveModStates = getStatesCAN(); // Get the states once a loop
         telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModStates);
         telemetry.logModuleAbsolutePositions();
+        RobotTelemetry.print("Heading: " + getHeading().getDegrees());
+        RobotTelemetry.print("Gyro: " + gyro.getRawYaw().plus(angleOffset).getDegrees());
     }
 
     public void drive(
