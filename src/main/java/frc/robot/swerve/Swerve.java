@@ -25,7 +25,7 @@ public class Swerve extends SubsystemBase {
     public SwerveTelemetry telemetry;
     public SwerveModule[] mSwerveMods;
     private SwerveModuleState[] mSwerveModCANStates;
-    private SwerveModuleState[] mSwerveModStates;
+    public SwerveModuleState[] SwerveModDesiredStates;
 
     public Swerve() {
         setName("Swerve");
@@ -63,6 +63,7 @@ public class Swerve extends SubsystemBase {
         odometry.update();
         mSwerveModCANStates = getStatesCAN(); // Get the states once a loop
         telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModCANStates);
+        telemetry.logModuleStates("SwerveModuleStates/Desired", SwerveModDesiredStates);
         telemetry.logModuleAbsolutePositions();
     }
 
@@ -108,14 +109,15 @@ public class Swerve extends SubsystemBase {
             speeds = new ChassisSpeeds(fwdPositive, leftPositive, omegaRadiansPerSecond);
         }
 
-        mSwerveModStates =
+        SwerveModDesiredStates =
                 SwerveConfig.swerveKinematics.toSwerveModuleStates(speeds, centerOfRotationMeters);
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(mSwerveModStates, SwerveConfig.maxVelocity);
+        SwerveDriveKinematics.desaturateWheelSpeeds(
+                SwerveModDesiredStates, SwerveConfig.maxVelocity);
 
-        telemetry.logModuleStates("SwerveModuleStates/Desired", mSwerveModStates);
+        telemetry.logModuleStates("SwerveModuleStates/Desired", SwerveModDesiredStates);
         for (SwerveModule mod : mSwerveMods) {
-            mod.setDesiredState(mSwerveModStates[mod.moduleNumber], isOpenLoop);
+            mod.setDesiredState(SwerveModDesiredStates[mod.moduleNumber], isOpenLoop);
         }
     }
 
