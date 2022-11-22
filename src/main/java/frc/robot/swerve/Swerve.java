@@ -128,14 +128,29 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    /**
+     * Reset the Heading to any angle
+     *
+     * @param heading Rotation2d representing the current heading of the robot
+     */
     public void resetHeading(Rotation2d heading) {
         odometry.resetHeading(heading);
     }
 
+    /**
+     * Get the heading of the robot
+     *
+     * @return current heading using the offset from Odometry class
+     */
     public Rotation2d getHeading() {
         return odometry.getHeading();
     }
 
+    /**
+     * Ge the Pose of the odemotry class
+     *
+     * @return
+     */
     public Pose2d getPoseMeters() {
         return odometry.getPoseMeters();
     }
@@ -153,18 +168,29 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    /**
+     * Set both the drive and angle motor on each module to brake mode if enabled = true
+     *
+     * @param enabled true = brake mode, false = coast mode
+     */
     public void setBrakeMode(boolean enabled) {
         for (SwerveModule mod : mSwerveMods) {
             mod.setBrakeMode(enabled);
         }
     }
 
+    /** Stop the drive and angle motor of each module */
     public void stop() {
         for (SwerveModule mod : mSwerveMods) {
             mod.stop();
         }
     }
 
+    /**
+     * Gets the states of the modules from the modules directly, called once a loop
+     *
+     * @return the current module states
+     */
     private SwerveModuleState[] getStatesCAN() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
@@ -173,10 +199,20 @@ public class Swerve extends SubsystemBase {
         return states;
     }
 
+    /**
+     * Accesst the stored module states
+     *
+     * @return the modules states that we reiceved this loop
+     */
     public SwerveModuleState[] getStates() {
         return mSwerveModCANStates;
     }
 
+    /**
+     * Get the module positions from the modules directly
+     *
+     * @return the current module positions
+     */
     public SwerveModulePosition[] getPositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : mSwerveMods) {
