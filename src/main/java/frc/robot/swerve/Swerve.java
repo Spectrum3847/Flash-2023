@@ -30,7 +30,7 @@ public class Swerve extends SubsystemBase {
         setName("Swerve");
         config = new SwerveConfig();
 
-        //Check robot type to set the gyro type and module offsets
+        // Check robot type to set the gyro type and module offsets
         switch (Robot.config.getRobotType()) {
             case PRACTICE:
                 gyro = new Pigeon1();
@@ -93,8 +93,7 @@ public class Swerve extends SubsystemBase {
         SwerveModDesiredStates =
                 SwerveConfig.swerveKinematics.toSwerveModuleStates(speeds, centerOfRotationMeters);
 
-
-        //LOOK INTO THE OTHER CONSTRUCTOR FOR desaturateWheelSpeeds to see if it is better
+        // LOOK INTO THE OTHER CONSTRUCTOR FOR desaturateWheelSpeeds to see if it is better
         SwerveDriveKinematics.desaturateWheelSpeeds(
                 SwerveModDesiredStates, SwerveConfig.maxVelocity);
 
