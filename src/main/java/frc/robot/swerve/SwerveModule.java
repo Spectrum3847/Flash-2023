@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.SpectrumLib.swerve.CTREModuleState;
 import frc.SpectrumLib.swerve.SwerveModuleConfig;
 import frc.SpectrumLib.util.Conversions;
 
@@ -24,7 +23,7 @@ public class SwerveModule extends SubsystemBase {
     private WPI_TalonFX mAngleMotor;
     private WPI_TalonFX mDriveMotor;
     private WPI_CANCoder angleEncoder;
-    private Rotation2d lastAngle;
+    private double lastAngle;
     private SwerveConfig swerveConfig;
     private SwerveModuleState mSwerveModState;
     private SwerveModulePosition mSwerveModPosition;
@@ -39,7 +38,6 @@ public class SwerveModule extends SubsystemBase {
         this.moduleNumber = moduleNumber;
         this.swerveConfig = swerveConfig;
         angleOffset = moduleConfig.angleOffset;
-
         /* Angle Encoder Config */
         angleEncoder = new WPI_CANCoder(moduleConfig.cancoderID);
         configAngleEncoder();
@@ -52,7 +50,7 @@ public class SwerveModule extends SubsystemBase {
         mDriveMotor = new WPI_TalonFX(moduleConfig.driveMotorID);
         configDriveMotor();
 
-        lastAngle = getState().angle;
+        lastAngle = getFalconAngle();
     }
 
     @Override
@@ -65,8 +63,32 @@ public class SwerveModule extends SubsystemBase {
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
         // Custom optimize command, since default WPILib optimize assumes continuous controller
         // which CTRE is not
-        desiredState = CTREModuleState.optimize(desiredState, getState().angle);
+        Rotation2d currentAngle = getState().angle;
+        desiredState = SwerveModuleState.optimize(desiredState, currentAngle);
 
+        // Prevent rotating module if speed is less then 1%
+        // Prevents Jittering.
+        Rotation2d desiredAngle = desiredState.angle;
+
+        double delta = desiredAngle.getDegrees() - currentAngle.getDegrees();
+        if (delta > 180) {
+            delta = (delta - 360);
+        } else if (delta < -180) {
+            delta = (delta + 360);
+        }
+
+        double output = getFalconAngle() + delta;
+
+        if ((Math.abs(desiredState.speedMetersPerSecond) < (SwerveConfig.maxVelocity * 0.01))) {
+            output = lastAngle;
+        }
+
+        mAngleMotor.set(
+                ControlMode.Position,
+                Conversions.degreesToFalcon(output, SwerveConfig.angleGearRatio));
+        lastAngle = output;
+
+        // Velocity
         if (isOpenLoop) {
             double percentOutput = desiredState.speedMetersPerSecond / SwerveConfig.maxVelocity;
             mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
@@ -82,19 +104,6 @@ public class SwerveModule extends SubsystemBase {
                     DemandType.ArbitraryFeedForward,
                     feedforward.calculate(desiredState.speedMetersPerSecond));
         }
-
-        // Prevent rotating module if speed is less then 1%
-        // Prevents Jittering.
-        Rotation2d angle = desiredState.angle;
-
-        if ((Math.abs(desiredState.speedMetersPerSecond) < (SwerveConfig.maxVelocity * 0.01))) {
-            angle = lastAngle;
-        }
-
-        mAngleMotor.set(
-                ControlMode.Position,
-                Conversions.degreesToFalcon(angle.getDegrees(), SwerveConfig.angleGearRatio));
-        lastAngle = angle;
     }
 
     public void resetToAbsolute() {
@@ -137,8 +146,13 @@ public class SwerveModule extends SubsystemBase {
         return mCANcoderAngle;
     }
 
-    public Rotation2d getTargetAngle() {
+    public double getTargetAngle() {
         return lastAngle;
+    }
+
+    public double getFalconAngle() {
+        return Conversions.falconToDegrees(
+                mAngleMotor.getSelectedSensorPosition(), SwerveConfig.angleGearRatio);
     }
 
     private SwerveModuleState getCANState() {
