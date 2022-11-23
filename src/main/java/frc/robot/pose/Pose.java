@@ -61,7 +61,7 @@ public class Pose extends SubsystemBase {
     }
 
     /** Sets the Odometry Pose to the given post */
-    public void setOdometryPose(Pose2d pose) {
+    private void setOdometryPose(Pose2d pose) {
         odometryPose = pose;
     }
 
@@ -71,7 +71,7 @@ public class Pose extends SubsystemBase {
     }
 
     /** Sets the estimated pose to the given pose */
-    public void setEstimatedPose(Pose2d pose) {
+    private void setEstimatedPose(Pose2d pose) {
         estimatePose = pose;
     }
 
@@ -135,7 +135,7 @@ public class Pose extends SubsystemBase {
      * @param s std for all module positions in meters
      * @return the Vector of standard deviations need for the poseEstimator
      */
-    public Vector<N7> createStateStdDevs(double x, double y, double theta, double s) {
+    private Vector<N7> createStateStdDevs(double x, double y, double theta, double s) {
         return VecBuilder.fill(x, y, Units.degreesToRadians(theta), s, s, s, s);
     }
 
@@ -148,7 +148,7 @@ public class Pose extends SubsystemBase {
      * @param s std for all module positions in meters per sec
      * @return the Vector of standard deviations need for the poseEstimator
      */
-    public Vector<N5> createLocalMeasurementStdDevs(double theta, double p) {
+    private Vector<N5> createLocalMeasurementStdDevs(double theta, double p) {
         return VecBuilder.fill(Units.degreesToRadians(theta), p, p, p, p);
     }
 
@@ -162,7 +162,7 @@ public class Pose extends SubsystemBase {
      * @param theta in degrees
      * @return the Vector of standard deviations need for the poseEstimator
      */
-    public Vector<N3> createVisionMeasurementStdDevs(double x, double y, double theta) {
+    private Vector<N3> createVisionMeasurementStdDevs(double x, double y, double theta) {
         return VecBuilder.fill(x, y, Units.degreesToRadians(theta));
     }
 

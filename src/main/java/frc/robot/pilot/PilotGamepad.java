@@ -12,7 +12,7 @@ import frc.robot.leds.commands.RainbowLEDCommand;
 import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
 import frc.robot.pose.commands.PoseCommands;
-import frc.robot.swerve.commands.LockSwerve;
+import frc.robot.swerve.commands.SwerveCommands;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
@@ -38,7 +38,7 @@ public class PilotGamepad extends Gamepad {
         gamepad.aButton.whileTrue(
                 PilotCommands.aimPilotDrive(Math.PI * -1 / 2).withName("Snap 90"));
         gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
-        gamepad.xButton.whileTrue(new LockSwerve());
+        gamepad.xButton.whileTrue(SwerveCommands.lockSwerve());
         gamepad.yButton.whileTrue(PilotCommands.snakeDrive());
 
         // Right Stick points the robot in that direction
