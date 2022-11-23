@@ -15,10 +15,10 @@ import java.util.HashMap;
 
 public class FollowTrajectory extends PPSwerveControllerCommand {
 
+    HashMap<String, Command> eventMap = new HashMap<>();
     /** Creates a new FollowTrajectory. */
     public FollowTrajectory(PathPlannerTrajectory trajectory) {
         this(trajectory, new HashMap<>());
-
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.swerve);
     }
@@ -33,7 +33,7 @@ public class FollowTrajectory extends PPSwerveControllerCommand {
                 Robot.trajectories.yController,
                 Robot.trajectories.thetaController,
                 Robot.swerve::setModuleStates,
-                eventMap,
+                // FollowPathWithEvents.generateEventMap(eventMap),
                 Robot.swerve);
 
         // Use addRequirements() here to declare subsystem dependencies.
