@@ -2,6 +2,7 @@ package frc.robot.auton.commands;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -19,11 +20,12 @@ public class Drive1MeterWEventMapping extends SequentialCommandGroup {
         eventMap.put("marker2", new PrintCommand("Passed marker 2"));
 
         // An example trajectory to follow. All units in meters.
-        PathPlannerTrajectory drive1MeterWEventMapping =
+        PathPlannerTrajectory testPath =
                 PathPlanner.loadPath("1 Meter", AutonConstants.kMaxSpeed, AutonConstants.kMaxAccel);
 
         addCommands(
-                AutonCommands.intializePathFollowing(drive1MeterWEventMapping),
-                new FollowTrajectory(drive1MeterWEventMapping));
+                AutonCommands.intializePathFollowing(testPath),
+                new FollowPathWithEvents(
+                        new FollowTrajectory(testPath), testPath.getMarkers(), eventMap));
     }
 }

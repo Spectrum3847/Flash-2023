@@ -12,10 +12,10 @@ import frc.robot.auton.AutonConstants;
 import java.util.function.DoubleSupplier;
 
 public class Trajectories extends SubsystemBase {
-    public static PIDController thetaController;
-    public static PIDController xController =
+    public PIDController thetaController;
+    public PIDController xController =
             new PIDController(AutonConstants.kPXController, 0, AutonConstants.kDXController);;
-    public static PIDController yController =
+    public PIDController yController =
             new PIDController(AutonConstants.kPYController, 0, AutonConstants.kDYController);;
     public Rotation2d startAngle;
 
