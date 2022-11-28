@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.RobotTelemetry;
 import frc.robot.swerve.gyros.GyroIO;
 import frc.robot.swerve.gyros.Pigeon1;
 import frc.robot.swerve.gyros.Pigeon2;
@@ -30,7 +31,7 @@ public class Swerve extends SubsystemBase {
         setName("Swerve");
         config = new SwerveConfig();
 
-        //Check robot type to set the gyro type and module offsets
+        // Check robot type to set the gyro type and module offsets
         switch (Robot.config.getRobotType()) {
             case PRACTICE:
                 gyro = new Pigeon1();
@@ -38,9 +39,11 @@ public class Swerve extends SubsystemBase {
                 SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetP;
                 SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetP;
                 SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
+                RobotTelemetry.print("Practice Bot Pigeon1 and Swerve Angles");
                 break;
             default:
                 gyro = new Pigeon2();
+                RobotTelemetry.print("Pigeon2 and comp swerve angles");
                 break;
         }
 
@@ -93,8 +96,7 @@ public class Swerve extends SubsystemBase {
         SwerveModDesiredStates =
                 SwerveConfig.swerveKinematics.toSwerveModuleStates(speeds, centerOfRotationMeters);
 
-
-        //LOOK INTO THE OTHER CONSTRUCTOR FOR desaturateWheelSpeeds to see if it is better
+        // LOOK INTO THE OTHER CONSTRUCTOR FOR desaturateWheelSpeeds to see if it is better
         SwerveDriveKinematics.desaturateWheelSpeeds(
                 SwerveModDesiredStates, SwerveConfig.maxVelocity);
 
@@ -179,7 +181,8 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : mSwerveMods) {
             mod.stop();
-            states[mod.moduleNumber] = new SwerveModuleState(0, mod.getTargetAngle());
+            states[mod.moduleNumber] =
+                    new SwerveModuleState(0, Rotation2d.fromDegrees(mod.getTargetAngle()));
         }
         SwerveModDesiredStates = states;
     }

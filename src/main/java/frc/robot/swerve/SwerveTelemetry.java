@@ -55,7 +55,7 @@ public class SwerveTelemetry {
         SuppliedValueWidget<Double> mod0IntegratedAngleWidget =
                 modLayout.addNumber(
                         "Integrated Angle",
-                        () -> Robot.swerve.mSwerveMods[moduleNum].getState().angle.getDegrees());
+                        () -> Robot.swerve.mSwerveMods[moduleNum].getFalconAngle());
         mod0IntegratedAngleWidget.withPosition(0, 1);
 
         // mod0 Velocity
@@ -64,6 +64,12 @@ public class SwerveTelemetry {
                         "Wheel Velocity",
                         () -> Robot.swerve.mSwerveMods[moduleNum].getState().speedMetersPerSecond);
         mod0VelocityWidget.withPosition(0, 2);
+
+        // mod0 TargetAngle
+        SuppliedValueWidget<Double> mod0TargetAngleWidget =
+                modLayout.addNumber(
+                        "Target Angle", () -> Robot.swerve.mSwerveMods[moduleNum].getTargetAngle());
+        mod0TargetAngleWidget.withPosition(0, 3);
         return modLayout;
     }
 }

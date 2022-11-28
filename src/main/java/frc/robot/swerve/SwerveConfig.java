@@ -16,8 +16,6 @@ import frc.robot.RobotConfig.Motors;
 
 public final class SwerveConfig {
 
-    public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
-
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(17.5); // (18.75); 2022
     public static final double wheelBase = Units.inchesToMeters(20.5); // (21.75); 2022
@@ -27,9 +25,12 @@ public final class SwerveConfig {
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
 
-    public static final double driveGearRatio = (8.16 / 1.0); // 6.75:1
-    public static final double angleGearRatio =
-            (12.8 / 1.0); // (50.0 / 14.0) * (60.0 / 10.0); //12.8:1
+    public static final double MK4_L2_driveGearRatio = (6.75 / 1.0);
+    public static final double MK3_standard_driveGearRatio = (8.16 / 1.0);
+    public static final double driveGearRatio = MK3_standard_driveGearRatio;
+    public static final double MK4i_L2_angleGearRatio = (50.0 / 14.0) * (60.0 / 10.0);
+    public static final double MK3_standard_angleGearRatio = (12.8 / 1.0);
+    public static final double angleGearRatio = MK3_standard_angleGearRatio;
 
     public static final Translation2d frontLeftLocation =
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0);
@@ -70,14 +71,13 @@ public final class SwerveConfig {
     public static final double driveKF = 0.0;
 
     /* Drive Motor Characterization Values */
-    public static final double driveKS =
-            (0.605 / 12); // /12 to convert from volts to %output for CTRE
+    public static final double driveKS = (0.605 / 12); // /12 to convert from volts to %output
     public static final double driveKV = (1.72 / 12);
     public static final double driveKA = (0.193 / 12);
 
     /* Swerve Profiling Values */
     public static final double maxVelocity =
-            ((6380 / 60) / driveGearRatio) * wheelDiameter * Math.PI * 0.95; // meters per second
+            ((6380 / 60) / angleGearRatio) * wheelDiameter * Math.PI * 0.95; // meters per second
     public static final double maxAccel = maxVelocity * 1.5; // take 1/2 sec to get to max speed.
     public static final double maxAngularVelocity =
             maxVelocity / Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
@@ -100,8 +100,8 @@ public final class SwerveConfig {
         public static final int driveMotorID = Motors.driveMotor0;
         public static final int angleMotorID = Motors.angleMotor0;
         public static final int canCoderID = 3;
-        public static final double angleOffsetC = 184.39;
-        public static final double angleOffsetP = 0;
+        public static final double angleOffsetC = 2.54 + 180;
+        public static final double angleOffsetP = 184.39;
         public static double angleOffset = angleOffsetC;
         public static final SwerveModuleConfig config =
                 new SwerveModuleConfig(
@@ -113,8 +113,8 @@ public final class SwerveConfig {
         public static final int driveMotorID = Motors.driveMotor1;
         public static final int angleMotorID = Motors.angleMotor1;
         public static final int canCoderID = 13;
-        public static final double angleOffsetC = 99;
-        public static final double angleOffsetP = 0;
+        public static final double angleOffsetC = -91.31 + 180;
+        public static final double angleOffsetP = 99;
         public static double angleOffset = angleOffsetC;
         public static final SwerveModuleConfig config =
                 new SwerveModuleConfig(
@@ -126,8 +126,8 @@ public final class SwerveConfig {
         public static final int driveMotorID = Motors.driveMotor2;
         public static final int angleMotorID = Motors.angleMotor2;
         public static final int canCoderID = 23;
-        public static final double angleOffsetC = 355;
-        public static final double angleOffsetP = 0;
+        public static final double angleOffsetC = 172.4 + 180;
+        public static final double angleOffsetP = 355;
         public static double angleOffset = angleOffsetC;
         public static final SwerveModuleConfig config =
                 new SwerveModuleConfig(
@@ -139,8 +139,8 @@ public final class SwerveConfig {
         public static final int driveMotorID = Motors.driveMotor3;
         public static final int angleMotorID = Motors.angleMotor3;
         public static final int canCoderID = 33;
-        public static final double angleOffsetC = 342;
-        public static final double angleOffsetP = 0;
+        public static final double angleOffsetC = 170.59 - 180;
+        public static final double angleOffsetP = 342;
         public static double angleOffset = angleOffsetC;
         public static final SwerveModuleConfig config =
                 new SwerveModuleConfig(
