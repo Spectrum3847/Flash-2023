@@ -5,10 +5,8 @@
 package frc.robot.test;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.SpectrumLib.util.Util;
-import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
 
 public class confirmCurrent extends CommandBase {
@@ -26,7 +24,8 @@ public class confirmCurrent extends CommandBase {
     @Override
     public void initialize() {
         current = motor.getSupplyCurrent();
-        RobotTelemetry.print(name + " current is in range: " + Util.closeTo(current, targetCurrent, 0.1));
+        RobotTelemetry.print(
+                name + " current is in range: " + Util.closeTo(current, targetCurrent, 0.1));
     }
 
     @Override

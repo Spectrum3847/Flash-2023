@@ -23,11 +23,11 @@ public class AutonCommands {
     }
 
     public static Command setBrakeMode() {
-        return new RunCommand(() -> Robot.swerve.brakeMode(true));
+        return new RunCommand(() -> Robot.swerve.setBrakeMode(true));
     }
 
     public static Command setCoastMode() {
-        return new RunCommand(() -> Robot.swerve.brakeMode(false));
+        return new RunCommand(() -> Robot.swerve.setBrakeMode(false));
     }
 
     public static Command setGryoDegrees(double deg) {

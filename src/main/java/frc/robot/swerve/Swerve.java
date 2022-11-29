@@ -22,7 +22,7 @@ import frc.robot.swerve.gyros.Pigeon2;
 public class Swerve extends SubsystemBase {
     public SwerveConfig config;
     protected GyroIO gyro;
-    protected Odometry odometry;
+    public Odometry odometry;
     public SwerveTelemetry telemetry;
     protected SwerveModule[] mSwerveMods;
     private SwerveModuleState[] SwerveModDesiredStates;
@@ -222,5 +222,9 @@ public class Swerve extends SubsystemBase {
         mSwerveMods[2].setVoltage(leftVolts);
         mSwerveMods[1].setVoltage(rightVolts);
         mSwerveMods[3].setVoltage(rightVolts);
+    }
+
+    public Object getAbsoluteAngle(boolean b) {
+        return null;
     }
 }

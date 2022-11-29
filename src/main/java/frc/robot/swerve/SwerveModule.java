@@ -27,7 +27,7 @@ public class SwerveModule extends SubsystemBase {
     private SwerveConfig swerveConfig;
     private SwerveModuleState mSwerveModState;
     private SwerveModulePosition mSwerveModPosition;
-    private Rotation2d mCANcoderAngle;
+    public Rotation2d mCANcoderAngle;
 
     SimpleMotorFeedforward feedforward =
             new SimpleMotorFeedforward(
@@ -51,6 +51,8 @@ public class SwerveModule extends SubsystemBase {
         configDriveMotor();
 
         lastAngle = getFalconAngle();
+        mSwerveModState = getCANState();
+        mSwerveModPosition = getCANPosition();
     }
 
     @Override
@@ -117,6 +119,7 @@ public class SwerveModule extends SubsystemBase {
     private void configAngleEncoder() {
         angleEncoder.configFactoryDefault();
         angleEncoder.configAllSettings(swerveConfig.swerveCanCoderConfig);
+        mCANcoderAngle = getCANcoderAngle();
         angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 249);
         angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 20);
     }
