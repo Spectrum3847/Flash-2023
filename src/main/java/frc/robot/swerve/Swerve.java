@@ -56,6 +56,7 @@ public class Swerve extends SubsystemBase {
                 };
         odometry = new Odometry(this);
         telemetry = new SwerveTelemetry(this);
+        drive(0, 0, 0, true, false, new Translation2d());
     }
 
     @Override

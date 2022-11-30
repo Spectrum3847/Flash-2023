@@ -10,6 +10,8 @@ import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
 import frc.robot.auton.commands.Drive1Meter;
 import frc.robot.auton.commands.Drive1MeterWEventMapping;
+import frc.robot.auton.commands.TestPathPlanner;
+import frc.robot.auton.commands.TestPathPlannerTurning;
 
 public class Auton {
     public static final SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -22,6 +24,9 @@ public class Auton {
                 "Nothing", new PrintCommand("Doing Nothing in Auton").andThen(new WaitCommand(5)));
         autonChooser.addOption("Drive 1 Meter", new Drive1Meter());
         autonChooser.addOption("Drive 1 Metet w/Event Mapping", new Drive1MeterWEventMapping());
+        autonChooser.addOption("Test Path Planner", new TestPathPlanner());
+        autonChooser.addOption("Test Path Planner w/ Turning", new TestPathPlannerTurning());
+        autonChooser.addOption("Test Path Planner w/ Crazy Route", new TestPathPlanner());
     }
 
     /**

@@ -15,7 +15,12 @@
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
-      "waitTime": 0
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
     },
     {
       "anchorPoint": {
@@ -35,7 +40,12 @@
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
-      "waitTime": 0
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
     },
     {
       "anchorPoint": {
@@ -52,7 +62,12 @@
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
-      "waitTime": 0
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
     }
   ],
   "markers": []

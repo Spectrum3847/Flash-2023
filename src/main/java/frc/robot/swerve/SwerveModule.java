@@ -25,9 +25,9 @@ public class SwerveModule extends SubsystemBase {
     private WPI_CANCoder angleEncoder;
     private double lastAngle;
     private SwerveConfig swerveConfig;
-    private SwerveModuleState mSwerveModState;
-    private SwerveModulePosition mSwerveModPosition;
-    public Rotation2d mCANcoderAngle;
+    private SwerveModuleState mSwerveModState = new SwerveModuleState();
+    private SwerveModulePosition mSwerveModPosition = new SwerveModulePosition();
+    public Rotation2d mCANcoderAngle = new Rotation2d();
 
     SimpleMotorFeedforward feedforward =
             new SimpleMotorFeedforward(
