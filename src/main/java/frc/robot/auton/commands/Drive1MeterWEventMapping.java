@@ -21,7 +21,8 @@ public class Drive1MeterWEventMapping extends SequentialCommandGroup {
 
         // An example trajectory to follow. All units in meters.
         PathPlannerTrajectory testPath =
-                PathPlanner.loadPath("1 Meter", AutonConstants.kMaxSpeed, AutonConstants.kMaxAccel);
+                PathPlanner.loadPath(
+                        "1 Meter W Event Map", AutonConstants.kMaxSpeed, AutonConstants.kMaxAccel);
 
         addCommands(
                 AutonCommands.intializePathFollowing(testPath),
