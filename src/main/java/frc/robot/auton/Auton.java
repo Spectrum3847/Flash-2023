@@ -10,11 +10,18 @@ import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
 import frc.robot.auton.commands.Drive1MeterWEventMapping;
 import frc.robot.auton.commands.FollowPath;
+import java.util.HashMap;
 
 public class Auton {
     public static final SendableChooser<Command> autonChooser = new SendableChooser<>();
     private static boolean autoMessagePrinted = true;
     private static double autonStart = 0;
+    public static HashMap<String, Command> eventMap = new HashMap<>();
+
+    public Auton() {
+        setupSelectors();
+        setupEventMap();
+    }
 
     // A chooser for autonomous commands
     public static void setupSelectors() {
@@ -22,6 +29,12 @@ public class Auton {
                 "Nothing", new PrintCommand("Doing Nothing in Auton").andThen(new WaitCommand(5)));
         autonChooser.addOption("Drive 1 Metet w/Event Mapping", new Drive1MeterWEventMapping());
         autonChooser.addOption("Test Path Planner", new FollowPath("Test Path", true));
+    }
+
+    // Adds event mapping to autonomous commands
+    public static void setupEventMap() {
+        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        eventMap.put("marker2", new PrintCommand("Passed marker 2"));
     }
 
     /**

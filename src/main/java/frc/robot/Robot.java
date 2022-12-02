@@ -25,6 +25,7 @@ public class Robot extends LoggedRobot {
     public static LEDs leds;
     public static PilotGamepad pilotGamepad;
     public static RobotTelemetry telemetry;
+    public static Auton auton;
 
     public static String MAC = "";
 
@@ -37,6 +38,7 @@ public class Robot extends LoggedRobot {
         swerve = new Swerve();
         pose = new Pose();
         trajectories = new Trajectories();
+        auton = new Auton();
 
         leds = new LEDs();
         pilotGamepad = new PilotGamepad();
