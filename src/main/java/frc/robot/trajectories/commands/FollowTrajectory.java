@@ -7,8 +7,6 @@ package frc.robot.trajectories.commands;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import frc.robot.Robot;
-import frc.robot.auton.commands.*;
-import frc.robot.swerve.*;
 import frc.robot.swerve.SwerveConfig;
 
 public class FollowTrajectory extends PPSwerveControllerCommand {

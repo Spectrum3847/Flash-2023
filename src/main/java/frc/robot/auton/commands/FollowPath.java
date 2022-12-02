@@ -3,16 +3,15 @@ package frc.robot.auton.commands;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.auton.AutonConstants;
+import frc.robot.auton.AutonConfig;
 import frc.robot.trajectories.commands.FollowTrajectory;
 
-public class TestPathPlanner extends SequentialCommandGroup {
+public class FollowPath extends SequentialCommandGroup {
     /** Creates a new Drive1Meter. */
-    public TestPathPlanner() {
+    public FollowPath(String path, Boolean events) {
         // An example trajectory to follow. All units in meters.
         PathPlannerTrajectory testPath =
-                PathPlanner.loadPath(
-                        "Test Path", AutonConstants.kMaxSpeed, AutonConstants.kMaxAccel);
+                PathPlanner.loadPath(path, AutonConfig.kMaxSpeed, AutonConfig.kMaxAccel);
 
         addCommands(AutonCommands.intializePathFollowing(testPath), new FollowTrajectory(testPath));
     }

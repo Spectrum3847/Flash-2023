@@ -6,7 +6,7 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.auton.AutonConstants;
+import frc.robot.auton.AutonConfig;
 import frc.robot.trajectories.commands.FollowTrajectory;
 import java.util.HashMap;
 
@@ -22,7 +22,7 @@ public class Drive1MeterWEventMapping extends SequentialCommandGroup {
         // An example trajectory to follow. All units in meters.
         PathPlannerTrajectory testPath =
                 PathPlanner.loadPath(
-                        "1 Meter W Event Map", AutonConstants.kMaxSpeed, AutonConstants.kMaxAccel);
+                        "1 Meter W Event Map", AutonConfig.kMaxSpeed, AutonConfig.kMaxAccel);
 
         addCommands(
                 AutonCommands.intializePathFollowing(testPath),
