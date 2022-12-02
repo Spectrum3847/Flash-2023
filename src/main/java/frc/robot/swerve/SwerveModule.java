@@ -25,9 +25,9 @@ public class SwerveModule extends SubsystemBase {
     private WPI_CANCoder angleEncoder;
     private double lastAngle;
     private SwerveConfig swerveConfig;
-    private SwerveModuleState mSwerveModState;
-    private SwerveModulePosition mSwerveModPosition;
-    private Rotation2d mCANcoderAngle;
+    private SwerveModuleState mSwerveModState = new SwerveModuleState();
+    private SwerveModulePosition mSwerveModPosition = new SwerveModulePosition();
+    private Rotation2d mCANcoderAngle = new Rotation2d();
 
     SimpleMotorFeedforward feedforward =
             new SimpleMotorFeedforward(
@@ -61,13 +61,10 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-        // Custom optimize command, since default WPILib optimize assumes continuous controller
-        // which CTRE is not
         Rotation2d currentAngle = getState().angle;
         desiredState = SwerveModuleState.optimize(desiredState, currentAngle);
-
-        // Prevent rotating module if speed is less then 1%
-        // Prevents Jittering.
+        // Calculate the correct angle to steer the wheel
+        // Correct for CTRE controller not being continuous
         Rotation2d desiredAngle = desiredState.angle;
 
         double delta = desiredAngle.getDegrees() - currentAngle.getDegrees();
@@ -77,18 +74,18 @@ public class SwerveModule extends SubsystemBase {
             delta = (delta + 360);
         }
 
-        double output = getFalconAngle() + delta;
+        double outputAngle = getFalconAngle() + delta;
 
         if ((Math.abs(desiredState.speedMetersPerSecond) < (SwerveConfig.maxVelocity * 0.01))) {
-            output = lastAngle;
+            outputAngle = lastAngle;
         }
 
         mAngleMotor.set(
                 ControlMode.Position,
-                Conversions.degreesToFalcon(output, SwerveConfig.angleGearRatio));
-        lastAngle = output;
+                Conversions.degreesToFalcon(outputAngle, SwerveConfig.angleGearRatio));
+        lastAngle = outputAngle;
 
-        // Velocity
+        // Calculate the velocity of the module
         if (isOpenLoop) {
             double percentOutput = desiredState.speedMetersPerSecond / SwerveConfig.maxVelocity;
             mDriveMotor.set(ControlMode.PercentOutput, percentOutput);
@@ -117,6 +114,7 @@ public class SwerveModule extends SubsystemBase {
     private void configAngleEncoder() {
         angleEncoder.configFactoryDefault();
         angleEncoder.configAllSettings(swerveConfig.swerveCanCoderConfig);
+        mCANcoderAngle = getCANcoderAngle();
         angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 249);
         angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 20);
     }
