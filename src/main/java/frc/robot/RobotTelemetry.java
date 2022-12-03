@@ -18,6 +18,9 @@ public class RobotTelemetry extends TelemetrySubsystem {
 
     private static boolean disablePrints = false;
 
+    // DriverStationNetworkTableKey
+    private static final String recordMatch = "RecordMatch";
+
     // Alerts
     private static Alert PracticeRobotAlert = new Alert("PRACTICE ROBOT", AlertType.INFO);
     private static Alert CompetitionRobotAlert = new Alert("COMPETITION ROBOT", AlertType.INFO);
@@ -54,6 +57,12 @@ public class RobotTelemetry extends TelemetrySubsystem {
         tab.add("Alerts", SmartDashboard.getData("Alerts")).withPosition(4, 0).withSize(2, 2);
         tab.add("MAC Address", Robot.MAC).withPosition(4, 2).withSize(2, 1);
         tab.addString("IP Address", () -> getIP()).withPosition(4, 3).withSize(2, 1);
+
+        SmartDashboard.putBoolean(recordMatch, false);
+    }
+
+    public static void recordMatch() {
+        SmartDashboard.putBoolean(recordMatch, true);
     }
 
     public static void createTab(String name) {

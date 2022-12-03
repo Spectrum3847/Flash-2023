@@ -1,11 +1,13 @@
 package frc.robot.pilot;
 
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.SpectrumLib.gamepads.AxisButton;
 import frc.SpectrumLib.gamepads.AxisButton.ThresholdType;
 import frc.SpectrumLib.gamepads.Gamepad;
 import frc.SpectrumLib.gamepads.XboxGamepad.XboxAxis;
+import frc.robot.RobotTelemetry;
 import frc.robot.leds.commands.BlinkLEDCommand;
 import frc.robot.leds.commands.OneColorLEDCommand;
 import frc.robot.leds.commands.RainbowLEDCommand;
@@ -62,6 +64,8 @@ public class PilotGamepad extends Gamepad {
         gamepad.bButton.whileTrue(new BlinkLEDCommand(Color.kPink, "Blink Pink", 10, 3));
         gamepad.xButton.whileTrue(new RainbowLEDCommand("rainbow", 15, 3));
         gamepad.yButton.whileTrue(new SnowfallLEDCommand("Snowfall", 20, 3));
+
+        gamepad.aButton.whileTrue(new InstantCommand(() -> RobotTelemetry.recordMatch()));
     }
 
     public void setupTestButtons() {}
