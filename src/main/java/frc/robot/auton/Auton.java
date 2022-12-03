@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
-import frc.robot.auton.commands.Drive1MeterWEventMapping;
 import frc.robot.auton.commands.FollowPath;
 import java.util.HashMap;
 
@@ -27,8 +26,9 @@ public class Auton {
     public static void setupSelectors() {
         autonChooser.setDefaultOption(
                 "Nothing", new PrintCommand("Doing Nothing in Auton").andThen(new WaitCommand(5)));
-        autonChooser.addOption("Drive 1 Metet w/Event Mapping", new Drive1MeterWEventMapping());
-        autonChooser.addOption("Test Path Planner", new FollowPath("Test Path", true));
+        autonChooser.addOption(
+                "Drive 1 Meter w/Event Mapping", new FollowPath("1 Meter W Event Map", true));
+        autonChooser.addOption("Test Path Planner", new FollowPath("Test Path", false));
     }
 
     // Adds event mapping to autonomous commands

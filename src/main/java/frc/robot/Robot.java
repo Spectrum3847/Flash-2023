@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,6 +49,7 @@ public class Robot extends LoggedRobot {
         // commands
         PilotCommands.setupDefaultCommand();
         SwerveCommands.setupDefaultCommand();
+        PathPlannerServer.startServer(5811);
     }
 
     /**
