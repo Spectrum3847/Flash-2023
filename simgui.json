@@ -16,7 +16,17 @@
           "open": true
         }
       },
+      "Talon FX[1]": {
+        "header": {
+          "open": true
+        }
+      },
       "Talon FX[2]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[2]/Rev Limit": {
         "header": {
           "open": true
         }
@@ -79,8 +89,5 @@
         "open": true
       }
     }
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }
