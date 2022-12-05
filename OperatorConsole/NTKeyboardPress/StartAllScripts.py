@@ -13,7 +13,7 @@ processes = {}
 
 # Start all of the scripts
 for script in scripts:
-  processes[script] = subprocess.Popen(["python", os.path.realpath(os.path.dirname(__file__)) + "\\" + script])
+  processes[script] = subprocess.Popen(["python", current_dir + "\\" + script])
 
 # Monitor the scripts to ensure they are always running
 while True:
