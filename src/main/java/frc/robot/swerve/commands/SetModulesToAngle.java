@@ -14,6 +14,11 @@ public class SetModulesToAngle extends CommandBase {
     SwerveModuleState[] swerveModuleStates;
     SwerveModuleState[] stopModuleStates;
 
+    /**
+     * Set the swerve modules to the spcified angles in SwerveModuleState array
+     *
+     * @param states
+     */
     public SetModulesToAngle(SwerveModuleState[] states) {
         this(
                 states[0].angle.getDegrees(),
@@ -22,12 +27,24 @@ public class SetModulesToAngle extends CommandBase {
                 states[3].angle.getDegrees());
     }
 
+    /**
+     * Set the swerve modules to the spcified angle
+     *
+     * @param angle
+     */
     public SetModulesToAngle(double angle) {
         this(angle, angle, angle, angle);
     }
 
-    /** Creates a new LockSwerve. */
-    public SetModulesToAngle(double angle1, double angle2, double angle3, double angle4) {
+    /**
+     * Set the swerve modules to the spcified angles
+     *
+     * @param angle0
+     * @param angle1
+     * @param angle2
+     * @param angle3
+     */
+    public SetModulesToAngle(double angle0, double angle1, double angle2, double angle3) {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.swerve);
 
@@ -36,18 +53,18 @@ public class SetModulesToAngle extends CommandBase {
         // Set the angles and minimum speeds to use when locking the swerve base
         swerveModuleStates =
                 new SwerveModuleState[] {
+                    new SwerveModuleState(minSpeed, Rotation2d.fromDegrees(angle0)),
                     new SwerveModuleState(minSpeed, Rotation2d.fromDegrees(angle1)),
                     new SwerveModuleState(minSpeed, Rotation2d.fromDegrees(angle2)),
-                    new SwerveModuleState(minSpeed, Rotation2d.fromDegrees(angle3)),
-                    new SwerveModuleState(minSpeed, Rotation2d.fromDegrees(angle4))
+                    new SwerveModuleState(minSpeed, Rotation2d.fromDegrees(angle3))
                 };
 
         stopModuleStates =
                 new SwerveModuleState[] {
+                    new SwerveModuleState(0, Rotation2d.fromDegrees(angle0)),
                     new SwerveModuleState(0, Rotation2d.fromDegrees(angle1)),
                     new SwerveModuleState(0, Rotation2d.fromDegrees(angle2)),
-                    new SwerveModuleState(0, Rotation2d.fromDegrees(angle3)),
-                    new SwerveModuleState(0, Rotation2d.fromDegrees(angle4))
+                    new SwerveModuleState(0, Rotation2d.fromDegrees(angle3))
                 };
     }
 
