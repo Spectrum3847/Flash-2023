@@ -226,4 +226,8 @@ public class Swerve extends SubsystemBase {
         mSwerveMods[1].setVoltage(rightVolts);
         mSwerveMods[3].setVoltage(rightVolts);
     }
+
+    public Object getAbsoluteAngle(boolean b) {
+        return null;
+    }
 }
