@@ -56,8 +56,8 @@ public class Pose extends SubsystemBase {
         setOdometryPose(Robot.swerve.getPoseMeters());
 
         // updatePose("DesiredPose", desiredPose);
-        telemetry.updatePoseOnField("OdometryPose", odometryPose);
-        telemetry.updatePoseOnField("EstimatedPose", estimatePose);
+        // telemetry.updatePoseOnField("OdometryPose", odometryPose);
+        // telemetry.updatePoseOnField("EstimatedPose", estimatePose);
     }
 
     /** Sets the Odometry Pose to the given post */

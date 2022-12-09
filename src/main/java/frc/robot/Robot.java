@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +26,7 @@ public class Robot extends LoggedRobot {
     public static LEDs leds;
     public static PilotGamepad pilotGamepad;
     public static RobotTelemetry telemetry;
+    public static Auton auton;
 
     public static String MAC = "";
 
@@ -37,6 +39,7 @@ public class Robot extends LoggedRobot {
         swerve = new Swerve();
         pose = new Pose();
         trajectories = new Trajectories();
+        auton = new Auton();
 
         leds = new LEDs();
         pilotGamepad = new PilotGamepad();
@@ -46,6 +49,7 @@ public class Robot extends LoggedRobot {
         // commands
         PilotCommands.setupDefaultCommand();
         SwerveCommands.setupDefaultCommand();
+        PathPlannerServer.startServer(5811);
     }
 
     /**
