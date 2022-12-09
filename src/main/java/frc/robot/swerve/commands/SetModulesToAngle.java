@@ -14,6 +14,14 @@ public class SetModulesToAngle extends CommandBase {
     SwerveModuleState[] swerveModuleStates;
     SwerveModuleState[] stopModuleStates;
 
+    public SetModulesToAngle(SwerveModuleState[] states) {
+        this(
+                states[0].angle.getDegrees(),
+                states[1].angle.getDegrees(),
+                states[2].angle.getDegrees(),
+                states[3].angle.getDegrees());
+    }
+
     public SetModulesToAngle(double angle) {
         this(angle, angle, angle, angle);
     }
