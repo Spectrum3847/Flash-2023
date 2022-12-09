@@ -11,13 +11,14 @@ import frc.robot.trajectories.commands.FollowTrajectory;
 public class FollowPath extends SequentialCommandGroup {
 
     /** Creates a new Drive1Meter. */
-    public FollowPath(String path, Boolean events) {
+    public FollowPath(String path, Boolean isFirstPath) {
         // An example trajectory to follow. All units in meters.
-        PathPlannerTrajectory testPath =
+        PathPlannerTrajectory traj =
                 PathPlanner.loadPath(path, AutonConfig.kMaxSpeed, AutonConfig.kMaxAccel);
+
         addCommands(
-                AutonCommands.intializePathFollowing(testPath),
+                AutonCommands.checkFirstPath(traj, isFirstPath),
                 new FollowPathWithEvents(
-                        new FollowTrajectory(testPath), testPath.getMarkers(), Auton.eventMap));
+                        new FollowTrajectory(traj), traj.getMarkers(), Auton.eventMap));
     }
 }

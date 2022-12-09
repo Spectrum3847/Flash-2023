@@ -13,6 +13,17 @@ import frc.robot.Robot;
 
 public class AutonCommands {
 
+    public static Command checkFirstPath(PathPlannerTrajectory traj, boolean isFirstPath) {
+        return new InstantCommand(
+                () -> {
+                    // Reset odometry for the first path you run during auto
+                    if (isFirstPath) {
+                        Robot.swerve.resetOdometry(traj.getInitialHolonomicPose());
+                    }
+                },
+                Robot.swerve);
+    }
+
     public static Command intializePathFollowing(PathPlannerTrajectory path) {
         return new SequentialCommandGroup(
                 AutonCommands.setBrakeMode()
