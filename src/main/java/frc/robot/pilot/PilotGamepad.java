@@ -16,22 +16,24 @@ import frc.robot.swerve.commands.SwerveCommands;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
+    public PilotConfig config;
 
     public PilotGamepad() {
         super("PILOT", PilotConfig.port);
-        gamepad.leftStick.setDeadband(PilotConfig.throttleDeadband);
-        gamepad.leftStick.configCurves(PilotConfig.throttleExp, PilotConfig.throttleScaler);
-        gamepad.leftStick.setXinvert(PilotConfig.xInvert);
-        gamepad.leftStick.setYinvert(PilotConfig.yInvert);
+        config = new PilotConfig();
+        gamepad.leftStick.setDeadband(config.throttleDeadband);
+        gamepad.leftStick.configCurves(config.throttleExp, config.throttleScaler);
+        gamepad.leftStick.setXinvert(config.xInvert);
+        gamepad.leftStick.setYinvert(config.yInvert);
 
-        gamepad.rightStick.setDeadband(PilotConfig.throttleDeadband);
-        gamepad.rightStick.configCurves(PilotConfig.steeringExp, PilotConfig.steeringScaler);
-        gamepad.rightStick.setXinvert(PilotConfig.xInvert);
-        gamepad.rightStick.setYinvert(PilotConfig.yInvert);
+        gamepad.rightStick.setDeadband(config.throttleDeadband);
+        gamepad.rightStick.configCurves(config.steeringExp, config.steeringScaler);
+        gamepad.rightStick.setXinvert(config.xInvert);
+        gamepad.rightStick.setYinvert(config.yInvert);
 
-        gamepad.triggers.setTwistDeadband(PilotConfig.steeringDeadband);
-        gamepad.triggers.configTwistCurve(PilotConfig.steeringExp, PilotConfig.steeringScaler);
-        gamepad.triggers.setTwistInvert(PilotConfig.steeringInvert);
+        gamepad.triggers.setTwistDeadband(config.steeringDeadband);
+        gamepad.triggers.configTwistCurve(config.steeringExp, config.steeringScaler);
+        gamepad.triggers.setTwistInvert(config.steeringInvert);
     }
 
     public void setupTeleopButtons() {

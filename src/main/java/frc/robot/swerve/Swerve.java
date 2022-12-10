@@ -14,7 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.RobotTelemetry;
+import frc.robot.swerve.configs.Flash2023;
+import frc.robot.swerve.configs.SwerveConfig;
 import frc.robot.swerve.gyros.GyroIO;
 import frc.robot.swerve.gyros.Pigeon1;
 import frc.robot.swerve.gyros.Pigeon2;
@@ -29,26 +30,34 @@ public class Swerve extends SubsystemBase {
 
     public Swerve() {
         setName("Swerve");
-        config = new SwerveConfig();
 
-        // Check robot type to set the gyro type and module offsets
+        // Check robot type and make the config file
         switch (Robot.config.getRobotType()) {
             case PRACTICE:
-                gyro = new Pigeon1();
-                RobotTelemetry.print("Practice Bot Pigeon1");
+                // CHANGE THIS TO THE PRACTICE BOT CONFIG
+                config = Flash2023.config;
                 break;
             default:
+                config = Flash2023.config;
+                break;
+        }
+
+        switch (config.gyro.type) {
+            case PIGEON1:
+                gyro = new Pigeon1();
+                break;
+            case PIGEON2:
+            default:
                 gyro = new Pigeon2();
-                RobotTelemetry.print("Pigeon2 and comp swerve angles");
                 break;
         }
 
         mSwerveMods =
                 new SwerveModule[] {
-                    new SwerveModule(0, config, SwerveConfig.Mod0.config),
-                    new SwerveModule(1, config, SwerveConfig.Mod1.config),
-                    new SwerveModule(2, config, SwerveConfig.Mod2.config),
-                    new SwerveModule(3, config, SwerveConfig.Mod3.config)
+                    new SwerveModule(0, config),
+                    new SwerveModule(1, config),
+                    new SwerveModule(2, config),
+                    new SwerveModule(3, config)
                 };
         odometry = new Odometry(this);
         telemetry = new SwerveTelemetry(this);
@@ -93,11 +102,11 @@ public class Swerve extends SubsystemBase {
         }
 
         SwerveModDesiredStates =
-                SwerveConfig.swerveKinematics.toSwerveModuleStates(speeds, centerOfRotationMeters);
+                config.swerveKinematics.toSwerveModuleStates(speeds, centerOfRotationMeters);
 
         // LOOK INTO THE OTHER CONSTRUCTOR FOR desaturateWheelSpeeds to see if it is better
         SwerveDriveKinematics.desaturateWheelSpeeds(
-                SwerveModDesiredStates, SwerveConfig.maxVelocity);
+                SwerveModDesiredStates, config.tuning.maxVelocity);
 
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(SwerveModDesiredStates[mod.moduleNumber], isOpenLoop);
@@ -153,7 +162,7 @@ public class Swerve extends SubsystemBase {
      * @param desiredStates Meters per second and radians per second
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConfig.maxVelocity);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, config.tuning.maxVelocity);
 
         SwerveModDesiredStates = desiredStates;
         for (SwerveModule mod : mSwerveMods) {

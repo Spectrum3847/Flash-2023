@@ -3,7 +3,6 @@ package frc.robot.pilot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Robot;
-import frc.robot.pilot.PilotConfig;
 import frc.robot.swerve.commands.SwerveDrive;
 import frc.robot.trajectories.TrajectoriesCommands;
 import java.util.function.DoubleSupplier;
@@ -46,7 +45,7 @@ public class PilotCommands {
                                         () -> Robot.pilotGamepad.getDriveAngle()),
                                 true,
                                 false,
-                                PilotConfig.intakeCoRmeters))
+                                Robot.pilotGamepad.config.intakeCoRmeters))
                 .withName("SnakeDrive");
     }
 

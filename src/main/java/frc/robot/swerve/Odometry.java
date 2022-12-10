@@ -14,9 +14,7 @@ public class Odometry {
         swerve = s;
         swerveOdometry =
                 new SwerveDriveOdometry(
-                        SwerveConfig.swerveKinematics,
-                        swerve.gyro.getRawYaw(),
-                        swerve.getPositions());
+                        s.config.swerveKinematics, swerve.gyro.getRawYaw(), swerve.getPositions());
     }
 
     public SwerveDriveOdometry getSwerveDriveOdometry() {

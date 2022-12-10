@@ -8,12 +8,12 @@ import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class CanCoder extends AngleSensorIO {
+public class CANencoder extends AngleSensorIO {
 
     private WPI_CANCoder encoder;
     private CANCoderConfiguration swerveCanCoderConfig;
 
-    public CanCoder(int canID) {
+    public CANencoder(int canID) {
         encoder = new WPI_CANCoder(canID);
 
         swerveCanCoderConfig = new CANCoderConfiguration();

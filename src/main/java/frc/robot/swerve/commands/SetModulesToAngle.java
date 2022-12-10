@@ -47,7 +47,7 @@ public class SetModulesToAngle extends CommandBase {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.swerve);
 
-        double minSpeed = 0.01 * Robot.swerve.config.maxVelocity;
+        double minSpeed = 0.01 * Robot.swerve.config.tuning.maxVelocity;
 
         // Set the angles and minimum speeds to use when locking the swerve base
         swerveModuleStates =

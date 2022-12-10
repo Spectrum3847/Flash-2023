@@ -6,7 +6,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.swerve.Swerve;
-import frc.robot.swerve.SwerveConfig;
 import java.util.function.DoubleSupplier;
 
 public class SpinMove extends CommandBase {
@@ -49,32 +48,41 @@ public class SpinMove extends CommandBase {
         double angle = heading.getDegrees();
 
         if (Math.abs(ccwPositive) >= 0.2 && !centerHasBeenSet) {
-            Translation2d offsets[] = SwerveConfig.moduleOffsets(Units.inchesToMeters(3));
+            Translation2d offsets[] =
+                    Robot.swerve.config.physical.moduleOffsets(Units.inchesToMeters(3));
             if (angle < 45 && angle >= -45) {
                 // negative rotation is clockwise
                 // positive rotation is counter-clockwise
                 if (ccwPositive > 0) {
-                    centerOfRotationMeters = SwerveConfig.frontRightLocation.plus(offsets[1]);
+                    centerOfRotationMeters =
+                            Robot.swerve.config.physical.frontRightLocation.plus(offsets[1]);
                 } else {
-                    centerOfRotationMeters = SwerveConfig.frontLeftLocation.plus(offsets[0]);
+                    centerOfRotationMeters =
+                            Robot.swerve.config.physical.frontLeftLocation.plus(offsets[0]);
                 }
             } else if (angle >= 45 && angle < 135) {
                 if (ccwPositive > 0) {
-                    centerOfRotationMeters = SwerveConfig.frontLeftLocation.plus(offsets[0]);
+                    centerOfRotationMeters =
+                            Robot.swerve.config.physical.frontLeftLocation.plus(offsets[0]);
                 } else {
-                    centerOfRotationMeters = SwerveConfig.backLeftLocation.plus(offsets[2]);
+                    centerOfRotationMeters =
+                            Robot.swerve.config.physical.backLeftLocation.plus(offsets[2]);
                 }
             } else if (angle >= 135 || angle < -135) {
                 if (ccwPositive > 0) {
-                    centerOfRotationMeters = SwerveConfig.backLeftLocation.plus(offsets[2]);
+                    centerOfRotationMeters =
+                            Robot.swerve.config.physical.backLeftLocation.plus(offsets[2]);
                 } else {
-                    centerOfRotationMeters = SwerveConfig.backRightLocation.plus(offsets[3]);
+                    centerOfRotationMeters =
+                            Robot.swerve.config.physical.backRightLocation.plus(offsets[3]);
                 }
             } else if (angle >= -135 && angle < -45) {
                 if (ccwPositive > 0) {
-                    centerOfRotationMeters = SwerveConfig.backRightLocation.plus(offsets[3]);
+                    centerOfRotationMeters =
+                            Robot.swerve.config.physical.backRightLocation.plus(offsets[3]);
                 } else {
-                    centerOfRotationMeters = SwerveConfig.frontRightLocation.plus(offsets[1]);
+                    centerOfRotationMeters =
+                            Robot.swerve.config.physical.frontRightLocation.plus(offsets[1]);
                 }
             }
             centerHasBeenSet = true;
