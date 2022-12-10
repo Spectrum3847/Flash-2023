@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
-import frc.robot.swerve.SwerveConfig;
 
 public class SetModulesToAngle extends CommandBase {
     SwerveModuleState[] swerveModuleStates;
@@ -48,7 +47,7 @@ public class SetModulesToAngle extends CommandBase {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.swerve);
 
-        double minSpeed = 0.01 * SwerveConfig.maxVelocity;
+        double minSpeed = 0.01 * Robot.swerve.config.maxVelocity;
 
         // Set the angles and minimum speeds to use when locking the swerve base
         swerveModuleStates =

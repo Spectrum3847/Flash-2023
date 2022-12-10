@@ -35,11 +35,7 @@ public class Swerve extends SubsystemBase {
         switch (Robot.config.getRobotType()) {
             case PRACTICE:
                 gyro = new Pigeon1();
-                SwerveConfig.Mod0.angleOffset = SwerveConfig.Mod0.angleOffsetP;
-                SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetP;
-                SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetP;
-                SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
-                RobotTelemetry.print("Practice Bot Pigeon1 and Swerve Angles");
+                RobotTelemetry.print("Practice Bot Pigeon1");
                 break;
             default:
                 gyro = new Pigeon2();
