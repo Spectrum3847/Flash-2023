@@ -15,6 +15,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.swerve.configs.Flash2023;
+import frc.robot.swerve.configs.Gamma2021;
+import frc.robot.swerve.configs.Infrared3847;
+import frc.robot.swerve.configs.Infrared8515;
 import frc.robot.swerve.configs.SwerveConfig;
 import frc.robot.swerve.gyros.GyroIO;
 import frc.robot.swerve.gyros.Pigeon1;
@@ -33,9 +36,14 @@ public class Swerve extends SubsystemBase {
 
         // Check robot type and make the config file
         switch (Robot.config.getRobotType()) {
-            case PRACTICE:
-                // CHANGE THIS TO THE PRACTICE BOT CONFIG
-                config = Flash2023.config;
+            case GAMMA2021:
+                config = Gamma2021.config;
+                break;
+            case INFRARED3847:
+                config = Infrared3847.config;
+                break;
+            case INFRARED8515:
+                config = Infrared8515.config;
                 break;
             default:
                 config = Flash2023.config;

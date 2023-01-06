@@ -5,21 +5,21 @@ import frc.robot.RobotConfig.Motors;
 import frc.robot.swerve.configs.GyroConfig.GyroType;
 import frc.robot.swerve.configs.PhysicalConfig.AngleSensorType;
 
-public class Flash2023 {
+public class Infrared3847 {
     /* Angle Offsets */
-    static final double Mod0AngleOffset = 182.54;
-    static final double Mod1AngleOffset = 88.69;
-    static final double Mod2AngleOffset = 352.4;
-    static final double Mod3AngleOffset = 350.59;
+    static final double Mod0AngleOffset = 322.822;
+    static final double Mod1AngleOffset = 126.826;
+    static final double Mod2AngleOffset = 142.2;
+    static final double Mod3AngleOffset = 74.8828;
 
     /* Physical Configs */
-    static final double trackWidth = Units.inchesToMeters(17.5);
-    static final double wheelBase = Units.inchesToMeters(20.5);
+    static final double trackWidth = Units.inchesToMeters(18.5);
+    static final double wheelBase = Units.inchesToMeters(21.5);
     static final double wheelDiameter = Units.inchesToMeters(3.8195);
-    static final double driveGearRatio = (8.16 / 1.0);
-    static final double angleGearRatio = (12.8 / 1.0);
-    static final boolean driveMotorInvert = false;
-    static final boolean angleMotorInvert = false;
+    static final double driveGearRatio = (6.75 / 1.0);
+    static final double angleGearRatio = (50.0 / 14.0) * (60.0 / 10.0);
+    static final boolean driveMotorInvert = true;
+    static final boolean angleMotorInvert = true;
     static final boolean angleSensorInvert = false;
 
     // Tuning Config
@@ -38,7 +38,8 @@ public class Flash2023 {
 
     /* Swerve Profiling Values */
     static final double maxVelocity =
-            ((6380 / 60) / angleGearRatio) * wheelDiameter * Math.PI * 0.95; // meters per // second
+            ((6380 / 60) / angleGearRatio) * wheelDiameter * Math.PI * 0.95; // meters per //
+    // second
     static final double maxAccel = maxVelocity * 1.5; // take 1/2 sec to get to max speed.
     static final double maxAngularVelocity =
             maxVelocity / Math.hypot(trackWidth / 2.0, wheelBase / 2.0);

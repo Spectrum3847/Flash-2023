@@ -83,7 +83,7 @@ public class RobotTelemetry extends TelemetrySubsystem {
                 PracticeRobotAlert.set(false);
                 SimRobotAlert.set(false);
                 break;
-            case PRACTICE:
+            case GAMMA2021:
                 CompetitionRobotAlert.set(false);
                 PracticeRobotAlert.set(true);
                 SimRobotAlert.set(false);

@@ -11,7 +11,10 @@ public final class RobotConfig {
     public final String Canivore = "3847";
     public final Motors motors = new Motors();
     public final Pneumatic pneumatic = new Pneumatic();
-    public final String praticeBotMAC = "00-80-2F-1C-1C-1C"; // Flash = 00:80:2F:32:FC:79
+    public final String gamma2021MAC = "00-80-2F-1C-1C-1C"; // Flash = 00:80:2F:32:FC:79
+    public final String infrared8515MAC = "00:80:2F:23:E9:33";
+    public final String infrared3847MAC =
+            "00:00:00:00:00:00"; // REPLACE WITH REAL IFRARED MAC ADDRESS
     public final ModuleType PowerDistributionType = ModuleType.kCTRE;
 
     public static final int pigeonID = 0;
@@ -44,7 +47,7 @@ public final class RobotConfig {
         switch (getRobotType()) {
             case COMP:
                 break;
-            case PRACTICE:
+            case GAMMA2021:
                 break;
             case SIM:
             case REPLAY:
@@ -58,12 +61,18 @@ public final class RobotConfig {
         if (Robot.isSimulation()) {
             robotType = RobotType.SIM;
             RobotTelemetry.print("Robot Type: Simulation");
-        } else if (Robot.MAC.equals(praticeBotMAC)) {
-            robotType = RobotType.PRACTICE;
-            RobotTelemetry.print("Robot Type: Practice");
+        } else if (Robot.MAC.equals(gamma2021MAC)) {
+            robotType = RobotType.GAMMA2021;
+            RobotTelemetry.print("Robot Type: GAMMA 2021");
+        } else if (Robot.MAC.equals(infrared8515MAC)) {
+            robotType = RobotType.INFRARED8515;
+            RobotTelemetry.print("Robot Type: INFRARED 8515");
+        } else if (Robot.MAC.equals(infrared3847MAC)) {
+            robotType = RobotType.INFRARED3847;
+            RobotTelemetry.print("Robot Type: INFRARED 3847");
         } else {
             robotType = RobotType.COMP;
-            RobotTelemetry.print("Robot Type: Competition");
+            RobotTelemetry.print("Robot Type: FLASH 2023");
         }
         return robotType;
     }
@@ -74,7 +83,9 @@ public final class RobotConfig {
 
     public enum RobotType {
         COMP,
-        PRACTICE,
+        GAMMA2021,
+        INFRARED3847,
+        INFRARED8515,
         SIM,
         REPLAY
     }

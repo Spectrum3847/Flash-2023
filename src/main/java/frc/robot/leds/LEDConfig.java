@@ -13,7 +13,7 @@ public class LEDConfig {
             case COMP:
                 // Set all the constants specifically for the competition robot
                 break;
-            case PRACTICE:
+            case GAMMA2021:
                 // Set all the constants specifically for the practice robot
                 break;
             case SIM:

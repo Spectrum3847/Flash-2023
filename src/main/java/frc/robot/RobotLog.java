@@ -37,7 +37,7 @@ public class RobotLog {
             switch (Robot.config.getRobotType()) {
                     // Running on a comp robot, log to a USB stick
                 case COMP:
-                case PRACTICE:
+                case GAMMA2021:
                     logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
                     logger.addDataReceiver(new NT4Publisher());
                     LoggedPowerDistribution.getInstance(0, Robot.config.PowerDistributionType);
