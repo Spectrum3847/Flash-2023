@@ -14,39 +14,19 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
-import frc.robot.RobotTelemetry;
-import frc.robot.swerve.gyros.GyroIO;
-import frc.robot.swerve.gyros.Pigeon1;
-import frc.robot.swerve.gyros.Pigeon2;
 
 public class Swerve extends SubsystemBase {
     public SwerveConfig config;
-    protected GyroIO gyro;
+    protected Gyro gyro;
     public Odometry odometry;
     public SwerveTelemetry telemetry;
     public SwerveModule[] mSwerveMods;
     private SwerveModuleState[] mSwerveModStates;
-    Rotation2d angleOffset;
 
     public Swerve() {
         setName("Swerve");
         config = new SwerveConfig();
-
-        switch (Robot.config.getRobotType()) {
-            case PRACTICE:
-                gyro = new Pigeon1();
-                SwerveConfig.Mod0.angleOffset = SwerveConfig.Mod0.angleOffsetP;
-                SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetP;
-                SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetP;
-                SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
-                RobotTelemetry.print("Practice Bot Pigeon1 and Swerve Angles");
-                break;
-            default:
-                gyro = new Pigeon2();
-                RobotTelemetry.print("Pigeon2 and comp swerve angles");
-                break;
-        }
+        gyro = new Gyro();
 
         mSwerveMods =
                 new SwerveModule[] {
@@ -55,9 +35,8 @@ public class Swerve extends SubsystemBase {
                     new SwerveModule(2, config, SwerveConfig.Mod2.config),
                     new SwerveModule(3, config, SwerveConfig.Mod3.config)
                 };
-        // resetSteeringToAbsolute();
+        resetSteeringToAbsolute();
         odometry = new Odometry(this);
-        angleOffset = gyro.getRawYaw().unaryMinus();
         telemetry = new SwerveTelemetry(this);
     }
 
@@ -127,10 +106,6 @@ public class Swerve extends SubsystemBase {
         for (SwerveModule mod : mSwerveMods) {
             mod.resetToAbsolute();
         }
-    }
-
-    public void resetHeading(Rotation2d heading) {
-        odometry.resetHeading(heading);
     }
 
     public Rotation2d getHeading() {
