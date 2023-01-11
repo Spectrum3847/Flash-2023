@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotTelemetry;
 
 public class Swerve extends SubsystemBase {
     public SwerveConfig config;
@@ -47,7 +48,7 @@ public class Swerve extends SubsystemBase {
         telemetry.logModuleStates("SwerveModuleStates/Measured", mSwerveModStates);
         telemetry.logModuleAbsolutePositions();
         RobotTelemetry.print("Heading: " + getHeading().getDegrees());
-        RobotTelemetry.print("Gyro: " + gyro.getRawYaw().plus(angleOffset).getDegrees());
+        RobotTelemetry.print("Gyro: " + gyro.getRawYaw().getDegrees());
     }
 
     public void drive(
