@@ -131,28 +131,6 @@ public class Pose extends SubsystemBase {
         return VecBuilder.fill(x, y, Units.degreesToRadians(theta));
     }
 
-    /* old implementation
-    createStateStdDevs(
-        config.kPositionStdDevX,
-        config.kPositionStdDevY,
-        config.kPositionStdDevTheta,
-        config.kPositionStdDevModule)
-    */
-    // /**
-    //  * Creates a vector of standard deviations for the states. Standard deviations of model
-    // states.
-    //  * Increase these numbers to trust your model's state estimates less.
-    //  *
-    //  * @param x in meters
-    //  * @param y in meters
-    //  * @param theta in degrees
-    //  * @param s std for all module positions in meters
-    //  * @return the Vector of standard deviations need for the poseEstimator
-    //  */
-    // public Vector<N7> createStateStdDevs(double x, double y, double theta, double s) {
-    //     return VecBuilder.fill(x, y, Units.degreesToRadians(theta), s, s, s, s);
-    // }
-
     /**
      * Creates a vector of standard deviations for the local measurements. Standard deviations of
      * encoder and gyro rate measurements. Increase these numbers to trust sensor readings from
