@@ -1,9 +1,9 @@
 package frc.robot.vision;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.apriltag.AprilTag;
 import frc.robot.vision.RobotPoseEstimator.PoseStrategy;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ public final class VisionConfig {
     /* Pose Estimation Strategy */
     public static PoseStrategy strategy = PoseStrategy.LOWEST_AMBIGUITY;
 
-    private final AprilTag[] tags;
+    private final edu.wpi.first.apriltag.AprilTag[] tags;
 
     /* Individual AprilTag setup -- make sure to add them to tags in constructor */
     public static final AprilTag tag0 =
