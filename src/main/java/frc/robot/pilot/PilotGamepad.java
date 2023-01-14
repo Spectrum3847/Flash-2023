@@ -6,6 +6,7 @@ import frc.SpectrumLib.gamepads.AxisButton;
 import frc.SpectrumLib.gamepads.AxisButton.ThresholdType;
 import frc.SpectrumLib.gamepads.Gamepad;
 import frc.SpectrumLib.gamepads.XboxGamepad.XboxAxis;
+import frc.robot.launcher.LauncherCommands;
 import frc.robot.leds.commands.BlinkLEDCommand;
 import frc.robot.leds.commands.OneColorLEDCommand;
 import frc.robot.leds.commands.RainbowLEDCommand;
@@ -35,8 +36,7 @@ public class PilotGamepad extends Gamepad {
     }
 
     public void setupTeleopButtons() {
-        gamepad.aButton.whileTrue(
-                PilotCommands.aimPilotDrive(Math.PI * -1 / 2).withName("Snap 90"));
+        gamepad.aButton.whileTrue(LauncherCommands.setOutput(1));
         gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.xButton.whileTrue(SwerveCommands.lockSwerve());
         gamepad.yButton.whileTrue(PilotCommands.snakeDrive());

@@ -1,13 +1,13 @@
-package frc.robot.launcher;
+package frc.robot.intake;
 
 import frc.SpectrumLib.subsystems.rollerMech.RollerMechConfig;
 import frc.robot.RobotConfig.Motors;
 
-public class LauncherConfig extends RollerMechConfig {
-    public static final String name = "Launcher";
+public class IntakeConfig extends RollerMechConfig {
+    public static final String name = "Intake";
     public final int diameterInches = 4;
 
-    public static final int launcherMotorID = Motors.launcherMotor;
+    public static final int intakeMotorID = Motors.intakeMotor;
 
     public double kP = 0.0;
     public double kI = 0.0;
@@ -15,7 +15,7 @@ public class LauncherConfig extends RollerMechConfig {
     public double kF = 0.0;
     public double kIz = 0.0;
 
-    public LauncherConfig() {
+    public IntakeConfig() {
         super(name);
     }
 }

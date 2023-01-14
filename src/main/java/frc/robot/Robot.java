@@ -8,6 +8,11 @@ import frc.SpectrumLib.sim.PhysicsSim;
 import frc.SpectrumLib.util.Network;
 import frc.robot.auton.Auton;
 import frc.robot.launcher.Launcher;
+import frc.robot.launcher.LauncherCommands;
+import frc.robot.intake.Intake;
+import frc.robot.intake.IntakeCommands;
+import frc.robot.elevator.Elevator;
+import frc.robot.elevator.ElevatorCommands;
 import frc.robot.leds.LEDs;
 import frc.robot.pilot.PilotGamepad;
 import frc.robot.pilot.commands.PilotCommands;
@@ -24,6 +29,8 @@ public class Robot extends LoggedRobot {
     public static Pose pose;
     public static Trajectories trajectories;
     public static Launcher launcher;
+    public static Intake intake; 
+    public static Elevator elevator;
     public static LEDs leds;
     public static PilotGamepad pilotGamepad;
     public static RobotTelemetry telemetry;
@@ -41,6 +48,8 @@ public class Robot extends LoggedRobot {
         trajectories = new Trajectories();
 
         launcher = new Launcher();
+        intake = new Intake();
+        elevator = new Elevator(); 
 
         leds = new LEDs();
         pilotGamepad = new PilotGamepad();
@@ -50,6 +59,9 @@ public class Robot extends LoggedRobot {
         // commands
         PilotCommands.setupDefaultCommand();
         SwerveCommands.setupDefaultCommand();
+        LauncherCommands.setupDefaultCommand();
+        IntakeCommands.setupDefaultCommand();
+        ElevatorCommands.setupDefaultCommand();
     }
 
     /**
