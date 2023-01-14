@@ -7,7 +7,10 @@ import frc.robot.Robot;
 // above all copied from PilotCommands.java
 
 public class LauncherCommands {
-    public static void setupDefaultCommand() {}
+    public static void setupDefaultCommand() {
+        Robot.launcher.setVelocity(5000);
+        // Robot.launcher.motorLeader.set(TalonFXControlMode.Velocity, 500);
+    }
 
     public static double addLauncherValue(double launcherValue) {
         launcherValue += 1;

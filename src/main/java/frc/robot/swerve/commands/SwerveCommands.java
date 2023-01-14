@@ -17,6 +17,6 @@ public class SwerveCommands {
 
     public static Command brakeMode() {
         return new StartEndCommand(
-                () -> Robot.swerve.setBrakeMode(true), () -> Robot.swerve.setBrakeMode(false));
+                () -> Robot.swerve.brakeMode(true), () -> Robot.swerve.brakeMode(false));
     }
 }

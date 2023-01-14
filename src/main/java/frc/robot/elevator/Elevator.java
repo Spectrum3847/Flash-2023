@@ -1,7 +1,6 @@
 package frc.robot.elevator;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import frc.SpectrumLib.subsystems.linearMech.LinearMechSubsystem;
 import frc.robot.RobotConfig;
 

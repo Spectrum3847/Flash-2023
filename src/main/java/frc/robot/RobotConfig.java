@@ -31,9 +31,9 @@ public final class RobotConfig {
         public static final int driveMotor3 = 31;
         public static final int angleMotor3 = 32;
 
-        public static final int launcherMotor = 41;
-        public static final int intakeMotor = 51; //actually idk
-        public static final int elevatorMotor = 52; //actually idk
+        public static final int launcherMotor = 50;
+        public static final int intakeMotor = 51;
+        public static final int elevatorMotor = 60;
     }
 
     public final class Pneumatic {
