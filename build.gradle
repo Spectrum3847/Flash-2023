@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2023.1.1-beta-4"
+    id "edu.wpi.first.GradleRIO" version "2023.1.1"
     id 'com.diffplug.spotless' version '6.10.0'
     id "com.peterabeles.gversion" version "1.10"
 }
@@ -60,7 +60,7 @@ repositories {
     }
 }
 
-//AdvatageKit code
+//AdvantageKit code
 configurations.all {
     exclude group: "edu.wpi.first.wpilibj"
 }
@@ -75,7 +75,7 @@ sourceSets {
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
-// Also defines JUnit 4.
+// Also defines JUnit 5.
 dependencies {
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
@@ -94,13 +94,20 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     //Include SpectrumLib in the project
     implementation ('com.github.Spectrum3847:SpectrumLib:2023-SNAPSHOT') {changing = true }
 
     //Include AdvantageKit in the project
     annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:2.0.0-beta-1"
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
 }
 
 // Simulation configuration (e.g. environment variables).

@@ -1,6 +1,5 @@
 package frc.robot.pose;
 
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -21,28 +20,23 @@ public class Pose extends SubsystemBase {
     Pose2d desiredPose = new Pose2d();
     Pose2d estimatePose = new Pose2d();
 
-    private final SwerveDrivePoseEstimator<N7, N7, N5> poseEstimator;
+    //    private final SwerveDrivePoseEstimator<N7, N7, N5> poseEstimator;
+    private final SwerveDrivePoseEstimator poseEstimator;
 
     public Pose() {
         config = new PoseConfig();
         telemetry = new PoseTelemetry(this);
 
         poseEstimator =
-                new SwerveDrivePoseEstimator<N7, N7, N5>(
-                        Nat.N7(),
-                        Nat.N7(),
-                        Nat.N5(),
+                new SwerveDrivePoseEstimator(
+                        SwerveConfig.swerveKinematics,
                         Robot.swerve.getHeading(),
                         Robot.swerve.getPositions(),
                         new Pose2d(),
-                        SwerveConfig.swerveKinematics,
                         createStateStdDevs(
                                 config.kPositionStdDevX,
                                 config.kPositionStdDevY,
-                                config.kPositionStdDevTheta,
-                                config.kPositionStdDevModule),
-                        createLocalMeasurementStdDevs(
-                                config.kRateStdDevTheta, config.kRateStdDevModule),
+                                config.kPositionStdDevTheta),
                         createVisionMeasurementStdDevs(
                                 config.kVisionStdDevX,
                                 config.kVisionStdDevY,
@@ -61,7 +55,7 @@ public class Pose extends SubsystemBase {
     }
 
     /** Sets the Odometry Pose to the given post */
-    private void setOdometryPose(Pose2d pose) {
+    public void setOdometryPose(Pose2d pose) {
         odometryPose = pose;
     }
 
@@ -71,14 +65,13 @@ public class Pose extends SubsystemBase {
     }
 
     /** Sets the estimated pose to the given pose */
-    private void setEstimatedPose(Pose2d pose) {
+    public void setEstimatedPose(Pose2d pose) {
         estimatePose = pose;
     }
 
     /** Updates the field relative position of the robot. */
     public void updateOdometryEstimate() {
-        poseEstimator.update(
-                Robot.swerve.getHeading(), Robot.swerve.getStates(), Robot.swerve.getPositions());
+        poseEstimator.update(Robot.swerve.getHeading(), Robot.swerve.getPositions());
     }
 
     /**
@@ -88,13 +81,13 @@ public class Pose extends SubsystemBase {
      * @param gyroAngle
      */
     public void resetPoseEstimate(Pose2d poseMeters) {
-        Robot.swerve.resetOdometry(poseMeters);
+        Robot.swerve.odometry.resetOdometry(poseMeters);
         poseEstimator.resetPosition(
                 Robot.swerve.getHeading(), Robot.swerve.getPositions(), poseMeters);
     }
 
     public void resetHeading(Rotation2d angle) {
-        Robot.swerve.resetHeading(angle);
+        Robot.swerve.odometry.resetHeading(angle);
         resetPoseEstimate(new Pose2d(estimatePose.getTranslation(), angle));
     }
 
@@ -132,11 +125,10 @@ public class Pose extends SubsystemBase {
      * @param x in meters
      * @param y in meters
      * @param theta in degrees
-     * @param s std for all module positions in meters
      * @return the Vector of standard deviations need for the poseEstimator
      */
-    private Vector<N7> createStateStdDevs(double x, double y, double theta, double s) {
-        return VecBuilder.fill(x, y, Units.degreesToRadians(theta), s, s, s, s);
+    public Vector<N3> createStateStdDevs(double x, double y, double theta) {
+        return VecBuilder.fill(x, y, Units.degreesToRadians(theta));
     }
 
     /**
@@ -148,7 +140,7 @@ public class Pose extends SubsystemBase {
      * @param s std for all module positions in meters per sec
      * @return the Vector of standard deviations need for the poseEstimator
      */
-    private Vector<N5> createLocalMeasurementStdDevs(double theta, double p) {
+    public Vector<N5> createLocalMeasurementStdDevs(double theta, double p) {
         return VecBuilder.fill(Units.degreesToRadians(theta), p, p, p, p);
     }
 
@@ -162,7 +154,7 @@ public class Pose extends SubsystemBase {
      * @param theta in degrees
      * @return the Vector of standard deviations need for the poseEstimator
      */
-    private Vector<N3> createVisionMeasurementStdDevs(double x, double y, double theta) {
+    public Vector<N3> createVisionMeasurementStdDevs(double x, double y, double theta) {
         return VecBuilder.fill(x, y, Units.degreesToRadians(theta));
     }
 
