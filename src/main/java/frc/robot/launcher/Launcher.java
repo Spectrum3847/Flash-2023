@@ -11,6 +11,6 @@ public class Launcher extends RollerMechSubsystem {
         super(config);
         motorLeader = new WPI_TalonFX(RobotConfig.Motors.launcherMotor);
         setupFalconLeader();
-        LauncherCommands.setupDefaultCommand();
+        //motorLeader.setInverted(LauncherConfig.true);
     }
 }

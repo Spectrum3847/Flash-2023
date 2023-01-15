@@ -8,7 +8,7 @@ import frc.robot.Robot;
 
 public class LauncherCommands {
     public static void setupDefaultCommand() {
-        Robot.launcher.setVelocity(5000);
+        // Robot.launcher.setVelocity(500);
         // Robot.launcher.motorLeader.set(TalonFXControlMode.Velocity, 500);
     }
 
@@ -19,5 +19,10 @@ public class LauncherCommands {
 
     public static Command setOutput(double value) {
         return new RunCommand(() -> Robot.launcher.setManualOutput(value), Robot.launcher);
+    }
+    // below not needed
+    public static Command turnOnLauncher(double vel) {
+        Robot.launcher.setVelocity(vel);
+        return new RunCommand(() -> Robot.launcher.setVelocity(vel));
     }
 }

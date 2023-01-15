@@ -7,6 +7,7 @@ import frc.SpectrumLib.gamepads.AxisButton.ThresholdType;
 import frc.SpectrumLib.gamepads.Gamepad;
 import frc.SpectrumLib.gamepads.XboxGamepad.XboxAxis;
 import frc.robot.Robot;
+import frc.robot.launcher.LauncherCommands;
 import frc.robot.leds.commands.BlinkLEDCommand;
 import frc.robot.leds.commands.OneColorLEDCommand;
 import frc.robot.leds.commands.RainbowLEDCommand;
@@ -45,7 +46,8 @@ public class PilotGamepad extends Gamepad {
         /* get information about target and robot yaw */
         gamepad.xButton.whileTrue(VisionCommands.printYawInfo());
         // gamepad.yButton.whileTrue(new SpinMove());
-        gamepad.yButton.whileTrue(VisionCommands.printEstimatedPoseInfo());
+        // gamepad.yButton.whileTrue(VisionCommands.printEstimatedPoseInfo());
+        gamepad.yButton.whileTrue(LauncherCommands.setOutput(3000));
 
         // Right Stick points the robot in that direction
         Trigger rightX = AxisButton.create(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND);
