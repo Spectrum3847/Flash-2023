@@ -7,7 +7,11 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
@@ -26,6 +30,8 @@ public class Vision extends SubsystemBase {
     private ArrayList<Pair<PhotonCamera, Transform3d>> cameraPairs;
     private double yaw, pitch, area, poseAmbiguity, captureTime;
     private int targetId;
+    private NetworkTable table;
+    private NetworkTableEntry tx, ty, ta;
 
     // testing
     private final DecimalFormat df = new DecimalFormat();
@@ -35,6 +41,7 @@ public class Vision extends SubsystemBase {
     public Vision() {
         setName("Vision");
         config = new VisionConfig();
+        table = NetworkTableInstance.getDefault().getTable("limelight");
         cameraPairs = new ArrayList<Pair<PhotonCamera, Transform3d>>();
         currentPose = new Pair<Pose3d, Double>(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), 0.0);
 
@@ -59,6 +66,16 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         currentPose = getEstimatedPose();
 
+        tx = table.getEntry("tx");
+        ty = table.getEntry("ty");
+        ta = table.getEntry("ta");
+        double x = tx.getDouble(0.0);
+        double y = ty.getDouble(0.0);
+        double area = ta.getDouble(0.0);
+
+        SmartDashboard.putString("LimelightX", df.format(x));
+        SmartDashboard.putString("LimelightY", df.format(y));
+        SmartDashboard.putString("LimelightArea", df.format(area));
         /* Adding vision estimate to pose */
         // if(isValidPose()) {
         //     Robot.pose.addVisionMeasurement(currentPose.getFirst().toPose2d(),
