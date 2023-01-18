@@ -45,6 +45,11 @@ public class Vision extends SubsystemBase {
         cameraPairs = new ArrayList<Pair<PhotonCamera, Transform3d>>();
         currentPose = new Pair<Pose3d, Double>(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), 0.0);
 
+        /* Limelight NetworkTable Retrieval */
+        tx = table.getEntry("tx");
+        ty = table.getEntry("ty");
+        ta = table.getEntry("ta");
+
         cameras =
                 new PhotonCamera[] {VisionConfig.LL.config.camera
                     /* Add cameras here */
@@ -65,17 +70,25 @@ public class Vision extends SubsystemBase {
     @Override
     public void periodic() {
         currentPose = getEstimatedPose();
-
-        tx = table.getEntry("tx");
-        ty = table.getEntry("ty");
-        ta = table.getEntry("ta");
         double x = tx.getDouble(0.0);
         double y = ty.getDouble(0.0);
         double area = ta.getDouble(0.0);
 
-        SmartDashboard.putString("LimelightX", df.format(x));
-        SmartDashboard.putString("LimelightY", df.format(y));
-        SmartDashboard.putString("LimelightArea", df.format(area));
+        double[] dv = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        double[] robotPose = table.getEntry("botpose").getDoubleArray(dv);
+
+        if (robotPose.length > 0) {
+            SmartDashboard.putString("BotX", df.format(robotPose[0]));
+            SmartDashboard.putString("BotY", df.format(robotPose[1]));
+            SmartDashboard.putString("BotZ", df.format(robotPose[2]));
+            SmartDashboard.putString("Bot1", df.format(robotPose[3]));
+            SmartDashboard.putString("Bot2", df.format(robotPose[4]));
+            SmartDashboard.putString("Bot3", df.format(robotPose[5]));
+        }
+
+        SmartDashboard.putString("tagX", df.format(x));
+        SmartDashboard.putString("tagY", df.format(y));
+        SmartDashboard.putString("tagArea", df.format(area));
         /* Adding vision estimate to pose */
         // if(isValidPose()) {
         //     Robot.pose.addVisionMeasurement(currentPose.getFirst().toPose2d(),
