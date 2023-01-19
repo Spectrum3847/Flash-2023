@@ -1,8 +1,8 @@
 package frc.robot;
 
-import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.SpectrumLib.sim.PhysicsSim;
@@ -15,6 +15,7 @@ import frc.robot.pose.Pose;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.commands.SwerveCommands;
 import frc.robot.trajectories.Trajectories;
+import frc.robot.vision.Vision;
 import org.littletonrobotics.junction.LoggedRobot;
 
 public class Robot extends LoggedRobot {
@@ -23,10 +24,10 @@ public class Robot extends LoggedRobot {
     public static Swerve swerve;
     public static Pose pose;
     public static Trajectories trajectories;
+    public static Vision vision;
     public static LEDs leds;
     public static PilotGamepad pilotGamepad;
     public static RobotTelemetry telemetry;
-    public static Auton auton;
 
     public static String MAC = "";
 
@@ -39,7 +40,7 @@ public class Robot extends LoggedRobot {
         swerve = new Swerve();
         pose = new Pose();
         trajectories = new Trajectories();
-        auton = new Auton();
+        vision = new Vision();
 
         leds = new LEDs();
         pilotGamepad = new PilotGamepad();
@@ -49,7 +50,6 @@ public class Robot extends LoggedRobot {
         // commands
         PilotCommands.setupDefaultCommand();
         SwerveCommands.setupDefaultCommand();
-        PathPlannerServer.startServer(5811);
     }
 
     /**
@@ -87,6 +87,7 @@ public class Robot extends LoggedRobot {
 
         // Initialize all systems, do this after getting the MAC address
         intializeSystems();
+        SmartDashboard.putData(CommandScheduler.getInstance());
         RobotTelemetry.print("--- Robot Init Complete ---");
     }
 

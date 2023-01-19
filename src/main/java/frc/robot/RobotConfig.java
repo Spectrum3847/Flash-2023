@@ -11,7 +11,7 @@ public final class RobotConfig {
     public final String Canivore = "3847";
     public final Motors motors = new Motors();
     public final Pneumatic pneumatic = new Pneumatic();
-    public final String praticeBotMAC = "00-80-2F-1C-1C-1C"; // Flash = 00:80:2F:32:FC:79
+    public final String praticeBotMAC = "00-80-2F-1C-1C-1C";
     public final ModuleType PowerDistributionType = ModuleType.kCTRE;
 
     public static final int pigeonID = 0;
