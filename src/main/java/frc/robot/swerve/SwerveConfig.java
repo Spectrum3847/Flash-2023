@@ -11,7 +11,6 @@ import com.ctre.phoenix.sensors.SensorTimeBase;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import frc.SpectrumLib.swerve.SwerveModuleConfig;
 import frc.robot.RobotConfig.Motors;
 
 public final class SwerveConfig {
@@ -101,11 +100,9 @@ public final class SwerveConfig {
         public static final int angleMotorID = Motors.angleMotor0;
         public static final int canCoderID = 3;
         public static final double angleOffsetC = 2.54 + 180;
-        public static final double angleOffsetP = 184.39;
         public static double angleOffset = angleOffsetC;
-        public static final SwerveModuleConfig config =
-                new SwerveModuleConfig(
-                        driveMotorID, angleMotorID, canCoderID, angleOffset, angleOffsetP);
+        public static final ModuleConfig config =
+                new ModuleConfig(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
     }
 
     /* Front Right Module - Module 1 */
@@ -114,11 +111,9 @@ public final class SwerveConfig {
         public static final int angleMotorID = Motors.angleMotor1;
         public static final int canCoderID = 13;
         public static final double angleOffsetC = -91.31 + 180;
-        public static final double angleOffsetP = 99;
         public static double angleOffset = angleOffsetC;
-        public static final SwerveModuleConfig config =
-                new SwerveModuleConfig(
-                        driveMotorID, angleMotorID, canCoderID, angleOffset, angleOffsetP);
+        public static final ModuleConfig config =
+                new ModuleConfig(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
     }
 
     /* Back Left Module - Module 2 */
@@ -127,11 +122,9 @@ public final class SwerveConfig {
         public static final int angleMotorID = Motors.angleMotor2;
         public static final int canCoderID = 23;
         public static final double angleOffsetC = 172.4 + 180;
-        public static final double angleOffsetP = 355;
         public static double angleOffset = angleOffsetC;
-        public static final SwerveModuleConfig config =
-                new SwerveModuleConfig(
-                        driveMotorID, angleMotorID, canCoderID, angleOffset, angleOffsetP);
+        public static final ModuleConfig config =
+                new ModuleConfig(driveMotorID, angleMotorID, canCoderID, angleOffset, false);
     }
 
     /* Back Right Module - Module 3 */
@@ -140,11 +133,9 @@ public final class SwerveConfig {
         public static final int angleMotorID = Motors.angleMotor3;
         public static final int canCoderID = 33;
         public static final double angleOffsetC = 170.59 - 180;
-        public static final double angleOffsetP = 342;
         public static double angleOffset = angleOffsetC;
-        public static final SwerveModuleConfig config =
-                new SwerveModuleConfig(
-                        driveMotorID, angleMotorID, canCoderID, angleOffset, angleOffsetP);;
+        public static final ModuleConfig config =
+                new ModuleConfig(driveMotorID, angleMotorID, canCoderID, angleOffset, false);;
     }
 
     public TalonFXConfiguration swerveAngleFXConfig;

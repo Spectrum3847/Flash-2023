@@ -22,7 +22,7 @@ import frc.robot.swerve.gyros.Pigeon2;
 public class Swerve extends SubsystemBase {
     public SwerveConfig config;
     protected GyroIO gyro;
-    public Odometry odometry;
+    protected Odometry odometry;
     public SwerveTelemetry telemetry;
     protected SwerveModule[] mSwerveMods;
     private SwerveModuleState[] SwerveModDesiredStates;
@@ -35,11 +35,7 @@ public class Swerve extends SubsystemBase {
         switch (Robot.config.getRobotType()) {
             case PRACTICE:
                 gyro = new Pigeon1();
-                SwerveConfig.Mod0.angleOffset = SwerveConfig.Mod0.angleOffsetP;
-                SwerveConfig.Mod1.angleOffset = SwerveConfig.Mod1.angleOffsetP;
-                SwerveConfig.Mod2.angleOffset = SwerveConfig.Mod2.angleOffsetP;
-                SwerveConfig.Mod3.angleOffset = SwerveConfig.Mod3.angleOffsetP;
-                RobotTelemetry.print("Practice Bot Pigeon1 and Swerve Angles");
+                RobotTelemetry.print("Practice Bot Pigeon1");
                 break;
             default:
                 gyro = new Pigeon2();
@@ -56,6 +52,8 @@ public class Swerve extends SubsystemBase {
                 };
         odometry = new Odometry(this);
         telemetry = new SwerveTelemetry(this);
+
+        // Set the initial module states to zero
         drive(0, 0, 0, true, false, new Translation2d());
     }
 
