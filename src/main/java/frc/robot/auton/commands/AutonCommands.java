@@ -17,7 +17,7 @@ public class AutonCommands {
         return new InstantCommand(
                 () -> {
                     // Reset odometry for the first path you run during auto
-                    if (isFirstPath) {
+                    if (true) {
                         Robot.swerve.resetOdometry(traj.getInitialHolonomicPose());
                     }
                 },
