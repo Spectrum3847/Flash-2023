@@ -23,11 +23,19 @@ public class LauncherCommands {
     }
 
     public static Command setVelocity(double velocity) {
-        // target velocity to 3000 rpm
-        velocity = (velocity * LauncherConfig.kF) * LauncherConfig.kP;
-        velocity = Conversions.RPMToFalcon(velocity, 1.0);
-        double newvel = velocity;
-        return new RunCommand(() -> Robot.launcher.setVelocity(newvel));
+        // double error = velocity - Robot.launcher.getRPM();
+        // double addon = error * LauncherConfig.kP;
+        // velocity = velocity + addon;
+        velocity = velocity * 1.5;
+        double newvel = Conversions.RPMToFalcon(velocity, 1.0);
+        // double newvel2 = newvel;
+
+        // velocity = Conversions.RPMToFalcon(3000, 1.0);
+        // double error = 3000 - Robot.launcher.getRPM();
+        // double addon = error * 2;
+        // velocity = addon + velocity;
+        // double newvel = velocity;
+        return new RunCommand(() -> Robot.launcher.setVelocity(newvel)); // newvel
     }
 
     // call the below later the in the repeat every 20 ms part

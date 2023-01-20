@@ -47,7 +47,7 @@ public class PilotGamepad extends Gamepad {
         gamepad.xButton.whileTrue(VisionCommands.printYawInfo());
         // gamepad.yButton.whileTrue(new SpinMove());
         // gamepad.yButton.whileTrue(VisionCommands.printEstimatedPoseInfo());
-        gamepad.yButton.whileTrue(LauncherCommands.setVelocity(3000));
+        gamepad.yButton.whileTrue(LauncherCommands.setVelocity(2500));
 
         // Right Stick points the robot in that direction
         Trigger rightX = AxisButton.create(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND);
