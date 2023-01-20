@@ -26,9 +26,8 @@ public class Auton {
     public static void setupSelectors() {
         autonChooser.setDefaultOption(
                 "Nothing", new PrintCommand("Doing Nothing in Auton").andThen(new WaitCommand(5)));
-        autonChooser.addOption(
-                "Drive 1 Meter w/Event Mapping", new FollowPath("1 Meter W Event Map", true));
-        autonChooser.addOption("Test Path Planner", new FollowPath("Test Path", false));
+        autonChooser.addOption("5 Ball w Balance", new FollowPath("5 Ball w Balance", true));
+        autonChooser.addOption("5 Ball", new FollowPath("5 Ball", false));
     }
 
     // Adds event mapping to autonomous commands

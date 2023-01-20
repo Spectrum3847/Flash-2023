@@ -15,22 +15,23 @@ public class AutonCommands {
                 () -> {
                     // Reset odometry for the first path you run during auto
                     if (true) {
-                        Robot.swerve.resetOdometry(traj.getInitialHolonomicPose());
+                        Robot.swerve.odometry.resetOdometry(traj.getInitialHolonomicPose());
                     }
                 },
                 Robot.swerve);
     }
 
     public static Command setBrakeMode() {
-        return new RunCommand(() -> Robot.swerve.setBrakeMode(true));
+        return new RunCommand(() -> Robot.swerve.brakeMode(true));
     }
 
     public static Command setCoastMode() {
-        return new RunCommand(() -> Robot.swerve.setBrakeMode(false));
+        return new RunCommand(() -> Robot.swerve.brakeMode(false));
     }
 
     public static Command setGryoDegrees(double deg) {
-        return new InstantCommand(() -> Robot.swerve.resetHeading(Rotation2d.fromDegrees(deg)))
+        return new InstantCommand(
+                        () -> Robot.swerve.odometry.resetHeading(Rotation2d.fromDegrees(deg)))
                 .andThen(
                         new PrintCommand(
                                 "Gyro Degrees: " + Robot.swerve.getHeading().getDegrees()));

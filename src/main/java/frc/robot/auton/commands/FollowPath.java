@@ -2,11 +2,14 @@ package frc.robot.auton.commands;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
+import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.auton.Auton;
 import frc.robot.auton.AutonConfig;
 import frc.robot.trajectories.commands.FollowTrajectory;
+import java.util.HashMap;
+import java.util.List;
 
 public class FollowPath extends SequentialCommandGroup {
 
@@ -18,7 +21,11 @@ public class FollowPath extends SequentialCommandGroup {
 
         addCommands(
                 AutonCommands.checkFirstPath(traj, isFirstPath),
-                new FollowPathWithEvents(
-                        new FollowTrajectory(traj), traj.getMarkers(), Auton.eventMap));
+                new FollowPath(new FollowTrajectory(traj), traj.getMarkers(), Auton.eventMap));
     }
+
+    public FollowPath(
+            FollowTrajectory followTrajectory,
+            List<EventMarker> markers,
+            HashMap<String, Command> eventMap) {}
 }

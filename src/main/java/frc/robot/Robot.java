@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.SpectrumLib.sim.PhysicsSim;
-import frc.SpectrumLib.util.Network;
 import frc.robot.auton.Auton;
 import frc.robot.leds.LEDs;
 import frc.robot.pilot.PilotGamepad;
@@ -37,19 +36,29 @@ public class Robot extends LoggedRobot {
 
     // Intialize subsystems and run their setupDefaultCommand methods here
     private void intializeSystems() {
+        System.out.println("started intit");
         swerve = new Swerve();
+        System.out.println("started swerve");
         pose = new Pose();
+        System.out.println("started pose");
         trajectories = new Trajectories();
+        System.out.println("started trajectories");
         vision = new Vision();
+        System.out.println("started vision");
 
         leds = new LEDs();
+        System.out.println("started led");
         pilotGamepad = new PilotGamepad();
+        System.out.println("started pilotgamepad");
         telemetry = new RobotTelemetry(RobotConfig.mainTabName);
+        System.out.println("started robotTelemtry");
 
         // Set Default Commands, this method should exist for each subsystem that has
         // commands
         PilotCommands.setupDefaultCommand();
+        System.out.println("started defaultCommand");
         SwerveCommands.setupDefaultCommand();
+        System.out.println("started setupDefaultCommand");
     }
 
     /**
@@ -76,7 +85,7 @@ public class Robot extends LoggedRobot {
         Timer.delay(RobotConfig.robotInitDelay); // Wait for the robot to fully boot up
         // Set the MAC Address for this robot, useful for adjusting comp/practice bot
         // settings
-        MAC = Network.getMACaddress();
+        // MAC = Network.getMACaddress();
         RobotTelemetry.print("Robot MAC: " + MAC);
 
         // Set up the config
