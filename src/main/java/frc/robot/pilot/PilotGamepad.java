@@ -7,6 +7,7 @@ import frc.SpectrumLib.gamepads.AxisButton.ThresholdType;
 import frc.SpectrumLib.gamepads.Gamepad;
 import frc.SpectrumLib.gamepads.XboxGamepad.XboxAxis;
 import frc.robot.Robot;
+import frc.robot.elevator.ElevatorCommands;
 import frc.robot.launcher.LauncherCommands;
 import frc.robot.leds.commands.BlinkLEDCommand;
 import frc.robot.leds.commands.OneColorLEDCommand;
@@ -14,7 +15,6 @@ import frc.robot.leds.commands.RainbowLEDCommand;
 import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
 import frc.robot.pose.commands.PoseCommands;
-import frc.robot.vision.VisionCommands;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
@@ -42,11 +42,11 @@ public class PilotGamepad extends Gamepad {
         gamepad.bButton.whileTrue(
                 PilotCommands.aimPilotDrive(() -> Robot.vision.getRadiansToTarget())
                         .withName("Aim to target"));
-        // gamepad.xButton.whileTrue(new LockSwerve());
-        /* get information about target and robot yaw */
-        gamepad.xButton.whileTrue(VisionCommands.printYawInfo());
-        // gamepad.yButton.whileTrue(new SpinMove());
-        // gamepad.yButton.whileTrue(VisionCommands.printEstimatedPoseInfo());
+        gamepad.xButton.whileTrue(ElevatorCommands.setMMPosition(10)); // this is in inches!!
+        // gamepad.xButton.whileTrue(ElevatorCommands.setManualOutput(-0.2)); // this one works
+        // gamepad.xButton.whileTrue(ElevatorCommands.setEncoder(0)); // never use, sets position as
+        // 0, doesn't actually move
+
         gamepad.yButton.whileTrue(LauncherCommands.setVelocity(2500));
 
         // Right Stick points the robot in that direction

@@ -33,8 +33,8 @@ public final class RobotConfig {
 
         public static final int launcherMotor =
                 50; // the acc 51 motor doesn't work, I think the pulley broke
-        public static final int intakeMotor = 52; //idk
-        public static final int elevatorMotor = 60; 
+        public static final int intakeMotor = 52; // idk
+        public static final int elevatorMotor = 60;
     }
 
     public final class Pneumatic {

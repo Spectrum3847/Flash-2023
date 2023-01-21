@@ -181,7 +181,8 @@ public class Robot extends LoggedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        RobotTelemetry.print("RPM: " + Robot.launcher.getRPM());
+        // RobotTelemetry.print("RPM: " + Robot.launcher.getRPM());
+        RobotTelemetry.print("Pos: " + Robot.elevator.getPosition());
     }
 
     @Override
