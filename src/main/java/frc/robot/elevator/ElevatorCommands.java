@@ -10,12 +10,6 @@ import frc.robot.RobotTelemetry;
 
 public class ElevatorCommands {
     public static void setupDefaultCommand() {}
-
-    public static double addElevatorValue(double elevatorValue) {
-        elevatorValue += 1;
-        return elevatorValue;
-    }
-
     public static Command setOutput(double value) {
         return new RunCommand(() -> Robot.elevator.setManualOutput(value), Robot.elevator);
     }
@@ -30,11 +24,6 @@ public class ElevatorCommands {
         RobotTelemetry.print("running");
         return new RunCommand(() -> Robot.elevator.setMMPosition(newpos), Robot.elevator);
         // set diameter to 1.2815, gear ratio to 62/8
-    }
-
-    public static Command setManualOutput(double speed) {
-        double newspeed = Conversions.RPMToFalcon(speed, 1.0);
-        return new RunCommand(() -> Robot.elevator.setManualOutput(newspeed), Robot.elevator);
     }
 
     public static Command setEncoder(double position) {

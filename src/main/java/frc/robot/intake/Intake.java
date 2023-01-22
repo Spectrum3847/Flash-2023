@@ -1,15 +1,53 @@
-package frc.robot.intake;
+package frc.robot.Intake;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import frc.SpectrumLib.subsystems.rollerMech.RollerMechSubsystem;
-import frc.robot.RobotConfig;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-public class Intake extends RollerMechSubsystem {
-    public static IntakeConfig config = new IntakeConfig();
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-    public Intake() {
-        super(config);
-        motorLeader = new WPI_TalonFX(RobotConfig.Motors.intakeMotor);
-        setupFalconLeader();
+public class Intake extends SubsystemBase{
+    int lowerRoller = 42;
+    int upperRoller = 43;
+    int launcher = 44;
+    VictorSPX lowerRollerMotor;
+    VictorSPX upperRollerMotor;
+    VictorSPX launcherMotor;
+
+    public Intake(){
+        super();
+        lowerRollerMotor = new VictorSPX(lowerRoller);
+        upperRollerMotor = new VictorSPX(upperRoller);
+        launcherMotor = new VictorSPX(launcher);
     }
+
+    public void setLowerRoller(double speed){
+        lowerRollerMotor.set(VictorSPXControlMode.PercentOutput, speed);
+    }
+
+    public void setUpperRoller(double speed){
+        upperRollerMotor.set(VictorSPXControlMode.PercentOutput, speed);
+    }
+
+    public void setLauncher(double speed){
+        launcherMotor.set(VictorSPXControlMode.PercentOutput, speed);
+    }
+
+    public void stopLowerRoller(){
+        lowerRollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
+    }
+
+    public void stopUpperRoller(){
+        upperRollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
+    }
+
+    public void stopLauncher(){
+        launcherMotor.set(VictorSPXControlMode.PercentOutput, 0);
+    }
+
+    public void stopAll(){
+        stopLowerRoller();
+        stopUpperRoller();
+        stopLauncher();
+    }
+    
 }
