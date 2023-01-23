@@ -10,11 +10,11 @@ public class ElevatorConfig extends LinearMechConfig {
 
     public static final int elevatorMotorID = Motors.elevatorMotor;
 
-    public double kP = 1;
-    public double kI = 1; // could be 0
-    public double kD = 1; // could be 0
+    public double kP = 0;
+    public double kI = 0; // could be 0
+    public double kD = 0; // could be 0
     public double kF = 0.1079;
-    public double kIz = 1; // could be 0
+    public double kIz = 0; // could be 0
     public double motionCruiseVelocity = 4663;
     public double motionAcceleration = 4663;
 

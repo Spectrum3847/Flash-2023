@@ -31,10 +31,10 @@ public final class RobotConfig {
         public static final int driveMotor3 = 31;
         public static final int angleMotor3 = 32;
 
-        public static final int launcherMotor =
-                50; // the acc 51 motor doesn't work, I think the pulley broke
-        public static final int intakeMotor = 52; // idk
-        public static final int elevatorMotor = 60;
+        public static final int launcherMotor = 50; // unused
+        public static final int intakeMotor = 52; // unused
+        public static final int elevatorMotor = 40;
+        public static final int fourBarMotor = 45;
     }
 
     public final class Pneumatic {
