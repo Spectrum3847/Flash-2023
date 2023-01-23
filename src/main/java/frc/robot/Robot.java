@@ -58,7 +58,6 @@ public class Robot extends LoggedRobot {
         PilotCommands.setupDefaultCommand();
         System.out.println("started defaultCommand");
         SwerveCommands.setupDefaultCommand();
-        System.out.println("started setupDefaultCommand");
     }
 
     /**
@@ -134,7 +133,40 @@ public class Robot extends LoggedRobot {
     }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        /*RobotTelemetry.print(
+                String.valueOf(
+                        "Mod 0 Cancoder Angle: "
+                                + Robot.swerve.mSwerveMods[0].getCanCoderAngle().getDegrees()));
+        RobotTelemetry.print(
+                String.valueOf(
+                        "Mod 1 Cancoder Angle: "
+                                + Robot.swerve.mSwerveMods[1].getCanCoderAngle().getDegrees()));
+        RobotTelemetry.print(
+                String.valueOf(
+                        "Mod 2 Cancoder Angle: "
+                                + Robot.swerve.mSwerveMods[2].getCanCoderAngle().getDegrees()));
+        RobotTelemetry.print(
+                String.valueOf(
+                        "Mod 3 Cancoder Angle: "
+                                + Robot.swerve.mSwerveMods[3].getCanCoderAngle().getDegrees()));
+        RobotTelemetry.print(
+                String.valueOf(
+                        "Mod 0 Integrated Angle: "
+                                + Robot.swerve.mSwerveMods[0].getState().angle.getDegrees()));
+        RobotTelemetry.print(
+                String.valueOf(
+                        "Mod 1 Integrated Angle: "
+                                + Robot.swerve.mSwerveMods[1].getState().angle.getDegrees()));
+        RobotTelemetry.print(
+                String.valueOf(
+                        "Mod 2 Integrated Angle: "
+                                + Robot.swerve.mSwerveMods[2].getState().angle.getDegrees()));
+        RobotTelemetry.print(
+                String.valueOf(
+                        "Mod 3 Integrated Angle: "
+                                + Robot.swerve.mSwerveMods[3].getState().angle.getDegrees()));*/
+    }
 
     @Override
     public void disabledExit() {
@@ -191,7 +223,9 @@ public class Robot extends LoggedRobot {
 
     /** This function is called periodically during test mode. */
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic() {
+        swerve.telemetry.testMode();
+    }
 
     @Override
     public void testExit() {
