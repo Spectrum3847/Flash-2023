@@ -1,5 +1,7 @@
 package frc.robot.auton;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -26,9 +28,16 @@ public class Auton {
     public static void setupSelectors() {
         autonChooser.setDefaultOption(
                 "Nothing", new PrintCommand("Doing Nothing in Auton").andThen(new WaitCommand(5)));
-        autonChooser.addOption("5 Ball w Balance", new FollowPath("5 Ball w Balance", true));
-        autonChooser.addOption("5 Ball", new FollowPath("5 Ball", false));
-        autonChooser.addOption("1 Meter", new FollowPath("1 Meter", true));
+        // autonChooser.addOption("5 Ball w Balance", new FollowPath("5 Ball w Balance", true));
+        // autonChooser.addOption("5 Ball", new FollowPath("5 Ball", false));
+        autonChooser.addOption(
+                "1 Meter",
+                FollowPath.autoBuilder.fullAuto(
+                        PathPlanner.loadPathGroup("1 Meter", new PathConstraints(4, 3))));
+        autonChooser.addOption(
+                "5 Ball",
+                FollowPath.autoBuilder.fullAuto(
+                        PathPlanner.loadPathGroup("5 Ball", new PathConstraints(4, 3))));
     }
 
     // Adds event mapping to autonomous commands
