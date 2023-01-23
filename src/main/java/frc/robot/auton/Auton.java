@@ -28,6 +28,7 @@ public class Auton {
                 "Nothing", new PrintCommand("Doing Nothing in Auton").andThen(new WaitCommand(5)));
         autonChooser.addOption("5 Ball w Balance", new FollowPath("5 Ball w Balance", true));
         autonChooser.addOption("5 Ball", new FollowPath("5 Ball", false));
+        autonChooser.addOption("1 Meter", new FollowPath("1 Meter", true));
     }
 
     // Adds event mapping to autonomous commands
