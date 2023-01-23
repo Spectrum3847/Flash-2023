@@ -6,7 +6,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.SpectrumLib.sim.PhysicsSim;
+import frc.robot.FourBar.FourBar;
+import frc.robot.FourBar.FourBarCommands;
+import frc.robot.Intake.Intake;
+import frc.robot.Intake.IntakeCommands;
 import frc.robot.auton.Auton;
+import frc.robot.elevator.Elevator;
+import frc.robot.elevator.ElevatorCommands;
 import frc.robot.leds.LEDs;
 import frc.robot.pilot.PilotGamepad;
 import frc.robot.pilot.commands.PilotCommands;
@@ -23,6 +29,9 @@ public class Robot extends LoggedRobot {
     public static Swerve swerve;
     public static Pose pose;
     public static Trajectories trajectories;
+    public static Elevator elevator;
+    public static Intake intake;
+    public static FourBar fourBar;
     public static Vision vision;
     public static LEDs leds;
     public static PilotGamepad pilotGamepad;
@@ -43,6 +52,14 @@ public class Robot extends LoggedRobot {
         System.out.println("started pose");
         trajectories = new Trajectories();
         System.out.println("started trajectories");
+
+        elevator = new Elevator();
+        System.out.println("started elevator");
+        intake = new Intake();
+        System.out.println("started intake");
+        fourBar = new FourBar();
+        System.out.println("started fourBar");
+
         vision = new Vision();
         System.out.println("started vision");
 
@@ -56,8 +73,13 @@ public class Robot extends LoggedRobot {
         // Set Default Commands, this method should exist for each subsystem that has
         // commands
         PilotCommands.setupDefaultCommand();
-        System.out.println("started defaultCommand");
+        System.out.println("started Pilot Default Commands");
         SwerveCommands.setupDefaultCommand();
+        System.out.println("started Swerve setupDefaultCommand");
+
+        IntakeCommands.setupDefaultCommand();
+        ElevatorCommands.setupDefaultCommand();
+        FourBarCommands.setupDefaultCommand();
     }
 
     /**
@@ -133,40 +155,7 @@ public class Robot extends LoggedRobot {
     }
 
     @Override
-    public void disabledPeriodic() {
-        /*RobotTelemetry.print(
-                String.valueOf(
-                        "Mod 0 Cancoder Angle: "
-                                + Robot.swerve.mSwerveMods[0].getCanCoderAngle().getDegrees()));
-        RobotTelemetry.print(
-                String.valueOf(
-                        "Mod 1 Cancoder Angle: "
-                                + Robot.swerve.mSwerveMods[1].getCanCoderAngle().getDegrees()));
-        RobotTelemetry.print(
-                String.valueOf(
-                        "Mod 2 Cancoder Angle: "
-                                + Robot.swerve.mSwerveMods[2].getCanCoderAngle().getDegrees()));
-        RobotTelemetry.print(
-                String.valueOf(
-                        "Mod 3 Cancoder Angle: "
-                                + Robot.swerve.mSwerveMods[3].getCanCoderAngle().getDegrees()));
-        RobotTelemetry.print(
-                String.valueOf(
-                        "Mod 0 Integrated Angle: "
-                                + Robot.swerve.mSwerveMods[0].getState().angle.getDegrees()));
-        RobotTelemetry.print(
-                String.valueOf(
-                        "Mod 1 Integrated Angle: "
-                                + Robot.swerve.mSwerveMods[1].getState().angle.getDegrees()));
-        RobotTelemetry.print(
-                String.valueOf(
-                        "Mod 2 Integrated Angle: "
-                                + Robot.swerve.mSwerveMods[2].getState().angle.getDegrees()));
-        RobotTelemetry.print(
-                String.valueOf(
-                        "Mod 3 Integrated Angle: "
-                                + Robot.swerve.mSwerveMods[3].getState().angle.getDegrees()));*/
-    }
+    public void disabledPeriodic() {}
 
     @Override
     public void disabledExit() {
@@ -223,9 +212,7 @@ public class Robot extends LoggedRobot {
 
     /** This function is called periodically during test mode. */
     @Override
-    public void testPeriodic() {
-        swerve.telemetry.testMode();
-    }
+    public void testPeriodic() {}
 
     @Override
     public void testExit() {
