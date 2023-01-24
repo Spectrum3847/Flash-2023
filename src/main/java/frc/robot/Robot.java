@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -117,6 +118,8 @@ public class Robot extends LoggedRobot {
 
         // Initialize all systems, do this after getting the MAC address
         intializeSystems();
+        PathPlannerServer.startServer(
+                5811); // 5811 = port number. adjust this according to your needs
         SmartDashboard.putData(CommandScheduler.getInstance());
         RobotTelemetry.print("--- Robot Init Complete ---");
     }
