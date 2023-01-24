@@ -24,9 +24,9 @@ public final class AutonConfig {
     public static final double kPTranslationController = 0.6;
     public static final double kITranslationController = 0;
     public static final double kDTranslationController = 0;
-    public static final double kPRotationController = 0.6;
+    public static final double kPRotationController = 5;
     public static final double kIRotationController = 0;
-    public static final double kDRotationController = 0;
+    public static final double kDRotationController = 0.01;
 
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
