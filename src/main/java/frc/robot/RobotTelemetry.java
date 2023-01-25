@@ -36,6 +36,7 @@ public class RobotTelemetry extends TelemetrySubsystem {
         // Setup the auton selector to display on shuffleboard
         Auton.setupSelectors();
         tab.add("Auton Selection", Auton.autonChooser).withPosition(0, 0).withSize(2, 1);
+        tab.add("Alliance Color", Auton.allianceColorChooser).withPosition(0, 1).withSize(2, 1);
 
         // Column 2
         tab.addBoolean("Connected?", () -> flash())
