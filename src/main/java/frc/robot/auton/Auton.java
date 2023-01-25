@@ -2,7 +2,6 @@ package frc.robot.auton;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,12 +14,10 @@ import frc.robot.auton.commands.AutoBuilder;
 import java.util.HashMap;
 
 public class Auton {
-    public static final SendableChooser<Command> allianceColorChooser = new SendableChooser<>();
     public static final SendableChooser<Command> autonChooser = new SendableChooser<>();
     private static boolean autoMessagePrinted = true;
     private static double autonStart = 0;
     public static HashMap<String, Command> eventMap = new HashMap<>();
-    public static SwerveAutoBuilder autoBuilder;
 
     public Auton() {
         setupSelectors();
@@ -29,33 +26,24 @@ public class Auton {
 
     // A chooser for autonomous commands
     public static void setupSelectors() {
-        allianceColorChooser.setDefaultOption("Blue Alliance", setAutoBuilder("Blue"));
-        allianceColorChooser.addOption("Red Alliance", setAutoBuilder("Blue"));
-
         autonChooser.setDefaultOption(
                 "Nothing", new PrintCommand("Doing Nothing in Auton").andThen(new WaitCommand(5)));
         // autonChooser.addOption("5 Ball w Balance", new FollowPath("5 Ball w Balance", true));
         // autonChooser.addOption("5 Ball", new FollowPath("5 Ball", false));
         autonChooser.addOption(
                 "1 Meter",
-                autoBuilder.fullAuto(
+                AutoBuilder.autoBuilder.fullAuto(
                         PathPlanner.loadPathGroup(
                                 "1 Meter",
                                 new PathConstraints(
                                         AutonConfig.kMaxSpeed, AutonConfig.kMaxAccel))));
         autonChooser.addOption(
                 "5 Ball",
-                autoBuilder.fullAuto(
+                AutoBuilder.autoBuilder.fullAuto(
                         PathPlanner.loadPathGroup(
                                 "5 Ball",
                                 new PathConstraints(
                                         AutonConfig.kMaxSpeed, AutonConfig.kMaxAccel))));
-    }
-
-    public static Command setAutoBuilder(String allianceColor) {
-        if (allianceColor == "Blue") autoBuilder = AutoBuilder.autoBuilderBlue;
-        else if (allianceColor == "Red") autoBuilder = AutoBuilder.autoBuilderRed;
-        return null;
     }
 
     // Adds event mapping to autonomous commands
