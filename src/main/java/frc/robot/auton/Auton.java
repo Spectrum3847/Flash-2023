@@ -44,6 +44,13 @@ public class Auton {
                                 "5 Ball",
                                 new PathConstraints(
                                         AutonConfig.kMaxSpeed, AutonConfig.kMaxAccel))));
+        autonChooser.addOption(
+                "Test Path",
+                AutoBuilder.autoBuilder.fullAuto(
+                        PathPlanner.loadPathGroup(
+                                "Test Path",
+                                new PathConstraints(
+                                        AutonConfig.kMaxSpeed, AutonConfig.kMaxAccel))));
     }
 
     // Adds event mapping to autonomous commands
