@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -32,6 +33,8 @@ public class Vision extends SubsystemBase {
     private int targetId;
     private NetworkTable table;
     private NetworkTableEntry tx, ty, ta;
+    private DoubleArraySubscriber botPoseSub;
+    private Transform3d botPoseTransform3d;
 
     // testing
     private final DecimalFormat df = new DecimalFormat();
@@ -42,6 +45,8 @@ public class Vision extends SubsystemBase {
         setName("Vision");
         config = new VisionConfig();
         table = NetworkTableInstance.getDefault().getTable("limelight");
+        /* Creating bot pose sub */
+        botPoseSub = table.getDoubleArrayTopic("botpose").subscribe(new double[] {});
         cameraPairs = new ArrayList<Pair<PhotonCamera, Transform3d>>();
         currentPose = new Pair<Pose3d, Double>(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), 0.0);
 
@@ -76,6 +81,7 @@ public class Vision extends SubsystemBase {
 
         double[] dv = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         double[] robotPose = table.getEntry("botpose").getDoubleArray(dv);
+        double[] subbedPose = botPoseSub.get();
 
         if (robotPose.length > 0) {
             SmartDashboard.putString("BotX", df.format(robotPose[0]));
@@ -84,6 +90,11 @@ public class Vision extends SubsystemBase {
             SmartDashboard.putString("Bot1", df.format(robotPose[3]));
             SmartDashboard.putString("Bot2", df.format(robotPose[4]));
             SmartDashboard.putString("Bot3", df.format(robotPose[5]));
+
+            /* Creating Transform3d object from raw values */
+            botPoseTransform3d =  new Transform3d(new Translation3d(robotPose[0], robotPose[1], robotPose[2]), new Rotation3d(robotPose[3], robotPose[4], robotPose[5]));
+
+            SmartDashboard.putNumberArray("RobotPose", subbedPose);
         }
 
         SmartDashboard.putString("tagX", df.format(x));
