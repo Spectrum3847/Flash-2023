@@ -8,16 +8,32 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
+import frc.robot.auton.commands.FollowPath;
+import java.util.HashMap;
 
 public class Auton {
     public static final SendableChooser<Command> autonChooser = new SendableChooser<>();
     private static boolean autoMessagePrinted = true;
     private static double autonStart = 0;
+    public static HashMap<String, Command> eventMap = new HashMap<>();
+
+    public Auton() {
+        setupSelectors();
+        setupEventMap();
+    }
 
     // A chooser for autonomous commands
     public static void setupSelectors() {
         autonChooser.setDefaultOption(
                 "Nothing", new PrintCommand("Doing Nothing in Auton").andThen(new WaitCommand(5)));
+        autonChooser.addOption("5 Ball w Balance", new FollowPath("5 Ball w Balance", true));
+        autonChooser.addOption("5 Ball", new FollowPath("5 Ball", false));
+    }
+
+    // Adds event mapping to autonomous commands
+    public static void setupEventMap() {
+        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        eventMap.put("marker2", new PrintCommand("Passed marker 2"));
     }
 
     /**
