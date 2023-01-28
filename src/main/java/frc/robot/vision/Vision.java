@@ -92,7 +92,10 @@ public class Vision extends SubsystemBase {
             SmartDashboard.putString("Bot3", df.format(robotPose[5]));
 
             /* Creating Transform3d object from raw values */
-            botPoseTransform3d =  new Transform3d(new Translation3d(robotPose[0], robotPose[1], robotPose[2]), new Rotation3d(robotPose[3], robotPose[4], robotPose[5]));
+            botPoseTransform3d =
+                    new Transform3d(
+                            new Translation3d(robotPose[0], robotPose[1], robotPose[2]),
+                            new Rotation3d(robotPose[3], robotPose[4], robotPose[5]));
 
             SmartDashboard.putNumberArray("RobotPose", subbedPose);
         }
