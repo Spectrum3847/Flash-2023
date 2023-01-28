@@ -39,7 +39,7 @@ public class PilotGamepad extends Gamepad {
         gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(Math.PI * 1 / 2).withName("Snap 90"));
         // gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
         gamepad.bButton.whileTrue(
-                PilotCommands.aimPilotDrive(() -> Robot.vision.getRadiansToTarget())
+                PilotCommands.aimPilotDrive(() -> Robot.vision.photonVision.getRadiansToTarget())
                         .withName("Aim to target"));
         // gamepad.xButton.whileTrue(new LockSwerve());
         /* get information about target and robot yaw */

@@ -15,16 +15,16 @@ public class VisionCommands {
                 () ->
                         RobotTelemetry.print(
                                 "Yaw (D): "
-                                        + Robot.vision.getYaw()
+                                        + Robot.vision.photonVision.getYaw()
                                         + "|| gyro (D): "
                                         + Robot.swerve.getHeading().getDegrees()
                                         + " || Aiming at: "
-                                        + (Robot.vision.getYaw()
+                                        + (Robot.vision.photonVision.getYaw()
                                                 + Robot.swerve.getHeading().getDegrees())));
     }
 
     public static Command printEstimatedPoseInfo() {
-        Pair<Pose3d, Double> pose = Robot.vision.currentPose;
+        Pair<Pose3d, Double> pose = Robot.vision.photonVision.currentPose;
         return new InstantCommand(
                 () ->
                         RobotTelemetry.print(
