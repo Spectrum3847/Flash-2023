@@ -50,11 +50,6 @@ public class PilotCommands {
                 .withName("SnakeDrive");
     }
 
-    /**
-     * Drive the robot and control orientation using the right stick
-     *
-     * @return
-     */
     public static Command stickSteer() {
         return aimPilotDrive(() -> Robot.pilotGamepad.getRightStickAngle()).withName("StickSteer");
     }

@@ -19,6 +19,4 @@ public class PilotConfig {
     public static final boolean steeringInvert = true;
 
     public static final Translation2d intakeCoRmeters = new Translation2d(0, 0);
-
-    public static final double launcherValue = 0;
 }

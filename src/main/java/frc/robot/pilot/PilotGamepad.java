@@ -1,16 +1,19 @@
 package frc.robot.pilot;
 
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.SpectrumLib.gamepads.AxisButton;
+import frc.SpectrumLib.gamepads.AxisButton.ThresholdType;
 import frc.SpectrumLib.gamepads.Gamepad;
-import frc.robot.FourBar.FourBarCommands;
-import frc.robot.Intake.IntakeCommands;
-import frc.robot.elevator.ElevatorCommands;
+import frc.SpectrumLib.gamepads.XboxGamepad.XboxAxis;
+import frc.robot.Robot;
 import frc.robot.leds.commands.BlinkLEDCommand;
 import frc.robot.leds.commands.OneColorLEDCommand;
 import frc.robot.leds.commands.RainbowLEDCommand;
 import frc.robot.leds.commands.SnowfallLEDCommand;
 import frc.robot.pilot.commands.PilotCommands;
 import frc.robot.pose.commands.PoseCommands;
+import frc.robot.vision.VisionCommands;
 
 /** Used to add buttons to the pilot gamepad and configure the joysticks */
 public class PilotGamepad extends Gamepad {
@@ -33,31 +36,21 @@ public class PilotGamepad extends Gamepad {
     }
 
     public void setupTeleopButtons() {
-        // gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(Math.PI * 1 / 2).withName("Snap
-        // 90"));
+        gamepad.aButton.whileTrue(PilotCommands.aimPilotDrive(Math.PI * 1 / 2).withName("Snap 90"));
         // gamepad.bButton.whileTrue(PilotCommands.fpvPilotSwerve());
-        /*gamepad.bButton.whileTrue(
-        PilotCommands.aimPilotDrive(() -> Robot.vision.getRadiansToTarget())
-                .withName("Aim to target"));*/
+        gamepad.bButton.whileTrue(
+                PilotCommands.aimPilotDrive(() -> Robot.vision.getRadiansToTarget())
+                        .withName("Aim to target"));
         // gamepad.xButton.whileTrue(new LockSwerve());
         /* get information about target and robot yaw */
-        // gamepad.xButton.whileTrue(VisionCommands.printYawInfo());
+        gamepad.xButton.whileTrue(VisionCommands.printYawInfo());
         // gamepad.yButton.whileTrue(new SpinMove());
-        // gamepad.yButton.whileTrue(VisionCommands.printEstimatedPoseInfo());
-        gamepad.aButton.whileTrue(IntakeCommands.intake());
-        gamepad.xButton.whileTrue(IntakeCommands.launch());
-        gamepad.yButton.whileTrue(IntakeCommands.eject());
-        gamepad.rightBumper.whileTrue(
-                ElevatorCommands.setOutput(() -> gamepad.rightStick.getY() * 0.5));
-        gamepad.leftBumper.whileTrue(
-                FourBarCommands.setManualOutput(() -> gamepad.rightStick.getY() * 0.1));
+        gamepad.yButton.whileTrue(VisionCommands.printEstimatedPoseInfo());
 
         // Right Stick points the robot in that direction
-        // Trigger rightX = AxisButton.create(gamepad, XboxAxis.RIGHT_X, 0.5,
-        // ThresholdType.DEADBAND);
-        // Trigger rightY = AxisButton.create(gamepad, XboxAxis.RIGHT_Y, 0.5,
-        // ThresholdType.DEADBAND);
-        // rightX.or(rightY).whileTrue(PilotCommands.stickSteer());
+        Trigger rightX = AxisButton.create(gamepad, XboxAxis.RIGHT_X, 0.5, ThresholdType.DEADBAND);
+        Trigger rightY = AxisButton.create(gamepad, XboxAxis.RIGHT_Y, 0.5, ThresholdType.DEADBAND);
+        rightX.or(rightY).whileTrue(PilotCommands.stickSteer());
 
         // Reorient the robot to the current heading
         gamepad.Dpad.Up.whileTrue(
