@@ -31,6 +31,7 @@ public class Vision extends SubsystemBase {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         /* Creating bot pose sub */
         botPoseSub = table.getDoubleArrayTopic("botpose").subscribe(new double[] {});
+        table.getEntry("ledMode").setNumber(1); //0 will use the LED Mode set in the pipeline || 1 is force off
 
         /* Limelight NetworkTable Retrieval */
         tx = table.getEntry("tx");
