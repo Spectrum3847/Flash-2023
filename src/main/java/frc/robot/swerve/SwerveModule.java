@@ -36,7 +36,7 @@ public class SwerveModule {
         this.moduleNumber = moduleNumber;
         this.swerveConfig = swerveConfig;
         if (Robot.config.getRobotType() == RobotType.PRACTICE) {
-            angleOffset = moduleConfig.angleOffset;
+            angleOffset = moduleConfig.angleOffsetPractice;
         } else {
             angleOffset = moduleConfig.angleOffset;
         }
@@ -109,7 +109,7 @@ public class SwerveModule {
         angleEncoder.configFactoryDefault();
         angleEncoder.configAllSettings(swerveConfig.swerveCanCoderConfig);
         angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 249);
-        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 20);
+        angleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 253);
     }
 
     private void configAngleMotor() {

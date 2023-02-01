@@ -11,7 +11,7 @@ public final class RobotConfig {
     public final String Canivore = "3847";
     public final Motors motors = new Motors();
     public final Pneumatic pneumatic = new Pneumatic();
-    public final String praticeBotMAC = "00:80:2F:23:E9:33";
+    public final String praticeBotMAC = "00-80-2F-1C-1C-1C";
     public final ModuleType PowerDistributionType = ModuleType.kCTRE;
 
     public static final int pigeonID = 0;
@@ -30,11 +30,6 @@ public final class RobotConfig {
         public static final int angleMotor2 = 22;
         public static final int driveMotor3 = 31;
         public static final int angleMotor3 = 32;
-
-        public static final int launcherMotor = 50; // unused
-        public static final int intakeMotor = 52; // unused
-        public static final int elevatorMotor = 40;
-        public static final int fourBarMotor = 45;
     }
 
     public final class Pneumatic {
