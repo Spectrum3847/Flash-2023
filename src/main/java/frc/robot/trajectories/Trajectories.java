@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.auton.AutonConfig;
-
 import java.util.function.DoubleSupplier;
 
 public class Trajectories extends SubsystemBase {

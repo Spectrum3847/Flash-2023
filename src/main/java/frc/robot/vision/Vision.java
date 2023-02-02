@@ -31,10 +31,11 @@ public class Vision extends SubsystemBase {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         /* Creating bot pose sub */
         botPoseSub = table.getDoubleArrayTopic("botpose").subscribe(new double[] {});
-        table.getEntry("ledMode").setNumber(1); //0 will use the LED Mode set in the pipeline || 1 is force off
+        table.getEntry("ledMode")
+                .setValue(0); // 0 will use the LED Mode set in the pipeline || 1 is force off
 
         /* Limelight NetworkTable Retrieval */
-        tx = table.getEntry("tx");
+        tx = table.getEntry("tx"); //offset from camera in degrees
         ty = table.getEntry("ty");
         ta = table.getEntry("ta");
 
@@ -57,7 +58,7 @@ public class Vision extends SubsystemBase {
                         photonVisionPose.getFirst().toPose2d(), photonVision.getTimestampSeconds());
             }
         }
-        
+
         /* Limelight Pose Estimation */
         double x = tx.getDouble(0.0);
         double y = ty.getDouble(0.0);
@@ -66,6 +67,11 @@ public class Vision extends SubsystemBase {
         double[] dv = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         double[] robotPose = table.getEntry("botpose").getDoubleArray(dv);
         double[] subbedPose = botPoseSub.get();
+
+        // for (double num : robotPose) {
+        //     System.out.print(num + " ");
+        // }
+        // System.out.println();
 
         if (robotPose.length > 0) {
             SmartDashboard.putString("BotX", df.format(robotPose[0]));
@@ -87,7 +93,5 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putString("tagX", df.format(x));
         SmartDashboard.putString("tagY", df.format(y));
         SmartDashboard.putString("tagArea", df.format(area));
-
-
     }
 }
