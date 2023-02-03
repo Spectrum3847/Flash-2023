@@ -43,7 +43,7 @@ public class PilotGamepad extends Gamepad {
                         .withName("Aim to target"));
         // gamepad.xButton.whileTrue(new LockSwerve());
         /* get information about target and robot yaw */
-        gamepad.xButton.whileTrue(VisionCommands.printYawInfo());
+        gamepad.xButton.whileTrue(VisionCommands.printEstimatedLimelightPoseInfo());
         // gamepad.yButton.whileTrue(new SpinMove());
         // gamepad.yButton.whileTrue(VisionCommands.printEstimatedPoseInfo());
 

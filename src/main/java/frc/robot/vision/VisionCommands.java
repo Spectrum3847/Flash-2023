@@ -23,7 +23,7 @@ public class VisionCommands {
                                                 + Robot.swerve.getHeading().getDegrees())));
     }
 
-    public static Command printEstimatedPoseInfo() {
+    public static Command printEstimatedPhotonPoseInfo() {
         if (Robot.vision.photonVision.currentPose != null) {
             Pair<Pose3d, Double> pose = Robot.vision.photonVision.currentPose;
             return new InstantCommand(
@@ -44,5 +44,9 @@ public class VisionCommands {
             return new InstantCommand(
                     () -> RobotTelemetry.print("PhotonVision doesn't have a pose!"));
         }
+    }
+
+    public static Command printEstimatedLimelightPoseInfo() {
+        return new InstantCommand(() -> Robot.vision.printDebug());
     }
 }
