@@ -1,7 +1,6 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -105,11 +104,6 @@ public class PhotonVision {
         return yaw;
     }
 
-    /** Gets the camera capture time in seconds. */
-    public double getTimestampSeconds() {
-        return Timer.getFPGATimestamp() - (currentPose.getSecond().doubleValue() / 1000d);
-    }
-
     /**
      * Gets the estimated pose of the robot.
      *
@@ -117,20 +111,6 @@ public class PhotonVision {
      */
     private Pair<Pose3d, Double> getEstimatedPose() {
         return poseEstimator.update();
-    }
-
-    /**
-     * Projects 3d pose to 2d to compare against odometry estimate. Does not account for difference
-     * in rotation.
-     *
-     * @return whether or not the vision estimated pose is within 1 meter of the odometry estimated
-     *     pose
-     */
-    public boolean isValidPose() {
-        Pose2d pose = currentPose.getFirst().toPose2d();
-        Pose2d odometryPose = Robot.pose.getPosition();
-        return (Math.abs(pose.getX() - odometryPose.getX()) <= 1)
-                && (Math.abs(pose.getY() - odometryPose.getY()) <= 1);
     }
 
     /**

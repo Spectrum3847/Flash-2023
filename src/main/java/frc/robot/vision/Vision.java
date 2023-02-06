@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.DoubleArrayTopic;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -22,7 +23,7 @@ public class Vision extends SubsystemBase {
     public Pose2d botPose;
 
     private NetworkTable table;
-    private NetworkTableEntry tx, ty, ta;
+    private NetworkTableEntry tx, ty, ta, tl;
     private DoubleArraySubscriber poseSub;
     private Pose3d botPose3d;
     private Pair<Pose3d, Double> photonVisionPose;
@@ -45,6 +46,7 @@ public class Vision extends SubsystemBase {
         tx = table.getEntry("tx"); // offset from camera in degrees
         ty = table.getEntry("ty");
         ta = table.getEntry("ta");
+        tl = table.getEntry("tl");
 
         /* PhotonVision Setup -- uncomment if running PhotonVision*/
         // photonVision = new PhotonVision();
@@ -59,39 +61,51 @@ public class Vision extends SubsystemBase {
         double x = tx.getDouble(0.0);
         double y = ty.getDouble(0.0);
         double area = ta.getDouble(0.0);
+        double latency = tl.getDouble(0.0);
         double[] subbedPose = poseSub.get();
 
         if (subbedPose.length > 0) {
-            SmartDashboard.putString("BotX", df.format(subbedPose[0]));
-            SmartDashboard.putString("BotY", df.format(subbedPose[1]));
-            SmartDashboard.putString("BotZ", df.format(subbedPose[2]));
-            SmartDashboard.putString("Bot1", df.format(subbedPose[3]));
-            SmartDashboard.putString("Bot2", df.format(subbedPose[4]));
-            SmartDashboard.putString("Bot3", df.format(subbedPose[5]));
+            SmartDashboard.putString("LimelightX", df.format(subbedPose[0]));
+            SmartDashboard.putString("LimelightY", df.format(subbedPose[1]));
+            SmartDashboard.putString("LimelightZ", df.format(subbedPose[2]));
+            SmartDashboard.putString("LimelightRoll", df.format(subbedPose[3]));
+            SmartDashboard.putString("LimelightPitch", df.format(subbedPose[4]));
+            SmartDashboard.putString("LimelightYaw", df.format(subbedPose[5]));
 
             /* Creating Transform3d object from raw values -- Rotation values could be in degrees which need to be converted*/
             botPose3d =
                     new Pose3d(
                             new Translation3d(subbedPose[0], subbedPose[1], subbedPose[2]),
                             new Rotation3d(subbedPose[3], subbedPose[4], subbedPose[5]));
+            botPose = botPose3d.toPose2d();
+            //this is not a solution. Odometry will still think that it's at 0 and influence the estimate
+            if (isValidPose(botPose)
+                    || Robot.pose.getLocation().getX() < 1
+                    || Robot.pose.getLocation().getY() < 1) {
+                Robot.pose.addVisionMeasurement(botPose, getTimestampSeconds(latency));
+            }
         }
 
         SmartDashboard.putString("tagX", df.format(x));
         SmartDashboard.putString("tagY", df.format(y));
         SmartDashboard.putString("tagArea", df.format(area));
 
-        botPose = botPose3d.toPose2d();
-
         /* PhotonVision Pose Estimation Retrieval */
         if (photonVision != null) {
             photonVision.update();
             photonVisionPose = photonVision.currentPose;
+            Pose2d photonVisionPose2d = photonVisionPose.getFirst().toPose2d();
             /* Adding PhotonVision estimate to pose */
-            if (photonVision.isValidPose()) {
+            if (isValidPose(photonVisionPose2d)) {
                 Robot.pose.addVisionMeasurement(
-                        photonVisionPose.getFirst().toPose2d(), photonVision.getTimestampSeconds());
+                        photonVisionPose2d,
+                        getTimestampSeconds(photonVisionPose.getSecond().doubleValue()));
             }
         }
+
+        // testing || printing estimatedPose to smartDashboard
+        SmartDashboard.putString("EstimatedPoseX", df.format(Robot.pose.getLocation().getX()));
+        SmartDashboard.putString("EstimatedPoseY", df.format(Robot.pose.getLocation().getY()));
     }
 
     /**
@@ -106,6 +120,29 @@ public class Vision extends SubsystemBase {
         } else {
             return table.getDoubleArrayTopic("botpose_wpired");
         }
+    }
+
+    /**
+     * Projects 3d pose to 2d to compare against odometry estimate. Does not account for difference
+     * in rotation.
+     *
+     * @return whether or not the vision estimated pose is within 1 meter of the odometry estimated
+     *     pose
+     */
+    public boolean isValidPose(Pose2d pose) {
+        Pose2d odometryPose = Robot.pose.getPosition();
+        return (Math.abs(pose.getX() - odometryPose.getX()) <= 1)
+                && (Math.abs(pose.getY() - odometryPose.getY()) <= 1);
+    }
+
+    /**
+     * Gets the camera capture time in seconds.
+     *
+     * @param latencyMillis the latency of the camera in milliseconds
+     * @return the camera capture time in seconds
+     */
+    public double getTimestampSeconds(double latencyMillis) {
+        return Timer.getFPGATimestamp() - (latencyMillis / 1000d);
     }
 
     public void printDebug() {

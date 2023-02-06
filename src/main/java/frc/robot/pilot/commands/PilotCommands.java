@@ -76,6 +76,26 @@ public class PilotCommands {
     public static Command rumble(double intensity, double durationSeconds) {
         return new RunCommand(() -> Robot.pilotGamepad.rumble(intensity), Robot.pilotGamepad)
                 .withTimeout(durationSeconds)
-                .withName("RumblePilot");
+                .withName("RumblePilot")
+                .ignoringDisable(true);
+    }
+
+    /**
+     * Overrides Odometry Pose to be Vision pose. Should be used at the start of the match in
+     * Disabled when the camera can see at least two tags in order to correctly get the starting
+     * position. Can also be used if odometry is very inaccurate for some reason.
+     */
+    public static Command resetOdometryPose() {
+        return new RunCommand(
+                        () -> {
+                            Robot.swerve.odometry.resetOdometry(Robot.vision.botPose);
+                            System.out.println(
+                                    "THIS RAN OK? X: "
+                                            + Robot.pose.getLocation().getX()
+                                            + " Y: "
+                                            + Robot.pose.getLocation().getY());
+                        })
+                .withName("ResetOdometryPose")
+                .ignoringDisable(true);
     }
 }
