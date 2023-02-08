@@ -77,7 +77,6 @@ public class Pose extends SubsystemBase {
      * reset the pose estimator
      *
      * @param poseMeters
-     * @param gyroAngle
      */
     public void resetPoseEstimate(Pose2d poseMeters) {
         Robot.swerve.odometry.resetOdometry(poseMeters);

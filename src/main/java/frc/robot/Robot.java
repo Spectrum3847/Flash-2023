@@ -123,6 +123,9 @@ public class Robot extends LoggedRobot {
     public void disabledInit() {
         RobotTelemetry.print("## Disabled Init Starting");
         resetCommandsAndButtons();
+        if (vision.botPose.getX() >= 0.3) {
+            pose.resetPoseEstimate(Robot.vision.botPose);
+        }
         RobotTelemetry.print("## Disabled Init Complete");
     }
 
@@ -160,8 +163,9 @@ public class Robot extends LoggedRobot {
     public void teleopInit() {
         RobotTelemetry.print("$$ Teleop Init Starting");
         resetCommandsAndButtons();
-        pose.resetPoseEstimate(vision.botPose);
-
+        if (vision.botPose.getX() >= 0.3) {
+            pose.resetPoseEstimate(Robot.vision.botPose);
+        }
         RobotTelemetry.print("$$ Teleop Init Complete");
     }
 

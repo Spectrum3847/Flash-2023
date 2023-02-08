@@ -32,6 +32,7 @@ public class Vision extends SubsystemBase {
 
     // testing
     private final DecimalFormat df = new DecimalFormat();
+    private long count = 0;
 
     public Vision() {
         setName("Vision");
@@ -58,13 +59,19 @@ public class Vision extends SubsystemBase {
 
     @Override
     public void periodic() {
-        /* Limelight Pose Estimation */
+        /* Limelight Pose Estimation
+         *
+         * Current logic:
+         * Sets odometry pose to be vision estimate at the start in teleopInit and disabledInit so odometry has correct starting pose
+         * Will not override odometry with vision if limelight does not see targets (vision thinks it's at origin which doesn't help us)
+         * Will add vision estimate to pose estimator using standard deviation values if 1. odometry has been overridden by vision at least once and 2. vision estimate is within 1 meter of odometry
+         */
         double x = tx.getDouble(0.0);
         double y = ty.getDouble(0.0);
         double area = ta.getDouble(0.0);
         double latency = tl.getDouble(0.0);
-        double[] subbedPose = poseSub.get();
 
+        double[] subbedPose = poseSub.get();
         if (subbedPose.length > 0) {
             SmartDashboard.putString("LimelightX", df.format(subbedPose[0]));
             SmartDashboard.putString("LimelightY", df.format(subbedPose[1]));
@@ -83,9 +90,9 @@ public class Vision extends SubsystemBase {
                                     Units.degreesToRadians(subbedPose[5])));
             botPose = botPose3d.toPose2d();
             /* Adding Limelight estimate to pose if within 1 meter of odometry*/
-            if (isValidPose(botPose)
-                    || Robot.pose.getLocation().getX() < 1
-                    || Robot.pose.getLocation().getY() < 1) {
+            if (isValidPose(botPose)) {
+                System.out.println("added pose" + count);
+                count++;
                 Robot.pose.addVisionMeasurement(botPose, getTimestampSeconds(latency));
             }
         }
@@ -111,7 +118,7 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putString("EstimatedPoseX", df.format(Robot.pose.getLocation().getX()));
         SmartDashboard.putString("EstimatedPoseY", df.format(Robot.pose.getLocation().getY()));
         SmartDashboard.putString(
-                "EstimatedPoseTheta", df.format(Robot.pose.getLocation().getAngle().getDegrees()));
+                "EstimatedPoseTheta", df.format(Robot.pose.getHeading().getDegrees()));
 
         SmartDashboard.putString(
                 "Odometry X", df.format(Robot.swerve.odometry.getPoseMeters().getX()));
@@ -137,16 +144,22 @@ public class Vision extends SubsystemBase {
     }
 
     /**
-     * Projects 3d pose to 2d to compare against odometry estimate. Does not account for difference
-     * in rotation.
+     * Comparing vision pose against odometry pose. Does not account for difference in rotation.
      *
      * @return whether or not the vision estimated pose is within 1 meter of the odometry estimated
      *     pose
      */
     public boolean isValidPose(Pose2d pose) {
-        Pose2d odometryPose = Robot.pose.getPosition();
-        return (Math.abs(pose.getX() - odometryPose.getX()) <= 1)
-                && (Math.abs(pose.getY() - odometryPose.getY()) <= 1);
+        Pose2d odometryPose = Robot.swerve.getPoseMeters();
+        /* Disregard Vision if odometry has not been set to vision pose yet in teleopInit*/
+        if (odometryPose.getX() <= 0.3
+                && odometryPose.getY() <= 0.3
+                && odometryPose.getRotation().getDegrees() <= 1) {
+            return false;
+        } else {
+            return (Math.abs(pose.getX() - odometryPose.getX()) <= 1)
+                    && (Math.abs(pose.getY() - odometryPose.getY()) <= 1);
+        }
     }
 
     /**

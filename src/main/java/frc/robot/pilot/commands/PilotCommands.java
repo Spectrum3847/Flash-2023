@@ -81,14 +81,16 @@ public class PilotCommands {
     }
 
     /**
-     * Overrides Odometry Pose to be Vision pose. Should be used at the start of the match in
-     * Disabled when the camera can see at least two tags in order to correctly get the starting
-     * position. Can also be used if odometry is very inaccurate for some reason.
+     * Overrides Estimated and Odometry Pose to be Vision pose. Should be used at the start of the
+     * match in Disabled when the camera can see at least two tags in order to correctly get the
+     * starting position. Can also be used if odometry is very inaccurate for some reason.
      */
-    public static Command resetOdometryPose() {
+    public static Command resetEstimatedPose() {
         return new RunCommand(
                         () -> {
-                            Robot.pose.resetPoseEstimate(Robot.vision.botPose);
+                            if (Robot.vision.botPose.getX() <= 0.3) {
+                                Robot.pose.resetPoseEstimate(Robot.vision.botPose);
+                            }
                         })
                 .withName("ResetOdometryPose")
                 .ignoringDisable(true);
