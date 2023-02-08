@@ -32,8 +32,8 @@ public class Vision extends SubsystemBase {
 
     // testing
     private final DecimalFormat df = new DecimalFormat();
-    private long count = 0;
 
+    
     public Vision() {
         setName("Vision");
         botPose = new Pose2d(0, 0, new Rotation2d(0));
@@ -80,7 +80,7 @@ public class Vision extends SubsystemBase {
             SmartDashboard.putString("LimelightPitch", df.format(subbedPose[4]));
             SmartDashboard.putString("LimelightYaw", df.format(subbedPose[5]));
 
-            /* Creating Transform3d object from raw values -- Rotation values could be in degrees which need to be converted*/
+            /* Creating Transform3d object from raw values*/
             botPose3d =
                     new Pose3d(
                             new Translation3d(subbedPose[0], subbedPose[1], subbedPose[2]),
@@ -91,8 +91,6 @@ public class Vision extends SubsystemBase {
             botPose = botPose3d.toPose2d();
             /* Adding Limelight estimate to pose if within 1 meter of odometry*/
             if (isValidPose(botPose)) {
-                System.out.println("added pose" + count);
-                count++;
                 Robot.pose.addVisionMeasurement(botPose, getTimestampSeconds(latency));
             }
         }
