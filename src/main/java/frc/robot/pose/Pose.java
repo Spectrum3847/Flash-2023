@@ -20,7 +20,6 @@ public class Pose extends SubsystemBase {
     Pose2d desiredPose = new Pose2d();
     Pose2d estimatePose = new Pose2d();
 
-    //    private final SwerveDrivePoseEstimator<N7, N7, N5> poseEstimator;
     private final SwerveDrivePoseEstimator poseEstimator;
 
     public Pose() {
@@ -54,7 +53,7 @@ public class Pose extends SubsystemBase {
         telemetry.updatePoseOnField("EstimatedPose", estimatePose);
     }
 
-    /** Sets the Odometry Pose to the given post */
+    /** Sets the Odometry Pose to the given pose */
     public void setOdometryPose(Pose2d pose) {
         odometryPose = pose;
     }

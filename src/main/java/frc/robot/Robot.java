@@ -39,9 +39,9 @@ public class Robot extends LoggedRobot {
     // Intialize subsystems and run their setupDefaultCommand methods here
     private void intializeSystems() {
         swerve = new Swerve();
+        vision = new Vision();
         pose = new Pose();
         trajectories = new Trajectories();
-        vision = new Vision();
 
         leds = new LEDs();
         pilotGamepad = new PilotGamepad();
@@ -123,7 +123,6 @@ public class Robot extends LoggedRobot {
     public void disabledInit() {
         RobotTelemetry.print("## Disabled Init Starting");
         resetCommandsAndButtons();
-
         RobotTelemetry.print("## Disabled Init Complete");
     }
 
@@ -161,6 +160,7 @@ public class Robot extends LoggedRobot {
     public void teleopInit() {
         RobotTelemetry.print("$$ Teleop Init Starting");
         resetCommandsAndButtons();
+        pose.resetPoseEstimate(vision.botPose);
 
         RobotTelemetry.print("$$ Teleop Init Complete");
     }

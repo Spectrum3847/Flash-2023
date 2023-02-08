@@ -88,12 +88,7 @@ public class PilotCommands {
     public static Command resetOdometryPose() {
         return new RunCommand(
                         () -> {
-                            Robot.swerve.odometry.resetOdometry(Robot.vision.botPose);
-                            System.out.println(
-                                    "THIS RAN OK? X: "
-                                            + Robot.pose.getLocation().getX()
-                                            + " Y: "
-                                            + Robot.pose.getLocation().getY());
+                            Robot.pose.resetPoseEstimate(Robot.vision.botPose);
                         })
                 .withName("ResetOdometryPose")
                 .ignoringDisable(true);

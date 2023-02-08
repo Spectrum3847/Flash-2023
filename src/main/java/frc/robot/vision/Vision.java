@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.DoubleArrayTopic;
 import edu.wpi.first.networktables.NetworkTable;
@@ -76,9 +77,12 @@ public class Vision extends SubsystemBase {
             botPose3d =
                     new Pose3d(
                             new Translation3d(subbedPose[0], subbedPose[1], subbedPose[2]),
-                            new Rotation3d(subbedPose[3], subbedPose[4], subbedPose[5]));
+                            new Rotation3d(
+                                    Units.degreesToRadians(subbedPose[3]),
+                                    Units.degreesToRadians(subbedPose[4]),
+                                    Units.degreesToRadians(subbedPose[5])));
             botPose = botPose3d.toPose2d();
-            //this is not a solution. Odometry will still think that it's at 0 and influence the estimate
+            /* Adding Limelight estimate to pose if within 1 meter of odometry*/
             if (isValidPose(botPose)
                     || Robot.pose.getLocation().getX() < 1
                     || Robot.pose.getLocation().getY() < 1) {
@@ -106,6 +110,16 @@ public class Vision extends SubsystemBase {
         // testing || printing estimatedPose to smartDashboard
         SmartDashboard.putString("EstimatedPoseX", df.format(Robot.pose.getLocation().getX()));
         SmartDashboard.putString("EstimatedPoseY", df.format(Robot.pose.getLocation().getY()));
+        SmartDashboard.putString(
+                "EstimatedPoseTheta", df.format(Robot.pose.getLocation().getAngle().getDegrees()));
+
+        SmartDashboard.putString(
+                "Odometry X", df.format(Robot.swerve.odometry.getPoseMeters().getX()));
+        SmartDashboard.putString(
+                "Odometry Y", df.format(Robot.swerve.odometry.getPoseMeters().getY()));
+        SmartDashboard.putString(
+                "Odometry Theta",
+                df.format(Robot.swerve.odometry.getPoseMeters().getRotation().getDegrees()));
     }
 
     /**
