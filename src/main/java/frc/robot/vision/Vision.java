@@ -156,7 +156,6 @@ public class Vision extends SubsystemBase {
         Pose2d odometryPose = Robot.swerve.getPoseMeters();
         /* Disregard Vision if there are no targets in view */
         if (!isTargetInView) {
-            System.out.println("target not in view");
             return false;
         }
         /* Disregard Vision if odometry has not been set to vision pose yet in teleopInit*/
