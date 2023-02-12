@@ -45,6 +45,13 @@ public class Pose extends SubsystemBase {
     @Override
     public void periodic() {
         updateOdometryEstimate();
+        /* Adding Limelight estimate to pose if within 1 meter of odometry*/
+        if (Robot.vision.isValidPose(Robot.vision.botPose)) {
+            Robot.pose.updateOdometryEstimate();
+            Robot.pose.addVisionMeasurement(
+                    Robot.vision.botPose,
+                    Robot.vision.getTimestampSeconds(Robot.vision.getLatency()));
+        }
         setEstimatedPose(getPosition());
         setOdometryPose(Robot.swerve.getPoseMeters());
 
